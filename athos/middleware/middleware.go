@@ -39,6 +39,16 @@ func respondWithError(code int, message string, c *gin.Context) {
 	c.Abort()
 }
 
+func AuthUUID(c *gin.Context) {
+	// check UUID
+	if true {
+		c.Next()
+	} else {
+		respondWithError(http.StatusUnauthorized, "invalid UUID", c)
+		return
+	}
+}
+
 func AuthJWT(c *gin.Context) {
 	// define api endpoint and audience
 	AUTH0_DOMAIN := "https://" + configuration.Config.Auth0.Domain + "/"

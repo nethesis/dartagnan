@@ -90,6 +90,10 @@ func Contains(intSlice []int, searchInt int) bool {
 	return false
 }
 
+func GetAlertPriority(alertID string) string {
+	return "HIGH"
+}
+
 func GetSubscriptionPlanByCode(code string) models.SubscriptionPlan {
 	var subscriptionPlan models.SubscriptionPlan
 	db := database.Database()
@@ -115,4 +119,13 @@ func GetSubscription(id int) models.Subscription {
 	db.Close()
 
 	return subscription
+}
+
+func GetSystemFromUUID(uuid string) models.System {
+	var system models.System
+	db := database.Database()
+	db.Where("uuid = ?", uuid).First(&system)
+	db.Close()
+
+	return system
 }

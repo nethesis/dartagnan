@@ -76,7 +76,7 @@ func CreateSystem(c *gin.Context) {
 	db.Close()
 
 	if system.ID == 0 {
-		c.JSON(http.StatusConflict, gin.H{"id": system.ID, "status": "system not added"})
+		c.JSON(http.StatusConflict, gin.H{"status": "system not added"})
 	} else {
 		c.JSON(http.StatusCreated, gin.H{"id": system.ID, "status": "success"})
 	}

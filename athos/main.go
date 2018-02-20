@@ -52,9 +52,38 @@ func main() {
 
 	api := router.Group("/api")
 
+	api.Use(middleware.AuthUUID)
+	{
+		heartbeats := api.Group("/heartbeats")
+		{
+			heartbeats.POST("/store", methods.SetHeartbeat)
+		}
+		alerts := api.Group("/alerts")
+		{
+			alerts.POST("/store", methods.SetAlert)
+		}
+		inventories := api.Group("/inventories")
+		{
+			inventories.POST("/store", methods.SetInventory)
+		}
+	}
+
 	// protect API using JWT middleware
 	api.Use(middleware.AuthJWT)
 	{
+		heartbeats := api.Group("/heartbeats")
+		{
+			heartbeats.GET("/:system_id", methods.GetHeartbeat)
+		}
+		alerts := api.Group("/alerts")
+		{
+			alerts.GET("/:system_id", methods.GetAlerts)
+		}
+		inventories := api.Group("/inventories")
+		{
+			inventories.GET("/:system_id", methods.GetInventory)
+		}
+
 		systems := api.Group("/systems")
 		{
 			systems.GET("", methods.GetSystems)
