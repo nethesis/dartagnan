@@ -27,22 +27,18 @@ import (
 )
 
 type System struct {
-	ID          int       `db:"id" json:"id"`
-	CreatorID   string    `db:"creator_id" json:"creator_id"`
-	UUID        string    `db:"uuid" json:"uuid"`
-	Hostname    string    `db:"hostname" json:"hostname"`
-	Description string    `db:"description" json:"description"`
-	PublicIP    string    `db:"public_ip" json:"public_ip"`
-	Status      string    `db:"status" json:"status"`
-	Created     time.Time `db:"created" json:"created"`
+	ID        int       `db:"id" json:"id"`
+	CreatorID string    `db:"creator_id" json:"creator_id"`
+	UUID      string    `db:"uuid" json:"uuid"`
+	Tags      string    `db:"tags" json:"tags"`
+	PublicIP  string    `db:"public_ip" json:"public_ip"`
+	Status    string    `db:"status" json:"status"`
+	Created   time.Time `db:"created" json:"created"`
 
 	Subscription   Subscription `json:"subscription"`
 	SubscriptionID int          `db:"subscription_id" json:"-"`
 }
 
 type SystemJSON struct {
-	UUID        string `db:"uuid" json:"uuid"`
-	Hostname    string `db:"hostname" json:"hostname"`
-	Description string `db:"description" json:"description"`
-	PublicIP    string `db:"public_ip" json:"public_ip"`
+	Tags string `db:"tags" json:"tags"`
 }

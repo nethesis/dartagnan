@@ -27,9 +27,16 @@ import (
 	"math"
 	"strconv"
 
+	"github.com/satori/go.uuid"
+
 	"github.com/nethesis/dartagnan/athos/database"
 	"github.com/nethesis/dartagnan/athos/models"
 )
+
+func GenerateUUID() string {
+	u := uuid.NewV4()
+	return u.String()
+}
 
 func OffsetCalc(page string, limit string) [2]int {
 	var resLimit = 0

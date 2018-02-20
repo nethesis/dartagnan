@@ -32,6 +32,7 @@ import (
 	jose "gopkg.in/square/go-jose.v2"
 
 	"github.com/nethesis/dartagnan/athos/configuration"
+	"github.com/nethesis/dartagnan/athos/utils"
 )
 
 func respondWithError(code int, message string, c *gin.Context) {
@@ -39,12 +40,13 @@ func respondWithError(code int, message string, c *gin.Context) {
 	c.Abort()
 }
 
-func AuthUUID(c *gin.Context) {
+func AuthSystemID(c *gin.Context) {
 	// check UUID
-	if true {
+	systemID := c.GetHeader("SystemID")
+	if utils.GetSystemFromUUID(systemID).ID != 0 {
 		c.Next()
 	} else {
-		respondWithError(http.StatusUnauthorized, "invalid UUID", c)
+		respondWithError(http.StatusUnauthorized, "invalid SystemID", c)
 		return
 	}
 }

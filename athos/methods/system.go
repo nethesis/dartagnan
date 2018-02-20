@@ -45,24 +45,23 @@ func CreateSystem(c *gin.Context) {
 	}
 
 	// get subscription plan
-	subuscriptionPlan := utils.GetSubscriptionPlanByCode("trial")
+	subscriptionPlan := utils.GetSubscriptionPlanByCode("trial")
 
 	// create system
 	system := models.System{
-		CreatorID:   creatorID,
-		UUID:        json.UUID,
-		Hostname:    json.Hostname,
-		Description: json.Description,
-		PublicIP:    json.PublicIP,
-		Status:      "active",
-		Created:     time.Now().UTC(),
+		CreatorID: creatorID,
+		UUID:      utils.GenerateUUID(),
+		Tags:      "trial",
+		PublicIP:  "",
+		Status:    "active",
+		Created:   time.Now().UTC(),
 		Subscription: models.Subscription{
 			UserID:             creatorID,
 			ValidFrom:          time.Now().UTC(),
-			ValidUntil:         time.Now().UTC().AddDate(0, 0, subuscriptionPlan.Period),
+			ValidUntil:         time.Now().UTC().AddDate(0, 0, subscriptionPlan.Period),
 			Status:             "valid",
 			Created:            time.Now().UTC(),
-			SubscriptionPlanID: subuscriptionPlan.ID,
+			SubscriptionPlanID: subscriptionPlan.ID,
 		},
 	}
 
@@ -78,7 +77,7 @@ func CreateSystem(c *gin.Context) {
 	if system.ID == 0 {
 		c.JSON(http.StatusConflict, gin.H{"status": "system not added"})
 	} else {
-		c.JSON(http.StatusCreated, gin.H{"id": system.ID, "status": "success"})
+		c.JSON(http.StatusCreated, gin.H{"uuid": system.UUID, "status": "success"})
 	}
 }
 
@@ -103,17 +102,8 @@ func UpdateSystem(c *gin.Context) {
 		return
 	}
 
-	if len(json.UUID) > 0 {
-		system.UUID = json.UUID
-	}
-	if len(json.Hostname) > 0 {
-		system.Hostname = json.Hostname
-	}
-	if len(json.Description) > 0 {
-		system.Description = json.Description
-	}
-	if len(json.PublicIP) > 0 {
-		system.PublicIP = json.PublicIP
+	if len(json.Tags) > 0 {
+		system.Tags = json.Tags
 	}
 
 	if err := db.Save(&system).Error; err != nil {
