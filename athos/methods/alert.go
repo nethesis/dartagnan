@@ -176,3 +176,24 @@ func GetAlerts(c *gin.Context) {
 
 	c.JSON(http.StatusOK, alerts)
 }
+
+func GetAlertHistories(c *gin.Context) {
+	var alertHistories []models.AlertHistory
+	creatorID := c.MustGet("authUser").(string)
+	systemID := c.Param("system_id")
+
+	page := c.Query("page")
+	limit := c.Query("limit")
+	offsets := utils.OffsetCalc(page, limit)
+
+	db := database.Database()
+	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id = ?", systemID).Offset(offsets[0]).Limit(offsets[1]).Find(&alertHistories)
+	db.Close()
+
+	if len(alertHistories) <= 0 {
+		c.JSON(http.StatusNotFound, gin.H{"message": "no alerts histories found!"})
+		return
+	}
+
+	c.JSON(http.StatusOK, alertHistories)
+}

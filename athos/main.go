@@ -78,10 +78,12 @@ func main() {
 		alerts := api.Group("/alerts")
 		{
 			alerts.GET("/:system_id", methods.GetAlerts)
+			alerts.GET("/:system_id/histories", methods.GetAlertHistories)
 		}
 		inventories := api.Group("/inventories")
 		{
 			inventories.GET("/:system_id", methods.GetInventory)
+			inventories.GET("/:system_id/histories", methods.GetInventoryHistories)
 		}
 
 		systems := api.Group("/systems")

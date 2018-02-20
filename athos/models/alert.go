@@ -27,7 +27,7 @@ import (
 )
 
 type Alert struct {
-	ID        int       `db:"id" json:"id"`
+	ID        int       `db:"id" json:"-"`
 	AlertID   string    `db:"alert_id" json:"alert_id"`
 	Priority  string    `db:"priority" json:"priority"`
 	Note      string    `db:"note" json:"note"`
@@ -39,7 +39,7 @@ type Alert struct {
 }
 
 type AlertHistory struct {
-	ID         int       `db:"id" json:"id"`
+	ID         int       `db:"id" json:"-"`
 	AlertID    string    `db:"alert_id" json:"alert_id"`
 	Priority   string    `db:"priority" json:"priority"`
 	Resolution string    `db:"resolution" json:"resolution"`
