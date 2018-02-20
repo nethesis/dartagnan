@@ -44,6 +44,10 @@ type Configuration struct {
 		Domain        string `json:"domain"`
 		IdentifierAPI string `json:"identifier_api"`
 	} `json:"auth0"`
+	PayPal struct {
+		ClientID     string `json:"client_id"`
+		ClientSecret string `json:"client_secret"`
+	} `json:"paypal"`
 }
 
 var Config = Configuration{}

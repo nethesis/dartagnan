@@ -30,6 +30,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 
 	"github.com/nethesis/dartagnan/athos/database"
+	"github.com/nethesis/dartagnan/athos/middleware"
 	"github.com/nethesis/dartagnan/athos/models"
 	"github.com/nethesis/dartagnan/athos/utils"
 )
@@ -89,19 +90,22 @@ func UpdateSystem(c *gin.Context) {
 
 	var json models.SystemJSON
 	if err := c.BindJSON(&json); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"message": "Request fields malformed", "error": err.Error()})
+		c.JSON(http.StatusBadRequest, gin.H{"message": "request fields malformed", "error": err.Error()})
 		return
 	}
 
 	db := database.Database()
-	db.Preload("Subscription.SubscriptionPlan").Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
+	db.Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
 
 	if system.ID == 0 {
 		db.Close()
-		c.JSON(http.StatusNotFound, gin.H{"message": "No system found!"})
+		c.JSON(http.StatusNotFound, gin.H{"message": "no system found!"})
 		return
 	}
 
+	if len(json.UUID) > 0 {
+		system.UUID = json.UUID
+	}
 	if len(json.Hostname) > 0 {
 		system.Hostname = json.Hostname
 	}
@@ -110,15 +114,6 @@ func UpdateSystem(c *gin.Context) {
 	}
 	if len(json.PublicIP) > 0 {
 		system.PublicIP = json.PublicIP
-	}
-
-	if json.SubscriptionPlanID != 0 && json.SubscriptionPlanID != system.Subscription.SubscriptionPlanID {
-		// update subscription
-		newSubscriptionPlan := utils.GetSubscriptionPlanById(json.SubscriptionPlanID)
-		system.Subscription.SubscriptionPlanID = newSubscriptionPlan.ID
-		system.Subscription.ValidFrom = time.Now().UTC()
-		system.Subscription.ValidUntil = time.Now().UTC().AddDate(0, 0, newSubscriptionPlan.Period)
-		system.Subscription.Status = "valid"
 	}
 
 	if err := db.Save(&system).Error; err != nil {
@@ -143,7 +138,7 @@ func GetSystems(c *gin.Context) {
 	db.Close()
 
 	if len(systems) <= 0 {
-		c.JSON(http.StatusNotFound, gin.H{"message": "No systems found!"})
+		c.JSON(http.StatusNotFound, gin.H{"message": "no systems found!"})
 		return
 	}
 
@@ -161,7 +156,7 @@ func GetSystem(c *gin.Context) {
 	db.Close()
 
 	if system.ID == 0 {
-		c.JSON(http.StatusNotFound, gin.H{"message": "No system found!"})
+		c.JSON(http.StatusNotFound, gin.H{"message": "no system found!"})
 		return
 	}
 
@@ -175,11 +170,11 @@ func DeleteSystem(c *gin.Context) {
 	systemID := c.Param("system_id")
 
 	db := database.Database()
-	db.Preload("Subscription.SubscriptionPlan").Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
+	db.Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
 
 	if system.ID == 0 {
 		db.Close()
-		c.JSON(http.StatusNotFound, gin.H{"message": "No system found!"})
+		c.JSON(http.StatusNotFound, gin.H{"message": "no system found!"})
 		return
 	}
 
@@ -187,6 +182,121 @@ func DeleteSystem(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "system not deleted", "error": err.Error()})
 		return
 	}
+	db.Close()
+
+	c.JSON(http.StatusOK, gin.H{"status": "success"})
+}
+
+func RenewalPlan(c *gin.Context) {
+	var system models.System
+	creatorID := c.MustGet("authUser").(string)
+
+	systemID := c.Param("system_id")
+
+	var json models.SubscriptionRenewalJSON
+	if err := c.BindJSON(&json); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "request fields malformed", "error": err.Error()})
+		return
+	}
+
+	db := database.Database()
+	db.Preload("Subscription").Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
+
+	if system.ID == 0 {
+		db.Close()
+		c.JSON(http.StatusNotFound, gin.H{"message": "no system found!"})
+		return
+	}
+
+	// check payment
+	if middleware.PaymentCheck(json.PaymentID, system.Subscription.SubscriptionPlan.Code, system.UUID) {
+		// update subscription
+		system.Subscription.ValidFrom = time.Now().UTC()
+		system.Subscription.ValidUntil = system.Subscription.ValidUntil.AddDate(0, 0, system.Subscription.SubscriptionPlan.Period)
+		system.Subscription.Status = "valid"
+
+		// update system info
+		if err := db.Save(&system).Error; err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"message": "system subscription plan not renewed", "error": err.Error()})
+			return
+		}
+	} else {
+		c.JSON(http.StatusNotFound, gin.H{"message": "no payment related to this plan for this server found"})
+		return
+	}
+
+	db.Close()
+
+	c.JSON(http.StatusOK, gin.H{"status": "success"})
+}
+
+func UpgradePlanPrice(c *gin.Context) {
+	var system models.System
+	creatorID := c.MustGet("authUser").(string)
+
+	systemID := c.Param("system_id")
+	plan := c.Query("plan")
+
+	newSubuscriptionPlan := utils.GetSubscriptionPlanByCode(plan)
+
+	db := database.Database()
+	db.Preload("Subscription.SubscriptionPlan").Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
+
+	// calculate discount upgrade
+	daysDiff := system.Subscription.ValidUntil.Sub(time.Now().UTC())
+	discount := (system.Subscription.SubscriptionPlan.Price * float64(system.Subscription.SubscriptionPlan.Period)) / (daysDiff.Hours() / 24)
+	finalPrice := newSubuscriptionPlan.Price - discount
+
+	c.JSON(http.StatusOK, gin.H{"price": utils.Round(finalPrice, 0.5, 2), "name": newSubuscriptionPlan.Code})
+}
+
+func UpgradePlan(c *gin.Context) {
+	var system models.System
+	creatorID := c.MustGet("authUser").(string)
+
+	systemID := c.Param("system_id")
+
+	var json models.SubscriptionUpgradeJSON
+	if err := c.BindJSON(&json); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "request fields malformed", "error": err.Error()})
+		return
+	}
+
+	db := database.Database()
+	db.Preload("Subscription").Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
+
+	if system.ID == 0 {
+		db.Close()
+		c.JSON(http.StatusNotFound, gin.H{"message": "no system found!"})
+		return
+	}
+
+	if json.SubscriptionPlanID != 0 && json.SubscriptionPlanID != system.Subscription.SubscriptionPlanID {
+		// get subscription using id
+		newSubscriptionPlan := utils.GetSubscriptionPlanById(json.SubscriptionPlanID)
+
+		// check payment
+		if middleware.PaymentCheck(json.PaymentID, newSubscriptionPlan.Code, system.UUID) {
+			// update subscription
+			system.Subscription.SubscriptionPlanID = newSubscriptionPlan.ID
+			system.Subscription.ValidFrom = time.Now().UTC()
+			system.Subscription.ValidUntil = time.Now().UTC().AddDate(0, 0, newSubscriptionPlan.Period)
+			system.Subscription.Status = "valid"
+
+			// update system info
+			if err := db.Save(&system).Error; err != nil {
+				c.JSON(http.StatusBadRequest, gin.H{"message": "system subscription plan not updated", "error": err.Error()})
+				return
+			}
+		} else {
+			c.JSON(http.StatusNotFound, gin.H{"message": "no payment related to this plan for this server found"})
+			return
+		}
+	} else {
+		c.JSON(http.StatusConflict, gin.H{"message": "this plan is already associated with this server"})
+		return
+	}
+
 	db.Close()
 
 	c.JSON(http.StatusOK, gin.H{"status": "success"})

@@ -23,10 +23,12 @@
 package middleware
 
 import (
+	"fmt"
 	"net/http"
 
 	auth0 "github.com/auth0-community/go-auth0"
 	"github.com/gin-gonic/gin"
+	"github.com/logpacker/PayPal-Go-SDK"
 	jose "gopkg.in/square/go-jose.v2"
 
 	"github.com/nethesis/dartagnan/athos/configuration"
@@ -66,4 +68,25 @@ func AuthJWT(c *gin.Context) {
 		c.Set("authUser", claims["sub"])
 		c.Next()
 	}
+}
+
+func PaymentCheck(paymentID string, planCode string, uuid string) bool {
+	c, errSDK := paypalsdk.NewClient(configuration.Config.PayPal.ClientID, configuration.Config.PayPal.ClientSecret, paypalsdk.APIBaseSandBox)
+	if errSDK != nil {
+		fmt.Println(errSDK.Error())
+	}
+	_, err := c.GetAccessToken()
+
+	payment, err := c.GetPayment(paymentID)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	if payment.State == "approved" {
+		if payment.Transactions[0].ItemList.Items[0].Name == planCode && payment.Transactions[0].ItemList.Items[0].SKU == uuid {
+			return true
+		}
+		return false
+	}
+	return false
 }

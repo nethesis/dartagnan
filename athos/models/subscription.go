@@ -31,7 +31,7 @@ type SubscriptionPlan struct {
 	Code        string  `db:"code" json:"code"`
 	Name        string  `db:"name" json:"name"`
 	Description string  `db:"description" json:"description"`
-	Price       float32 `db:"price" json:"price"`
+	Price       float64 `db:"price" json:"price"`
 	Period      int     `db:"period" json:"period"`
 }
 
@@ -45,4 +45,12 @@ type Subscription struct {
 
 	SubscriptionPlan   SubscriptionPlan `json:"subscription_plan"`
 	SubscriptionPlanID int              `db:"subscription_plan_id" json:"-"`
+}
+
+type SubscriptionRenewalJSON struct {
+	PaymentID string `json:"payment_id"`
+}
+type SubscriptionUpgradeJSON struct {
+	SubscriptionPlanID int    `json:"subscription_plan_id"`
+	PaymentID          string `json:"payment_id"`
 }

@@ -24,6 +24,7 @@ package utils
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 
 	"github.com/nethesis/dartagnan/athos/database"
@@ -56,6 +57,28 @@ func OffsetCalc(page string, limit string) [2]int {
 
 	result := [2]int{resOffset, resLimit}
 	return result
+}
+
+func Round(val float64, roundOn float64, places int) float64 {
+	pow := math.Pow(10, float64(places))
+	digit := pow * val
+	_, div := math.Modf(digit)
+
+	var round float64
+	if val > 0 {
+		if div >= roundOn {
+			round = math.Ceil(digit)
+		} else {
+			round = math.Floor(digit)
+		}
+	} else {
+		if div >= roundOn {
+			round = math.Floor(digit)
+		} else {
+			round = math.Ceil(digit)
+		}
+	}
+	return round / pow
 }
 
 func Contains(intSlice []int, searchInt int) bool {

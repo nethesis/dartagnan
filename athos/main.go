@@ -62,6 +62,16 @@ func main() {
 			systems.POST("", methods.CreateSystem)
 			systems.PUT("/:system_id", methods.UpdateSystem)
 			systems.DELETE("/:system_id", methods.DeleteSystem)
+
+			systems.POST("/:system_id/renewal", methods.RenewalPlan)
+
+			systems.GET("/:system_id/upgrade_price", methods.UpgradePlanPrice)
+			systems.POST("/:system_id/upgrade", methods.UpgradePlan)
+		}
+
+		plans := api.Group("/plans")
+		{
+			plans.GET("", methods.GetSubscriptionPlans)
 		}
 	}
 

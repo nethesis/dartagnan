@@ -41,9 +41,8 @@ type System struct {
 }
 
 type SystemJSON struct {
-	UUID               string `db:"uuid" json:"uuid"`
-	Hostname           string `db:"hostname" json:"hostname"`
-	Description        string `db:"description" json:"description"`
-	PublicIP           string `db:"public_ip" json:"public_ip"`
-	SubscriptionPlanID int    `db:"subscription_plan_id" json:"subscription_plan_id"`
+	UUID        string `db:"uuid" json:"uuid"`
+	Hostname    string `db:"hostname" json:"hostname"`
+	Description string `db:"description" json:"description"`
+	PublicIP    string `db:"public_ip" json:"public_ip"`
 }
