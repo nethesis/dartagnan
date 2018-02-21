@@ -55,7 +55,7 @@ func SetAlert(c *gin.Context) {
 	}
 
 	// get system from uuid
-	system := utils.GetSystemFromUUID(json.SystemUUID)
+	system := utils.GetSystemFromUUID(json.SystemID)
 
 	// check if alert exists
 	exists, alert := alertExists(system.ID, json.AlertID)
@@ -127,6 +127,12 @@ func SetAlert(c *gin.Context) {
 			db.Close()
 		}
 	} else {
+		if json.Status == "INIT" {
+			// reject
+			c.JSON(http.StatusOK, gin.H{"status": "no update"})
+			return
+		}
+
 		if json.Status == "OK" {
 			// reject
 			c.JSON(http.StatusOK, gin.H{"status": "no update"})

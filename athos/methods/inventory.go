@@ -55,7 +55,7 @@ func SetInventory(c *gin.Context) {
 	}
 
 	// get system from uuid
-	system := utils.GetSystemFromUUID(json.SystemUUID)
+	system := utils.GetSystemFromUUID(json.Data.SystemID)
 
 	// check if inventory exists
 	exists, inventory := inventoryExists(system.ID)
@@ -75,7 +75,7 @@ func SetInventory(c *gin.Context) {
 		}
 
 		// update current inventory
-		inventory.Data = json.Data
+		inventory.Data = json.Data.Data
 		inventory.Timestamp = time.Now().UTC()
 
 		// save current inventory
@@ -88,7 +88,7 @@ func SetInventory(c *gin.Context) {
 	} else {
 		// create inventory
 		inventory := models.Inventory{
-			Data:      json.Data,
+			Data:      json.Data.Data,
 			Timestamp: time.Now().UTC(),
 			SystemID:  system.ID,
 		}

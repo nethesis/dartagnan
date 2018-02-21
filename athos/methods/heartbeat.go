@@ -55,7 +55,7 @@ func SetHeartbeat(c *gin.Context) {
 	}
 
 	// get system from uuid
-	system := utils.GetSystemFromUUID(json.SystemUUID)
+	system := utils.GetSystemFromUUID(json.SystemID)
 
 	// check if heartbeat exists
 	exists, heartbeat := heartbeatExists(system.ID)

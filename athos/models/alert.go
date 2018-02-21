@@ -53,7 +53,8 @@ type AlertHistory struct {
 }
 
 type AlertJSON struct {
-	SystemUUID string `db:"uuid" json:"uuid"`
-	AlertID    string `db:"alert_id" json:"alert_id"`
-	Status     string `db:"status" json:"status"`
+	SystemID string `json:"lk"`
+	AlertID  string `json:"alert_id"`
+	Status   string `json:"status"`
+	Message  string `json:"message"`
 }

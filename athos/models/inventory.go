@@ -45,6 +45,8 @@ type InventoryHistory struct {
 }
 
 type InventoryJSON struct {
-	SystemUUID string `db:"uuid" json:"uuid"`
-	Data       JSONB  `db:"data" json:"data"`
+	Data struct {
+		SystemID string `json:"lk"`
+		Data     JSONB  `json:"data"`
+	} `json:"data"`
 }

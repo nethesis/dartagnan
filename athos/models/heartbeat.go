@@ -35,5 +35,5 @@ type Heartbeat struct {
 }
 
 type HeartbeatJSON struct {
-	SystemUUID string `db:"uuid" json:"uuid"`
+	SystemID string `json:"lk"`
 }
