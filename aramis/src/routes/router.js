@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 import Login from '@/components/Login'
 import Callback from '@/components/Callback'
+import NotFound from '@/components/NotFound'
 
 import Dashboard from '@/components/Dashboard'
 import Alerts from '@/components/Alerts'
@@ -43,5 +44,10 @@ export default new Router({
       name: 'Profile',
       component: Profile
     },
+    {
+      path: '*',
+      name: 'NotFound',
+      component: NotFound
+    }
   ]
 })

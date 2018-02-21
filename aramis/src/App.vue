@@ -196,10 +196,10 @@
       initGraphics() {
         $('body').addClass('logged')
         $('body').removeClass('not-logged')
+        this.showBody()
         setTimeout(function () {
           $().setupVerticalNavigation(true);
-        }, 1000);
-        this.showBody()
+        }, 0);
       },
       resetGraphics() {
         $('body').addClass('not-logged')
