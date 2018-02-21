@@ -30,6 +30,7 @@ type System struct {
 	ID        int       `db:"id" json:"id"`
 	CreatorID string    `db:"creator_id" json:"creator_id"`
 	UUID      string    `db:"uuid" json:"uuid"`
+	Secret    string    `db:"secret" json:"secret"`
 	Tags      string    `db:"tags" json:"tags"`
 	PublicIP  string    `db:"public_ip" json:"public_ip"`
 	Status    string    `db:"status" json:"status"`

@@ -48,9 +48,12 @@ func CreateSystem(c *gin.Context) {
 	subscriptionPlan := utils.GetSubscriptionPlanByCode("trial")
 
 	// create system
+	uuid := utils.GenerateUUID()
+	secret := utils.GenerateSecret(uuid)
 	system := models.System{
 		CreatorID: creatorID,
-		UUID:      utils.GenerateUUID(),
+		UUID:      uuid,
+		Secret:    secret,
 		Tags:      "trial",
 		PublicIP:  "",
 		Status:    "active",
@@ -77,7 +80,7 @@ func CreateSystem(c *gin.Context) {
 	if system.ID == 0 {
 		c.JSON(http.StatusConflict, gin.H{"status": "system not added"})
 	} else {
-		c.JSON(http.StatusCreated, gin.H{"uuid": system.UUID, "status": "success"})
+		c.JSON(http.StatusCreated, gin.H{"uuid": system.UUID, "secret": system.Secret, "status": "success"})
 	}
 }
 

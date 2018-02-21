@@ -23,9 +23,11 @@
 package utils
 
 import (
+	"crypto/sha256"
 	"fmt"
 	"math"
 	"strconv"
+	"time"
 
 	"github.com/satori/go.uuid"
 
@@ -36,6 +38,13 @@ import (
 func GenerateUUID() string {
 	u := uuid.NewV4()
 	return u.String()
+}
+
+func GenerateSecret(uuid string) string {
+	h := sha256.New()
+	h.Write([]byte(time.Now().UTC().String() + uuid))
+	secret := fmt.Sprintf("%x", h.Sum(nil))
+	return secret
 }
 
 func OffsetCalc(page string, limit string) [2]int {
