@@ -1,0 +1,14 @@
+[Unit]
+Description=SSL tunnel for network daemons
+After=network.target
+After=syslog.target
+ConditionPathExists=/etc/stunnel/%i.conf
+
+[Install]
+WantedBy=multi-user.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/stunnel /etc/stunnel/%i.conf
+User=nobody
+Group=nobody
