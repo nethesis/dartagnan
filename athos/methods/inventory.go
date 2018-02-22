@@ -57,6 +57,17 @@ func SetInventory(c *gin.Context) {
 	// get system from uuid
 	system := utils.GetSystemFromUUID(json.Data.SystemID)
 
+	// prepare the db for all queries
+	db := database.Database()
+
+	//db.Model(&system).Update("PublicIP",c.ClientIP());
+	if err := db.Model(&system).Where("uuid = ?", json.Data.SystemID).Update("PublicIP",c.ClientIP()).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "PublicIP not updated", "error": err.Error()})
+		db.Close()
+		return
+	}
+
+
 	// check if inventory exists
 	exists, inventory := inventoryExists(system.ID)
 	if exists {
@@ -68,7 +79,6 @@ func SetInventory(c *gin.Context) {
 		}
 
 		// save to inventory history
-		db := database.Database()
 		if err := db.Save(&inventoryHistory).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "inventory not saved in history", "error": err.Error()})
 			return
@@ -81,10 +91,10 @@ func SetInventory(c *gin.Context) {
 		// save current inventory
 		if err := db.Save(&inventory).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "inventory not updated", "error": err.Error()})
+			db.Close()
 			return
 		}
 
-		db.Close()
 	} else {
 		// create inventory
 		inventory := models.Inventory{
@@ -94,14 +104,14 @@ func SetInventory(c *gin.Context) {
 		}
 
 		// save new inventory
-		db := database.Database()
 		if err := db.Save(&inventory).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "inventory not saved", "error": err.Error()})
+			db.Close()
 			return
 		}
-		db.Close()
 	}
 
+	db.Close()
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }
 
