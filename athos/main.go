@@ -68,6 +68,10 @@ func main() {
 		{
 			inventories.POST("/store", methods.SetInventory)
 		}
+		info := machine.Group("/info")
+		{
+			info.GET("/:uuid", methods.GetSystemByUuid)
+		}
 	}
 
 	// protect API using JWT middleware
