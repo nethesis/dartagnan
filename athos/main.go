@@ -53,38 +53,43 @@ func main() {
 	api := router.Group("/api")
 
 	// protect API using SystemID middleware
-	heartbeats := api.Group("/heartbeats").Use(middleware.AuthSystemID)
+	machine := api.Group("/machine")
+	machine.Use(middleware.AuthSystemID)
 	{
-		heartbeats.POST("/store", methods.SetHeartbeat)
-	}
-	alerts := api.Group("/alerts").Use(middleware.AuthSystemID)
-	{
-		alerts.POST("/store", methods.SetAlert)
-	}
-	inventories := api.Group("/inventories").Use(middleware.AuthSystemID)
-	{
-		inventories.POST("/store", methods.SetInventory)
+		heartbeats := machine.Group("/heartbeats")
+		{
+			heartbeats.POST("/store", methods.SetHeartbeat)
+		}
+		alerts := machine.Group("/alerts")
+		{
+			alerts.POST("/store", methods.SetAlert)
+		}
+		inventories := machine.Group("/inventories")
+		{
+			inventories.POST("/store", methods.SetInventory)
+		}
 	}
 
 	// protect API using JWT middleware
-	api.Use(middleware.AuthJWT)
+	ui := api.Group("/ui")
+	ui.Use(middleware.AuthJWT)
 	{
-		heartbeats := api.Group("/heartbeats")
+		heartbeats := ui.Group("/heartbeats")
 		{
 			heartbeats.GET("/:system_id", methods.GetHeartbeat)
 		}
-		alerts := api.Group("/alerts")
+		alerts := ui.Group("/alerts")
 		{
 			alerts.GET("/:system_id", methods.GetAlerts)
 			alerts.GET("/:system_id/histories", methods.GetAlertHistories)
 		}
-		inventories := api.Group("/inventories")
+		inventories := ui.Group("/inventories")
 		{
 			inventories.GET("/:system_id", methods.GetInventory)
 			inventories.GET("/:system_id/histories", methods.GetInventoryHistories)
 		}
 
-		systems := api.Group("/systems")
+		systems := ui.Group("/systems")
 		{
 			systems.GET("", methods.GetSystems)
 			systems.GET("/:system_id", methods.GetSystem)
@@ -98,7 +103,7 @@ func main() {
 			systems.POST("/:system_id/upgrade", methods.UpgradePlan)
 		}
 
-		plans := api.Group("/plans")
+		plans := ui.Group("/plans")
 		{
 			plans.GET("", methods.GetSubscriptionPlans)
 		}
