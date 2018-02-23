@@ -145,3 +145,13 @@ func GetSystemFromUUID(uuid string) models.System {
 
 	return system
 }
+
+func GetSystemFromSecret(secret string) models.System {
+        var system models.System
+        db := database.Database()
+        db.Where("secret = ?", secret).First(&system)
+        db.Close()
+
+        return system
+}
+

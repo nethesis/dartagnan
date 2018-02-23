@@ -54,7 +54,7 @@ func main() {
 
 	// protect API using SystemID middleware
 	machine := api.Group("/machine")
-	machine.Use(middleware.AuthSystemID)
+	machine.Use(middleware.AuthSecret)
 	{
 		heartbeats := machine.Group("/heartbeats")
 		{

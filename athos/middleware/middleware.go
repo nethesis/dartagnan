@@ -25,6 +25,7 @@ package middleware
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	auth0 "github.com/auth0-community/go-auth0"
 	"github.com/gin-gonic/gin"
@@ -40,16 +41,24 @@ func respondWithError(code int, message string, c *gin.Context) {
 	c.Abort()
 }
 
-func AuthSystemID(c *gin.Context) {
-	// check UUID
-	systemID := c.GetHeader("SystemID")
-	if utils.GetSystemFromUUID(systemID).ID != 0 {
-		c.Next()
-	} else {
-		respondWithError(http.StatusUnauthorized, "invalid SystemID", c)
-		return
-	}
+func GetSecret(c *gin.Context) string {
+	/* Header format:
+		Authorization: token <TOKEN>
+	*/
+	authHeader := strings.Split(c.GetHeader("Authorization"), " ")
+	return authHeader[1]
 }
+
+func AuthSecret(c *gin.Context) {
+	secret := GetSecret(c)
+        if utils.GetSystemFromSecret(secret).ID != 0 {
+                c.Next()
+        } else {
+                respondWithError(http.StatusUnauthorized, "invalid Secret", c)
+                return
+        }
+}
+
 
 func AuthJWT(c *gin.Context) {
 	// define api endpoint and audience
