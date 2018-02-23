@@ -1,0 +1,24 @@
+#!/usr/bin/bash
+
+repomd_file=$1
+min_tiers=${2:-0}
+
+if [[ ! -f "${repomd_file}" || $(basename ${repomd_file}) != 'repomd.xml' ]]; then
+    echo -e "Usage:\n  $(basename $0) [PATH]repomd.xml [TIERS]" 1>&2
+    exit 1
+fi
+
+set -e
+shopt -s nullglob extglob
+repomd_fmt="$(dirname ${repomd_file})/repomd-t%s.xml"
+
+if (( $min_tiers > 0 )); then
+    for ((ti=0; ti < $min_tiers; ti++)); do
+        repomd_tier=$(printf "${repomd_fmt}" ${ti} )
+        if [[ ! -f ${repomd_tier} ]]; then
+            echo "[NOTICE] initializing from upstream ${repomd_tier}"
+            cp --preserve=timestamps ${repomd_file} ${repomd_tier}
+        fi
+    done
+fi
+
