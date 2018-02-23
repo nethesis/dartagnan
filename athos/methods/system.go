@@ -160,6 +160,28 @@ func GetSystems(c *gin.Context) {
 	c.JSON(http.StatusOK, systems)
 }
 
+func GetSystemByUuid(c *gin.Context) {
+        var system models.System
+	uuid := c.Param("uuid")
+        db := database.Database()
+        db.Where("uuid = ?", uuid).First(&system)
+
+	sentSecret := middleware.GetSecret(c)
+
+	// authentication secret must match requested system
+	if sentSecret != system.Secret {
+                c.JSON(http.StatusUnauthorized, gin.H{"message": "invalid authorization for requested system!"})
+		db.Close()
+                return
+	}
+
+        db.Preload("Subscription.SubscriptionPlan").Where("id = ? ", system.ID).First(&system)
+        db.Close()
+
+	system.Secret = ""
+        c.JSON(http.StatusOK, system)
+}
+
 func GetSystem(c *gin.Context) {
 	var system models.System
 	creatorID := c.MustGet("authUser").(string)
