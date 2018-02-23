@@ -118,6 +118,25 @@ func UpdateSystem(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }
 
+func getStatus(id int) string {
+        var heartbeat models.Heartbeat
+        db := database.Database()
+	db.LogMode(true)
+        db.Where("system_id = ?", id).First(&heartbeat)
+        db.Close()
+
+        if (heartbeat.ID == 0) {
+                return "no_comm"
+        }
+
+	sanity := heartbeat.Timestamp.Add(time.Minute * 30)
+	if (time.Now().After(sanity)) {
+		return "no_active";
+	} else {
+		return "active"
+	}
+}
+
 func GetSystems(c *gin.Context) {
 	var systems []models.System
 	creatorID := c.MustGet("authUser").(string)
@@ -133,6 +152,10 @@ func GetSystems(c *gin.Context) {
 	if len(systems) <= 0 {
 		c.JSON(http.StatusNotFound, gin.H{"message": "no systems found!"})
 		return
+	}
+
+	for i, system := range systems {
+		systems[i].Status = getStatus(system.ID)
 	}
 
 	c.JSON(http.StatusOK, systems)
