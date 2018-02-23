@@ -121,7 +121,6 @@ func UpdateSystem(c *gin.Context) {
 func getStatus(id int) string {
         var heartbeat models.Heartbeat
         db := database.Database()
-	db.LogMode(true)
         db.Where("system_id = ?", id).First(&heartbeat)
         db.Close()
 
@@ -176,6 +175,7 @@ func GetSystem(c *gin.Context) {
 		return
 	}
 
+	system.Status = getStatus(system.ID)
 	c.JSON(http.StatusOK, system)
 }
 
