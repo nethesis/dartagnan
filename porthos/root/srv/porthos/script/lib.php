@@ -10,13 +10,13 @@ function exit_http($code) {
     exit(1);
 }
 
-function get_access_descriptor($system_id) {
+function get_access_descriptor($system_id, $secret) {
     $redis = new Redis();
     if( ! $redis->connect($_SERVER['PORTHOS_REDIS'])) {
         error_log(sprintf('[ERROR] redis connect(%s) failed!', $_SERVER['PORTHOS_REDIS']));
         exit_http(503);
     };
-    $descriptor = $redis->hMGet($system_id, array('tier_id'));
+    $descriptor = $redis->hMGet($system_id, array('tier_id', 'secret'));
     $redis->close();
     return $descriptor;
 }
