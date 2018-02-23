@@ -127,7 +127,7 @@ func GetSystems(c *gin.Context) {
 	offsets := utils.OffsetCalc(page, limit)
 
 	db := database.Database()
-	db.Preload("Subscription.SubscriptionPlan").Where("creator_id = ?", creatorID).Offset(offsets[0]).Limit(offsets[1]).Find(&systems)
+	db.Select("systems.*, inventories.data->'networking'->>'fqdn' AS hostname").Preload("Subscription.SubscriptionPlan").Joins("LEFT JOIN inventories ON systems.id = inventories.system_id").Where("creator_id = ?", creatorID).Offset(offsets[0]).Limit(offsets[1]).Find(&systems)
 	db.Close()
 
 	if len(systems) <= 0 {
