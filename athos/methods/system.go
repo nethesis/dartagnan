@@ -263,7 +263,7 @@ func UpgradePlanPrice(c *gin.Context) {
 	discount := (system.Subscription.SubscriptionPlan.Price * float64(system.Subscription.SubscriptionPlan.Period)) / (daysDiff.Hours() / 24)
 	finalPrice := newSubuscriptionPlan.Price - discount
 
-	c.JSON(http.StatusOK, gin.H{"price": utils.Round(finalPrice, 0.5, 2), "name": newSubuscriptionPlan.Code})
+	c.JSON(http.StatusOK, gin.H{"full_price": newSubuscriptionPlan.Price, "price": utils.Round(finalPrice, 0.5, 2), "name": newSubuscriptionPlan.Code})
 }
 
 func UpgradePlan(c *gin.Context) {

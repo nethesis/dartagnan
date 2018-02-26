@@ -29,6 +29,10 @@ input[type=radio].form-control {
   }
 }
 
+.btn:focus {
+  outline: none !important;
+}
+
 .logged {
   background-color: #f5f5f5;
   background-image: none;
@@ -61,7 +65,7 @@ input[type=radio].form-control {
 
 .divider {
   border-top: 1px solid #d1d1d1;
-  margin-top: -10px;
+  margin-top: 0px;
   margin-bottom: 10px;
 }
 
@@ -281,6 +285,10 @@ input[type=radio].form-control {
   color: #cc0000;
 }
 
+.gray {
+  color: #8b8d8f;
+}
+
 .unsplash {
   background: rgba(0, 0, 0, 0.35);
   color: white;
@@ -296,12 +304,6 @@ input[type=radio].form-control {
 .login-pref-option {
   font-size: 20px !important;
   margin-left: 10px;
-}
-
-.captive-preview {
-  width: 100%;
-  height: 600px;
-  border: none;
 }
 
 .text-center {
@@ -322,9 +324,78 @@ input[type=radio].form-control {
 }
 
 .profile-picture-mini {
-  height: 30px;
+  height: 37px;
   position: fixed;
   border-radius: 50%;
-  margin-left: -40px;
-  margin-top: -8px;
+  margin-left: -45px;
+  margin-top: -10px;
+}
+
+.clipboard-btn {
+  margin-left: 8px;
+  margin-top: -4px;
+}
+
+.adjust-icon-size {
+  width: 75px !important;
+  height: 75px !important;
+  font-size: 30px !important;
+  line-height: 72px !important;
+}
+
+.renew-button {
+  margin-left: 8px;
+}
+
+.clear-filters {
+  font-size: 14px;
+  line-height: 16px;
+}
+
+.disabled-top {
+  border-top-color: #8b8d8f !important;
+}
+
+.disabled-circle {
+  border-color: #8b8d8f !important;
+  color: #8b8d8f !important;
+}
+
+.filters-container {
+  margin: 10px;
+}
+
+.servers-container {
+  margin-top: 15px;
+}
+
+.no-padding-left {
+  padding-left: 0px !important;
+}
+
+.filter-option:hover {
+  cursor: pointer;
+}
+
+.details-pay-item {
+  display: flex !important;
+}
+
+.done-payment-button {
+  float: right;
+  margin-top: 10px;
+}
+
+.click-hover:hover {
+  cursor: pointer;
+  color: #39a5dd;
+}
+
+.no-padding-top {
+  padding-top: 0px !important;
+}
+
+.row-divider {
+  border-bottom: 1px solid #d1d1d1;
+  margin-bottom: 20px;
 }

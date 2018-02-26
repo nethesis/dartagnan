@@ -1,39 +1,6 @@
 <template>
   <div>
-
     <h2>Dashboard</h2>
-
-    <!-- modals -->
-    <div class="modal fade" id="about-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content about-modal-pf">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-              <span class="pficon pficon-close"></span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <h1>Aramis</h1>
-            <div class="product-versions-pf">
-              <ul class="list-unstyled">
-                <li>
-                  <strong>Athos</strong>
-                  <a target="blank" href="https://github.com/nethesis/dartagnan/tree/master/athos">GitHub</a>
-                </li>
-                <li>
-                  <strong>Aramis</strong>
-                  <a target="blank" href="https://github.com/nethesis/dartagnan/tree/master/aramis">GitHub</a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <img class="about-logo" src="./../assets/logo.png" alt="Patternfly Symbol">
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- end modals -->
   </div>
 </template>
 

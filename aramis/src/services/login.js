@@ -1,5 +1,4 @@
 import auth0 from 'auth0-js'
-import EventEmitter from 'eventemitter3'
 
 import {
   AUTH_CONFIG
@@ -13,7 +12,6 @@ var auth0Instance = new auth0.WebAuth({
   responseType: 'token id_token',
   scope: 'openid profile email'
 })
-var authNotifier = new EventEmitter()
 
 var LoginService = {
   methods: {
@@ -21,17 +19,11 @@ var LoginService = {
       // show auth0 authorize login
       auth0Instance.authorize()
     },
-    auth0Logout(callback) {
+    auth0Logout() {
       // clear local storage
       localStorage.removeItem('access_token')
       localStorage.removeItem('id_token')
       localStorage.removeItem('expires_at')
-
-      // unset user profile and notify logout
-      authNotifier.emit('authChange', false)
-
-      // navigate to the dashboard route
-      callback()
     },
     auth0Handler(callback) {
       // parse hash url
@@ -41,7 +33,6 @@ var LoginService = {
         }
 
         // get user information
-        var context = this
         auth0Instance.client.userInfo(authResult.accessToken, function (err, user) {
           if (err) {
             return console.log(err)
@@ -57,9 +48,6 @@ var LoginService = {
             localStorage.setItem('expires_at', JSON.stringify(
               authResult.expiresIn * 1000 + new Date().getTime()
             ))
-            authNotifier.emit('authChange', {
-              authenticated: true
-            })
             callback('dashboard')
           } else if (err) {
             callback('login')
