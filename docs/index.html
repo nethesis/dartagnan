@@ -1,0 +1,51 @@
+---
+layout: default
+---
+
+<div class="header-container jumbotron">
+    <div class="container">
+        <h1>Dartagnan</h1>
+        <p>"Servers monitoring and Subscriptions made easy" 
+        <p><a class="btn btn-primary btn-lg" href="{{ "/docs/home/" | prepend: site.baseurl }}" role="button">Learn more</a></p>
+    </div>
+</div>
+
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-6">
+            <blockquote>
+              <p><strong>Dartagnan</strong> is a monitor and subscription system built for <a href="http://www.nethserver.org">NethServer</a>,
+              but it can be used with any other RPM-based Linux distribution.</p>
+            </blockquote>
+        </div>
+        <div class="col-md-6 text-center">
+            <img src="img/dartagnan.png" alt="" class="img-responsive">
+        </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+        <div class="col-sm-4">
+            <h1 class="text-center"><i class="fa fa-heartbeat" aria-hidden="true"></i></h1>
+            <h3 class="text-center"><a href="{{ "/docs/" | prepend: site.baseurl }}/monitoring/">Monitoring</a></h3>
+            <p>Monitor your installation using <a href='https://collectd.org/'>Collectd</a>,
+            generate and manage alerts.
+            </p>
+        </div>
+        <div class="col-sm-4">
+            <h1 class="text-center"><i class="fa fa-info-circle" aria-hidden="true"></i></h1>
+            <h3 class="text-center"><a href="{{ "/docs/" | prepend: site.baseurl }}/inventory/">Inventory</a></h3>
+            <p>Gather information from servers and display everything on a centralized dashboard.</p>
+        </div>
+        <div class="col-sm-4">
+            <h1 class="text-center"><i class="fa fa-check-square" aria-hidden="true"></i></h1>
+            <h3 class="text-center"><a href="{{ "/docs/" | prepend: site.baseurl }}/subscriptions/">Subscriptions</a></h3>
+            <p>Provide payed subscription to your customers.<p/>
+            <p>Subscribed servers can get access to stables repositories.</p>
+        </div>
+    </div>
+
+</div>

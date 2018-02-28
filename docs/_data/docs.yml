@@ -1,0 +1,13 @@
+- title: General
+  docs:
+  - home
+  - components
+  - subscriptions
+  - inventory
+  - monitoring
+
+- title: Installation
+  docs:
+  - provisioning
+  - client_installation
+  - configuration
