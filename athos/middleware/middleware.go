@@ -46,11 +46,19 @@ func GetSecret(c *gin.Context) string {
 		Authorization: token <TOKEN>
 	*/
 	authHeader := strings.Split(c.GetHeader("Authorization"), " ")
-	return authHeader[1]
+	if (len(authHeader) > 1) {
+		return authHeader[1]
+	} else {
+		return ""
+	}
 }
 
 func AuthSecret(c *gin.Context) {
 	secret := GetSecret(c)
+	if (secret == "") {
+                respondWithError(http.StatusUnauthorized, "invalid Secret", c)
+                return
+	}
         if utils.GetSystemFromSecret(secret).ID != 0 {
                 c.Next()
         } else {

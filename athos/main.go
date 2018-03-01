@@ -70,7 +70,7 @@ func main() {
 		}
 		info := machine.Group("/info")
 		{
-			info.GET("/:uuid", methods.GetSystemByUuid)
+			info.GET("/", methods.GetSystemBySecret)
 		}
 	}
 
