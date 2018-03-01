@@ -1,3 +1,3 @@
-# dartagnan
+# Dartagnan
 
-> Servers monitoring and Subscriptions made easy
+Official documentation: https://nethesis.github.io/dartagnan/
