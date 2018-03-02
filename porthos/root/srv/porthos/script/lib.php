@@ -6,7 +6,7 @@ function return_file($file_path) {
 }
 
 function exit_http($code) {
-    header('X-Accel-Redirect: /' . $code);
+    header('X-Accel-Redirect: /error/' . $code);
     exit(1);
 }
 

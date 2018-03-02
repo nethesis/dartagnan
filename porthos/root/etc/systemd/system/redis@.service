@@ -1,6 +1,6 @@
 [Unit]
 Description=Redis persistent key-value database
-After=stunnel@%i.service
+Before=stunnel@%i.service
 Requires=stunnel@%i.service
 ConditionPathExists=/etc/redis-%i.conf
 

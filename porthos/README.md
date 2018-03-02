@@ -1,8 +1,6 @@
-Porthos
-=======
+# Porthos
 
-Installation
-------------
+## Installation
 
 On CentOS 7 - porthos,
 
@@ -12,47 +10,80 @@ On CentOS 7 - porthos,
 
 On your local system,
 
-    rsync -ai porthos/root/ root@porthos:/
+    rsync -ai --no-super --no-o --no-g porthos/root/ root@porthos:/
 
-On CentOS 7 - porthos,
+On CentOS 7 - porthos, configure and apply SELinux context
 
+    semanage fcontext -a -t httpd_sys_content_t '/srv/porthos(/.*)?'
+    restorecon -vvRF /srv/porthos
+
+Run initial synchronization, then start daemons
+
+    repo-bulk-hinit
     systemctl start nginx php-fpm redis@athos
 
-YUM client
-----------
+## YUM client
 
-HTTP repository metadata query:
+Mirrorlist query format
 
-    http://porthos.nethserver.org/<repo_version>/<repo_name>/<repo_arch>/repodata/repomd.xml
+    http://mirrorlist.nethserver.com/?repo=nethserver-base&arch=x86_64&nsversion=7.4.1708&usetier=yes
 
-HTTP authentication is required to GET `repomd.xml`:
+The `mirrorlist.nethserver.com` virtual host returns the list of available YUM
+repository mirrors for the given parameters.
 
-    http://<system_id>:<secret>@porthos.nethserver.org/<repo_version>/<repo_name>/<repo_arch>/repodata/repomd.xml
+- `nsversion` full version number `X.Y.Z` 
+- `repo` repository name
+- `usetier` whether tier repository is desired or not. If present, `$YUM0`,
+  `no`, `0` and empty string are mapped to `false`, any other value is mapped to
+  `true`
+- `arch` system architecture, like `x86_64`
 
+HTTP repository metadata query (HTTP Basic authentication required):
 
-Redis DB format
----------------
+    http://m1.nethserver.com/autoupdate/<repo_version>/<repo_name>/<repo_arch>/repodata/repomd.xml
+    http://m1.nethserver.com/stable/<repo_version>/<repo_name>/<repo_arch>/repodata/repomd.xml
+
+* `autoupdate` returns data from the tier associated to the credentials provided
+* `stable` always returns data from `t0`
+
+## HTTP status codes
+
+* 401 - authorization required
+* 404 - resource not found
+* 403 - bad credentials or `tier_id` is false (disabled)
+* 503 - redis connection failed, see `/var/log/nginx/porthos-php-error.log`
+* 502 - php-fpm connection failed, see `/var/log/nginx/error.log`
+* 500 - generic PHP error, see `/var/log/nginx/porthos-php-error.log`
+
+## Redis DB format
 
 The `repomd.php` script expects the following storage format in redis DB:
 
     key: <system_id>
     value: hash{ tier_id => <integer>, secret => <string> }
 
-Troubleshooting
----------------
+If `tier_id` is not set, the access is denied (403 - forbidden).
 
-HTTP status codes for `repomd.xml`
+## Repository management commands
 
-* 404 - server_id not found
-* 403 - server_id exists, but has disabled access or the given secret is bad
-* 503 - redis connection failed, see `/var/log/nginx/porthos-php-error.log`
-* 502 - php-fpm connection failed, see `/var/log/nginx/error.log`
-* 500 - generic PHP error, see `/var/log/nginx/porthos-php-error.log`
+The `repo-*` are a set of Bash commands that include (source) the configuration
+from `/etc/porthos.conf`. Upstream YUM rsync URLs are defined there.
 
-TODO
-----
+- `repo-bulk-hinit` run initial synchronization from upstream repositories
+- `repo-bulk-pull` creates a snapshot date-dir (e.g. `d20180301`) under
+  `dest_dir` with differences from upstream repositories. Set `t0` to point at
+  it.
+- `repo-bulk-shift [N]` updates `t1` ... `tN` links by shifting tiers of one position
+  the optional `N`
 
-- configure `yum-cron` automated daily updates
+The following commands shold not be invoked directly. They are intended to be
+called by the commands above.
+
+- `repo-head-init`  initial synchronization from a specific upstream repo
+- `repo-tier-pull`  upstream snapshot for a specific repo
+- `xrsync` run rsync and try to repeat the operation if fails
+
+## TODO
+
 - configure `iptables`
-- command `repo-pull-upstream`
-- command `repo-shift-tier`
+- configure `rsync` replica to other m*.nethserver.com nodes

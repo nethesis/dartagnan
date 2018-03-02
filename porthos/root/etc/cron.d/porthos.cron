@@ -1,0 +1,9 @@
+#
+# porthos crontab
+#
+
+RANDOM=20
+CRON_TZ=UTC
+
+0 21 * * 1        root /usr/local/bin/repo-bulk-pull
+0 21 * * 2,3,4    root /usr/local/bin/repo-bulk-shift

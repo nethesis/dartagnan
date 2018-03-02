@@ -1,0 +1,57 @@
+#!/usr/bin/bash
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+set -e
+shopt -s nullglob
+
+min_tiers=${1:-1}
+
+. /etc/porthos/repos.conf
+cd ${dest_dir}
+tiers=( t[0-9] )
+
+# Shift up tier states
+for ((ti=${#tiers[@]}-1; ti>0; ti--)); do
+    date_dir=$(readlink ${tiers[$((ti - 1))]})
+    if [[ $? != 0 || ! -d ${date_dir} ]]; then
+        echo "[ERROR] Bad tier link ${tiers[$((ti - 1))]}"
+        continue
+    fi
+    ln -sfT ${date_dir} t${ti}
+done
+
+# Fill missing tiers up to $min_tiers
+if (( $min_tiers > 1 )); then
+    for ((ti=0; ti < $min_tiers - 1; ti++)); do
+        date_dir=$(readlink t${ti})
+        if [[ $? != 0 || ! -d ${date_dir} ]]; then
+            echo "[ERROR] Bad tier link t${ti}"
+            continue
+        fi
+        
+        next_tier=t$((ti + 1))
+        if [[ ! -e ${next_tier} ]]; then
+            echo "[NOTICE] initializing ${next_tier}"
+            ln -sfT ${date_dir} ${next_tier}
+        fi
+    done
+fi
