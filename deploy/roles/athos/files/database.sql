@@ -1,7 +1,7 @@
 CREATE database dartagnan;
-CREATE USER dartagnan WITH PASSWORD 'dartagnan';
-ALTER USER dartagnan WITH SUPERUSER;
-GRANT ALL PRIVILEGES ON DATABASE dartagnan to dartagnan;
+CREATE USER dtuser WITH PASSWORD 'SECRET';
+ALTER USER dtuser WITH SUPERUSER;
+GRANT ALL PRIVILEGES ON DATABASE dartagnan to dtuser;
 \connect dartagnan
 
 CREATE TABLE subscription_plans (
@@ -38,7 +38,7 @@ CREATE TABLE systems (
     public_ip character varying(1024) null,
     status character varying(1024) default null,
     created timestamp default current_timestamp,
-    UNIQUE(uuid)
+    UNIQUE(uuid),
     UNIQUE(secret)
 );
 

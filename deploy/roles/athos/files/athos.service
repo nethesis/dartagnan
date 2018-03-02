@@ -1,0 +1,15 @@
+[Unit]
+Description=Athos API server, part of Dartagnan
+After=network.target
+
+[Service]
+Type=simple
+User=root
+EnvironmentFile=-/opt/dartagnan/athos.env
+WorkingDirectory=/opt/dartagnan
+Environment=GIN_MODE=release
+ExecStart=/opt/dartagnan/athos -c config.json
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

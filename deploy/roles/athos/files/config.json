@@ -1,0 +1,20 @@
+{
+    "db_host":"localhost",
+    "db_port":"5432",
+    "db_name":"dartagnan",
+    "db_user": "dtuser",
+    "db_password": "SECRET",
+    "cors": {
+        "origins": ["*"],
+        "headers": ["Authorization", "Content-Type"],
+        "methods": ["GET", "PUT", "POST", "DELETE"]
+    },
+    "auth0": {
+        "domain": "dartagnan.auth0.com",
+        "identifier_api":"https://YOUR_DOMAIN"
+    },
+    "paypal": {
+        "client_id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+        "client_secret": "xxxxxxxxxxxxxxxxxxxxxxx-xxxxxxxxxxx-xxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    }
+}
