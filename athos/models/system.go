@@ -39,7 +39,7 @@ type System struct {
 	Subscription   Subscription `json:"subscription"`
 	SubscriptionID int          `db:"subscription_id" json:"-"`
 
-	Hostname string    `db:"-" json:"hostname"`
+	Hostname string `sql:"-" json:"hostname"`
 }
 
 type SystemJSON struct {

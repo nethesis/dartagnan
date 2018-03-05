@@ -1,7 +1,7 @@
 var StorageService = {
   methods: {
-    get(prop) {
-      return JSON.parse(localStorage.getItem(prop))
+    get(prop, parse=true) {
+      return parse ? JSON.parse(localStorage.getItem(prop)) : localStorage.getItem(prop)
     },
     set(prop, object) {
       localStorage.setItem(prop, JSON.stringify(object))

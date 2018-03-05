@@ -175,11 +175,6 @@ func GetAlerts(c *gin.Context) {
 	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id = ?", systemID).Offset(offsets[0]).Limit(offsets[1]).Find(&alerts)
 	db.Close()
 
-	if len(alerts) <= 0 {
-		c.JSON(http.StatusNotFound, gin.H{"message": "no alerts found!"})
-		return
-	}
-
 	c.JSON(http.StatusOK, alerts)
 }
 
@@ -195,11 +190,6 @@ func GetAlertHistories(c *gin.Context) {
 	db := database.Database()
 	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id = ?", systemID).Offset(offsets[0]).Limit(offsets[1]).Find(&alertHistories)
 	db.Close()
-
-	if len(alertHistories) <= 0 {
-		c.JSON(http.StatusNotFound, gin.H{"message": "no alerts histories found!"})
-		return
-	}
 
 	c.JSON(http.StatusOK, alertHistories)
 }

@@ -8,6 +8,7 @@ import NotFound from '@/components/NotFound'
 import Dashboard from '@/components/Dashboard'
 import Alerts from '@/components/Alerts'
 import Servers from '@/components/Servers'
+import ServerDetail from '@/components/ServerDetails'
 import Profile from '@/components/Profile'
 
 Vue.use(Router)
@@ -38,6 +39,11 @@ export default new Router({
       path: '/servers',
       name: 'Servers',
       component: Servers
+    },
+    {
+      path: '/servers/:id',
+      name: 'ServerDetail',
+      component: ServerDetail
     },
     {
       path: '/profile',

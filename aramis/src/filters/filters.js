@@ -27,24 +27,42 @@ var Filters = {
     }
     return result;
   },
-  secondsInHour: function (value) {
-    let hours = parseInt(Math.floor(value / 3600));
-    let minutes = parseInt(Math.floor((value - (hours * 3600)) / 60));
-    let seconds = parseInt((value - ((hours * 3600) + (minutes * 60))) % 60);
+  secondsInReadable: function (value) {
+    if (!value)
+      return '-'
 
-    let dHours = (hours > 9 ? hours : '0' + hours);
-    let dMins = (minutes > 9 ? minutes : '0' + minutes);
-    let dSecs = (seconds > 9 ? seconds : '0' + seconds);
+    var d, h, m, s;
+    s = value;
+    m = Math.floor(s / 60);
+    s = s % 60;
+    h = Math.floor(m / 60);
+    m = m % 60;
+    d = Math.floor(h / 24);
+    h = h % 24;
 
-    return dHours + "h " + dMins + "m " + dSecs + "s";
+    if (d == 0) {
+      var time = h + 'h ' + m + 'm ' + s + 's';
+    } else {
+      var time = d + 'd ' + h + 'h ' + m + 'm';
+    }
+
+    return time;
   },
-  formatDate: function (value) {
+  formatDate: function (value, hours = true) {
     var moment = require("patternfly/node_modules/moment/moment.js")
     if (+new Date(value) > 0)
-      return moment(String(value)).format('DD MMMM YYYY, HH:mm')
+      return moment(String(value)).format('DD MMMM YYYY' + (hours ? ', HH:mm' : ''))
     else
       return '-'
   },
+  dateFromNow: function (value) {
+    var moment = require("patternfly/node_modules/moment/moment.js")
+    var date = new Date(value)
+    if (+new Date(value) > 0)
+      return moment([date.getFullYear(), date.getUTCMonth(), date.getUTCDate()]).fromNow()
+    else
+      return '-'
+  }
 }
 
 export default Filters
