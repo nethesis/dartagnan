@@ -42,9 +42,7 @@
             </div>
             <div class="card-pf-footer">
               <div class="dropdown card-pf-time-frame-filter">
-                <button type="button" class="btn btn-danger">
-                  {{$t('servers.delete')}}
-                </button>
+                <delete-server :obj="server.info" :redir="'servers'"></delete-server>
               </div>
               <p>
                 <a class="card-pf-link-with-icon">
@@ -70,7 +68,8 @@
                 <div>
                   <span>{{$t('servers.description')}}</span>
                   <span class="right">
-                    <strong class="soft">{{server.info.subscription.subscription_plan && server.info.subscription.subscription_plan.description || '-'}}</strong>
+                    <strong class="soft">{{server.info.subscription.subscription_plan && server.info.subscription.subscription_plan.description
+                      || '-'}}</strong>
                   </span>
                 </div>
                 <div>
@@ -241,13 +240,17 @@
   import _ from 'lodash'
 
   import RenewButton from './directives/RenewButton.vue';
-import { setTimeout } from 'timers';
+  import DeleteServer from './directives/DeleteServer.vue';
+  import {
+    setTimeout
+  } from 'timers';
 
   export default {
     name: 'server',
     mixins: [LoginService, StorageService, UtilService],
     components: {
       renewButton: RenewButton,
+      deleteServer: DeleteServer
     },
     created() {
       // get server info
@@ -264,8 +267,8 @@ import { setTimeout } from 'timers';
     },
     data() {
       setTimeout(function () {
-       $('[data-toggle="tooltip"]').tooltip()
-      },500)
+        $('[data-toggle="tooltip"]').tooltip()
+      }, 500)
       return {
         server: {
           info: {},

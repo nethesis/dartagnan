@@ -155,9 +155,7 @@
               <renew-button :obj="s" :update="listServers"></renew-button>
             </div>
             <p>
-              <button @click="showDeleteModal(s)" type="button" class="btn btn-danger">
-                {{$t('servers.delete')}}
-              </button>
+              <delete-server :obj="s" :update="listServers"></delete-server>
             </p>
           </div>
         </div>
@@ -248,12 +246,14 @@
   import _ from 'lodash'
 
   import RenewButton from './directives/RenewButton.vue';
+  import DeleteServer from './directives/DeleteServer.vue';
 
   export default {
     name: 'servers',
     mixins: [LoginService, StorageService, UtilService],
     components: {
       renewButton: RenewButton,
+      deleteServer: DeleteServer
     },
     updated: function () {
       $('[data-toggle="tooltip"]').tooltip()
@@ -309,24 +309,6 @@
           this.newServer = success.body
           setTimeout(function () {
             $('#newServerModal').modal('toggle')
-          }, 0)
-          this.listServers()
-        }, function (error) {
-          console.error(error)
-        });
-      },
-      showDeleteModal(server) {
-        this.toDelete = server
-        $('#deleteServerModal').modal('toggle')
-      },
-      deleteServer() {
-        this.$http.delete('http://' + this.$root.$options.api_host + '/api/ui/systems/' + this.toDelete.id, {
-          headers: {
-            'Authorization': 'Bearer ' + this.get('access_token', false) || ''
-          }
-        }).then(function (success) {
-          setTimeout(function () {
-            $('#deleteServerModal').modal('toggle')
           }, 0)
           this.listServers()
         }, function (error) {
