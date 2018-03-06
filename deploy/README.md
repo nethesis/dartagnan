@@ -114,6 +114,25 @@ Instruction for a clean CentOS 7.
 
    Change `YOUR_DOMAIN` with your domain inside `ssl.conf` and `virtualhost.conf`.
 
+11. Configure the firewall
+
+    Install required packages:
+    ```
+    yum install iptables-services
+    ```
+
+    Copy the firewall configuration:
+    ```
+    cp ./roles/athos/files/iptables /etc/sysconfig/iptables
+    ```
+
+    Apply the configuration:
+    ```
+    systemctl start iptables
+    systemctl enable iptables
+    ```
+
+
 # Aramis installation
 
 1. Build Aramis following istructions from README:
