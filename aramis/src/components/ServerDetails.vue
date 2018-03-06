@@ -81,7 +81,7 @@
                 <div>
                   <span>{{$t('servers.status')}}</span>
                   <span class="right">
-                    <span data-toggle="tooltip" data-placement="left" :title="$t('servers.active')" v-if="!isExpired(server.info.subscription.valid_until)"
+                    <span data-toggle="tooltip" data-placement="left" :title="$t('servers.license_valid')" v-if="!isExpired(server.info.subscription.valid_until)"
                       class="pficon pficon-ok"></span>
                     <span data-toggle="tooltip" data-placement="left" :title="$t('servers.expired')" v-if="isExpired(server.info.subscription.valid_until)"
                       class="pficon pficon-warning-triangle-o"></span>

@@ -59,7 +59,8 @@
       "public_ip": "Public IP",
       "ns_lookup": "NS Lookup",
       "version": "Version",
-      "uptime": "Uptime"
+      "uptime": "Uptime",
+      "license_valid": "License valid"
     },
     "payment": {
       "renew": "Renew plan",

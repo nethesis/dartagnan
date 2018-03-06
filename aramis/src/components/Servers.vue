@@ -136,7 +136,7 @@
                 <span v-if="isExpired(s.subscription.valid_until)" class="card-pf-item-text">{{$t('servers.expired')}}</span>
               </div>
               <div class="card-pf-item">
-                <span data-toggle="tooltip" data-placement="right" :title="$t('servers.active')" v-if="!isExpired(s.subscription.valid_until)"
+                <span data-toggle="tooltip" data-placement="right" :title="$t('servers.license_valid')" v-if="!isExpired(s.subscription.valid_until)"
                   class="pficon pficon-ok"></span>
                 <span data-toggle="tooltip" data-placement="right" :title="$t('servers.expired')" v-if="isExpired(s.subscription.valid_until)"
                   class="pficon pficon-warning-triangle-o"></span>
