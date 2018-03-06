@@ -301,7 +301,7 @@
         return new Date().toISOString() > date
       },
       addServer() {
-        this.$http.post('http://' + this.$root.$options.api_host + '/api/ui/systems', {}, {
+        this.$http.post('https://' + this.$root.$options.api_host + '/api/ui/systems', {}, {
           headers: {
             'Authorization': 'Bearer ' + this.get('access_token', false) || ''
           }
@@ -316,7 +316,7 @@
         });
       },
       planList() {
-        this.$http.get('http://' + this.$root.$options.api_host + '/api/ui/plans', {
+        this.$http.get('https://' + this.$root.$options.api_host + '/api/ui/plans', {
           headers: {
             'Authorization': 'Bearer ' + this.get('access_token', false) || ''
           }
@@ -329,7 +329,7 @@
       },
       listServers() {
         this.isLoading = true
-        this.$http.get('http://' + this.$root.$options.api_host + '/api/ui/systems', {
+        this.$http.get('https://' + this.$root.$options.api_host + '/api/ui/systems', {
           headers: {
             'Authorization': 'Bearer ' + this.get('access_token', false) || ''
           }
