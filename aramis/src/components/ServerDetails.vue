@@ -7,7 +7,7 @@
       <div class="row row-cards-pf no-padding-top row-divider">
 
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-          <div class="card-pf">
+          <div class="card-pf card-pf-accented">
             <h2 class="card-pf-title">
               {{$t('servers.info')}}
             </h2>
@@ -53,7 +53,7 @@
         </div>
 
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-          <div class="card-pf">
+          <div class="card-pf card-pf-accented">
             <h2 class="card-pf-title">
               {{$t('servers.plan')}}
             </h2>
@@ -105,7 +105,7 @@
 
       <div class="row row-cards-pf no-padding-top row-divider">
         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-          <div class="card-pf">
+          <div class="card-pf card-pf-accented">
             <h2 class="card-pf-title">
               {{$t('servers.status')}}
               <span data-toggle="tooltip" data-placement="left" :title="$t('servers.active')" v-if="server.info.status == 'active'" class="pficon pficon-ok right"></span>
@@ -124,7 +124,7 @@
         </div>
 
         <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
-          <div class="card-pf">
+          <div class="card-pf card-pf-accented">
             <h2 class="card-pf-title">
               {{$t('servers.inventory')}}
               <span v-if="!server.inventory" data-toggle="tooltip" data-placement="left" :title="$t('servers.inventory_not_available')"
@@ -142,7 +142,7 @@
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
-          <div class="card-pf">
+          <div class="card-pf card-pf-accented">
             <h2 class="card-pf-title">
               {{$t('servers.alerts')}}
               <span :class="['pficon', server.alerts.length == 0 ? 'pficon-ok' : 'pficon-error-circle-o', 'right']"></span>
@@ -157,7 +157,7 @@
 
       <div class="row row-cards-pf no-padding-top">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-          <div class="card-pf">
+          <div class="card-pf card-pf-accented">
             <h2 class="card-pf-title">
               {{$t('servers.resources')}}
             </h2>
@@ -193,7 +193,7 @@
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-          <div class="card-pf">
+          <div class="card-pf card-pf-accented">
             <h2 class="card-pf-title">
               {{$t('servers.alerts_details')}}
             </h2>
