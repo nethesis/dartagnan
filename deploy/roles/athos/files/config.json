@@ -5,7 +5,7 @@
     "db_user": "dtuser",
     "db_password": "SECRET",
     "cors": {
-        "origins": ["*"],
+        "origins": ["https://YOUR_DOMAIN"],
         "headers": ["Authorization", "Content-Type"],
         "methods": ["GET", "PUT", "POST", "DELETE"]
     },
