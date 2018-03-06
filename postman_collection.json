@@ -1,0 +1,1316 @@
+{
+	"info": {
+		"name": "Dartagnan",
+		"_postman_id": "65d20351-2e82-4574-37b4-54d5d3d00475",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/alerts/<system_id>",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer JWT_TOKEN"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://{{hostname}}/api/alerts/<system_id>?page=:page&limit=:limit",
+					"protocol": "https",
+					"host": [
+						"{{hostname}}"
+					],
+					"path": [
+						"api",
+						"alerts",
+						"<system_id>"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": ":page",
+							"equals": true
+						},
+						{
+							"key": "limit",
+							"value": ":limit",
+							"equals": true
+						}
+					]
+				},
+				"description": null
+			},
+			"response": [
+				{
+					"id": "13a9aa64-3035-49d7-9e4f-484901430a0c",
+					"name": "/alerts/1",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1FSTNOalZGUXpFM04wWXdSak0xTWpSR1FrRTRPVEExUkVWQ09VRkJOamRGUTBZMFJEQkZRUSJ9.eyJpc3MiOiJodHRwczovL3NjcmliYS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWE4NWFjMzBmNWM4MjEzY2IyN2M0OTNiIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImh0dHBzOi8vc2NyaWJhLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1MTkwMjkxOTEsImV4cCI6MTUxOTAzNjM5MSwiYXpwIjoicnZ3aDZvY1FWZG92Q2RtQVd4UUJvUThwNUIyTEVkVVYiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIn0.4DXCHLGCv_weeFe3X2L37-dJCGs4cs7BDQNKIGv5WcrDQdy4q89hNRroiNNe6PZiEWjSb3hwcz_XqA04Eo7Hdpx9KCDGEd-MLYGpx5fU2Rw1cgolblwsPyJjPXPVHdE08jvZQN4hiyXjoETAuhcmC2SVxGABq-Oq5bnfIiJSCGJHhTeBTqlv1cIY8ArURW_n07msZdiSvcOnv1UcnjFz_1NBWv41bA3j8MODy9x_jY9QJ9bawIh_9EkUOrkFv5sgdESnUTSzWt9oqSC6DM99ukgUJ0osTKqJxCx8WZD-zpShY_hcL1dIDgZ8Zaun81uz3VIbrtab3yzz9JwyqeZZZZ"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://{{hostname}}/api/alerts/1",
+							"protocol": "https",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"api",
+								"alerts",
+								"1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [],
+					"cookie": [],
+					"responseTime": "0",
+					"body": "[\n    {\n        \"alert_id\": \"heartbeat:link\",\n        \"id\": 2,\n        \"note\": \"\",\n        \"priority\": \"HIGH\",\n        \"status\": \"failure\",\n        \"system\": {\n            \"created\": \"2018-02-20T11:37:32.316656Z\",\n            \"creator_id\": \"auth0|asdasdasd\",\n            \"description\": \"my brand new system 2\",\n            \"hostname\": \"test.golang.org\",\n            \"id\": 2,\n            \"public_ip\": \"99.55.44.66\",\n            \"status\": \"active\",\n            \"subscription\": {\n                \"created\": \"2018-02-20T11:37:32.316657Z\",\n                \"id\": 2,\n                \"status\": \"valid\",\n                \"subscription_plan\": {\n                    \"code\": \"trial\",\n                    \"description\": \"Trial of 30d\",\n                    \"id\": 1,\n                    \"name\": \"Trial\",\n                    \"period\": 30,\n                    \"price\": 0\n                },\n                \"user_id\": \"auth0|5a85ac30f5c8213cb27c493b\",\n                \"valid_from\": \"2018-02-20T11:37:32.316656Z\",\n                \"valid_until\": \"2018-03-22T11:37:32.316656Z\"\n            },\n            \"uuid\": \"34033ba5-74b0-4363-8e3e-b1aadfcadAAA\"\n        },\n        \"timestamp\": \"2018-02-20T11:37:33.873286Z\"\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "/alerts/<system_id>/histories",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer JWT_TOKEN"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://{{hostname}}/api/alerts/<system_id>/histories?page=:page&limit=:limit",
+					"protocol": "https",
+					"host": [
+						"{{hostname}}"
+					],
+					"path": [
+						"api",
+						"alerts",
+						"<system_id>",
+						"histories"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": ":page",
+							"equals": true
+						},
+						{
+							"key": "limit",
+							"value": ":limit",
+							"equals": true
+						}
+					]
+				},
+				"description": null
+			},
+			"response": [
+				{
+					"id": "6ba7ac7d-ec9f-4306-83d8-9b500a7cd45d",
+					"name": "/alerts/1/histories",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1FSTNOalZGUXpFM04wWXdSak0xTWpSR1FrRTRPVEExUkVWQ09VRkJOamRGUTBZMFJEQkZRUSJ9.eyJpc3MiOiJodHRwczovL3NjcmliYS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWE4NWFjMzBmNWM4MjEzY2IyN2M0OTNiIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImh0dHBzOi8vc2NyaWJhLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1MTkwMjkxOTEsImV4cCI6MTUxOTAzNjM5MSwiYXpwIjoicnZ3aDZvY1FWZG92Q2RtQVd4UUJvUThwNUIyTEVkVVYiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIn0.4DXCHLGCv_weeFe3X2L37-dJCGs4cs7BDQNKIGv5WcrDQdy4q89hNRroiNNe6PZiEWjSb3hwcz_XqA04Eo7Hdpx9KCDGEd-MLYGpx5fU2Rw1cgolblwsPyJjPXPVHdE08jvZQN4hiyXjoETAuhcmC2SVxGABq-Oq5bnfIiJSCGJHhTeBTqlv1cIY8ArURW_n07msZdiSvcOnv1UcnjFz_1NBWv41bA3j8MODy9x_jY9QJ9bawIh_9EkUOrkFv5sgdESnUTSzWt9oqSC6DM99ukgUJ0osTKqJxCx8WZD-zpShY_hcL1dIDgZ8Zaun81uz3VIbrtab3yzz9JwyqeZZZZ"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://{{hostname}}/api/alerts/1/histories",
+							"protocol": "https",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"api",
+								"alerts",
+								"1",
+								"histories"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [],
+					"cookie": [],
+					"responseTime": "0",
+					"body": "[\n    {\n        \"alert_id\": \"heartbeat:link\",\n        \"id\": 2,\n        \"note\": \"\",\n        \"priority\": \"HIGH\",\n        \"status\": \"failure\",\n        \"system\": {\n            \"created\": \"2018-02-20T11:37:32.316656Z\",\n            \"creator_id\": \"auth0|asdasdasd\",\n            \"description\": \"my brand new system 2\",\n            \"hostname\": \"test.golang.org\",\n            \"id\": 2,\n            \"public_ip\": \"99.55.44.66\",\n            \"status\": \"active\",\n            \"subscription\": {\n                \"created\": \"2018-02-20T11:37:32.316657Z\",\n                \"id\": 2,\n                \"status\": \"valid\",\n                \"subscription_plan\": {\n                    \"code\": \"trial\",\n                    \"description\": \"Trial of 30d\",\n                    \"id\": 1,\n                    \"name\": \"Trial\",\n                    \"period\": 30,\n                    \"price\": 0\n                },\n                \"user_id\": \"auth0|5a85ac30f5c8213cb27c493b\",\n                \"valid_from\": \"2018-02-20T11:37:32.316656Z\",\n                \"valid_until\": \"2018-03-22T11:37:32.316656Z\"\n            },\n            \"uuid\": \"34033ba5-74b0-4363-8e3e-b1aadfcadAAA\"\n        },\n        \"timestamp\": \"2018-02-20T11:37:33.873286Z\"\n    },\n    {...},\n    {...}\n]"
+				}
+			]
+		},
+		{
+			"name": "/alerts/store",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "SystemID",
+						"value": "SYSTEM_ID"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"uuid\": \"system_uuid | string\",\n\t\"alert_id\": \"alert id | string\",\n\t\"status\": \"alert status | string\"\n}"
+				},
+				"url": {
+					"raw": "https://{{hostname}}/api/alerts/store",
+					"protocol": "https",
+					"host": [
+						"{{hostname}}"
+					],
+					"path": [
+						"api",
+						"alerts",
+						"store"
+					]
+				},
+				"description": null
+			},
+			"response": [
+				{
+					"id": "3c183340-3cbb-4d4f-9183-bdf2e8232385",
+					"name": "/alerts/store",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "SystemID",
+								"value": "34033ba5-74b0-4363-8e3e-b1aadfcad789"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"uuid\": \"34033ba5-74b0-4363-8e3e-b1aadfcadasd\", \"alert_id\": \"heartbeat:link\", \"status\": \"OK\"}"
+						},
+						"url": {
+							"raw": "https://{{hostname}}/api/alerts/store",
+							"protocol": "https",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"api",
+								"alerts",
+								"store"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [],
+					"cookie": [],
+					"responseTime": "0",
+					"body": "{\"status\":\"success\"}"
+				}
+			]
+		},
+		{
+			"name": "/heartbeats/<system_id>",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer JWT_TOKEN"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://{{hostname}}/api/heartbeats/<system_id>",
+					"protocol": "https",
+					"host": [
+						"{{hostname}}"
+					],
+					"path": [
+						"api",
+						"heartbeats",
+						"<system_id>"
+					]
+				},
+				"description": null
+			},
+			"response": [
+				{
+					"id": "3364488f-f2bb-483d-8338-f8f7003acf4c",
+					"name": "/heartbeats/1",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1FSTNOalZGUXpFM04wWXdSak0xTWpSR1FrRTRPVEExUkVWQ09VRkJOamRGUTBZMFJEQkZRUSJ9.eyJpc3MiOiJodHRwczovL3NjcmliYS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWE4NWFjMzBmNWM4MjEzY2IyN2M0OTNiIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImh0dHBzOi8vc2NyaWJhLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1MTkwMjkxOTEsImV4cCI6MTUxOTAzNjM5MSwiYXpwIjoicnZ3aDZvY1FWZG92Q2RtQVd4UUJvUThwNUIyTEVkVVYiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIn0.4DXCHLGCv_weeFe3X2L37-dJCGs4cs7BDQNKIGv5WcrDQdy4q89hNRroiNNe6PZiEWjSb3hwcz_XqA04Eo7Hdpx9KCDGEd-MLYGpx5fU2Rw1cgolblwsPyJjPXPVHdE08jvZQN4hiyXjoETAuhcmC2SVxGABq-Oq5bnfIiJSCGJHhTeBTqlv1cIY8ArURW_n07msZdiSvcOnv1UcnjFz_1NBWv41bA3j8MODy9x_jY9QJ9bawIh_9EkUOrkFv5sgdESnUTSzWt9oqSC6DM99ukgUJ0osTKqJxCx8WZD-zpShY_hcL1dIDgZ8Zaun81uz3VIbrtab3yzz9JwyqeZZZZ"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://{{hostname}}/api/heartbeats/1",
+							"protocol": "https",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"api",
+								"heartbeats",
+								"1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [],
+					"cookie": [],
+					"responseTime": "0",
+					"body": "{\n    \"system\": {\n        \"created\": \"2018-02-20T11:37:04.680287Z\",\n        \"creator_id\": \"auth0|asdasdasdasd\",\n        \"description\": \"my brand new system\",\n        \"hostname\": \"test.golang.org\",\n        \"id\": 1,\n        \"public_ip\": \"99.88.77.66\",\n        \"status\": \"active\",\n        \"subscription\": {\n            \"created\": \"2018-02-20T11:37:04.680289Z\",\n            \"id\": 1,\n            \"status\": \"valid\",\n            \"subscription_plan\": {\n                \"code\": \"trial\",\n                \"description\": \"Trial of 30d\",\n                \"id\": 1,\n                \"name\": \"Trial\",\n                \"period\": 30,\n                \"price\": 0\n            },\n            \"user_id\": \"auth0|5a85ac30f5c8213cb27c493b\",\n            \"valid_from\": \"2018-02-20T11:37:04.680287Z\",\n            \"valid_until\": \"2018-03-22T11:37:04.680287Z\"\n        },\n        \"uuid\": \"34033ba5-74b0-4363-8e3e-b1aadfcad789\"\n    },\n    \"timestamp\": \"2018-02-20T14:24:34.346161Z\"\n}"
+				}
+			]
+		},
+		{
+			"name": "/heartbeats/store",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "SystemID",
+						"value": "SYSTEM_ID"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"uuid\": \"system_uuid | string\"\n}"
+				},
+				"url": {
+					"raw": "https://{{hostname}}/api/heartbeats/store",
+					"protocol": "https",
+					"host": [
+						"{{hostname}}"
+					],
+					"path": [
+						"api",
+						"heartbeats",
+						"store"
+					]
+				},
+				"description": null
+			},
+			"response": [
+				{
+					"id": "9a4d7507-62cc-473d-96ea-3cd3d97f0007",
+					"name": "/heartbeats/store",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "SystemID",
+								"value": "34033ba5-74b0-4363-8e3e-b1aadfcad789"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"uuid\": \"34033ba5-74b0-4363-8e3e-b1aadfcadasd\"}"
+						},
+						"url": {
+							"raw": "https://{{hostname}}/api/heartbeats/store",
+							"protocol": "https",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"api",
+								"heartbeats",
+								"store"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [],
+					"cookie": [],
+					"responseTime": "0",
+					"body": "{\"status\":\"success\"}"
+				}
+			]
+		},
+		{
+			"name": "/inventories/<system_id>",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer JWT_TOKEN"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://{{hostname}}/api/inventories/<system_id>",
+					"protocol": "https",
+					"host": [
+						"{{hostname}}"
+					],
+					"path": [
+						"api",
+						"inventories",
+						"<system_id>"
+					]
+				},
+				"description": null
+			},
+			"response": [
+				{
+					"id": "2bc58de8-a1d4-4966-b8fe-44741fead32d",
+					"name": "/inventories/1",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1FSTNOalZGUXpFM04wWXdSak0xTWpSR1FrRTRPVEExUkVWQ09VRkJOamRGUTBZMFJEQkZRUSJ9.eyJpc3MiOiJodHRwczovL3NjcmliYS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWE4NWFjMzBmNWM4MjEzY2IyN2M0OTNiIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImh0dHBzOi8vc2NyaWJhLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1MTkwMjkxOTEsImV4cCI6MTUxOTAzNjM5MSwiYXpwIjoicnZ3aDZvY1FWZG92Q2RtQVd4UUJvUThwNUIyTEVkVVYiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIn0.4DXCHLGCv_weeFe3X2L37-dJCGs4cs7BDQNKIGv5WcrDQdy4q89hNRroiNNe6PZiEWjSb3hwcz_XqA04Eo7Hdpx9KCDGEd-MLYGpx5fU2Rw1cgolblwsPyJjPXPVHdE08jvZQN4hiyXjoETAuhcmC2SVxGABq-Oq5bnfIiJSCGJHhTeBTqlv1cIY8ArURW_n07msZdiSvcOnv1UcnjFz_1NBWv41bA3j8MODy9x_jY9QJ9bawIh_9EkUOrkFv5sgdESnUTSzWt9oqSC6DM99ukgUJ0osTKqJxCx8WZD-zpShY_hcL1dIDgZ8Zaun81uz3VIbrtab3yzz9JwyqeZZZZ"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://{{hostname}}/api/inventories/1",
+							"protocol": "https",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"api",
+								"inventories",
+								"1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [],
+					"cookie": [],
+					"responseTime": "0",
+					"body": "{\n    \"data\": {\n        \"field1\": \"val1\",\n        \"field2\": \"val2\"\n    },\n    \"system\": {\n        \"created\": \"2018-02-20T11:37:04.680287Z\",\n        \"creator_id\": \"auth0|asdasdasdasd\",\n        \"description\": \"my brand new system\",\n        \"hostname\": \"test.golang.org\",\n        \"id\": 1,\n        \"public_ip\": \"99.88.77.66\",\n        \"status\": \"active\",\n        \"subscription\": {\n            \"created\": \"2018-02-20T11:37:04.680289Z\",\n            \"id\": 1,\n            \"status\": \"valid\",\n            \"subscription_plan\": {\n                \"code\": \"trial\",\n                \"description\": \"Trial of 30d\",\n                \"id\": 1,\n                \"name\": \"Trial\",\n                \"period\": 30,\n                \"price\": 0\n            },\n            \"user_id\": \"auth0|5a85ac30f5c8213cb27c493b\",\n            \"valid_from\": \"2018-02-20T11:37:04.680287Z\",\n            \"valid_until\": \"2018-03-22T11:37:04.680287Z\"\n        },\n        \"uuid\": \"34033ba5-74b0-4363-8e3e-b1aadfcad789\"\n    },\n    \"timestamp\": \"2018-02-20T14:18:29.238686Z\"\n}"
+				}
+			]
+		},
+		{
+			"name": "/inventories/<system_id>/histories",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer JWT_TOKEN"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://{{hostname}}/api/inventories/<system_id>/histories?page=:page&limit=:limit",
+					"protocol": "https",
+					"host": [
+						"{{hostname}}"
+					],
+					"path": [
+						"api",
+						"inventories",
+						"<system_id>",
+						"histories"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": ":page",
+							"equals": true
+						},
+						{
+							"key": "limit",
+							"value": ":limit",
+							"equals": true
+						}
+					]
+				},
+				"description": null
+			},
+			"response": [
+				{
+					"id": "34358852-621b-418c-91a3-2e74fefe1b2d",
+					"name": "/inventories/1/histories",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1FSTNOalZGUXpFM04wWXdSak0xTWpSR1FrRTRPVEExUkVWQ09VRkJOamRGUTBZMFJEQkZRUSJ9.eyJpc3MiOiJodHRwczovL3NjcmliYS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWE4NWFjMzBmNWM4MjEzY2IyN2M0OTNiIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImh0dHBzOi8vc2NyaWJhLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1MTkwMjkxOTEsImV4cCI6MTUxOTAzNjM5MSwiYXpwIjoicnZ3aDZvY1FWZG92Q2RtQVd4UUJvUThwNUIyTEVkVVYiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIn0.4DXCHLGCv_weeFe3X2L37-dJCGs4cs7BDQNKIGv5WcrDQdy4q89hNRroiNNe6PZiEWjSb3hwcz_XqA04Eo7Hdpx9KCDGEd-MLYGpx5fU2Rw1cgolblwsPyJjPXPVHdE08jvZQN4hiyXjoETAuhcmC2SVxGABq-Oq5bnfIiJSCGJHhTeBTqlv1cIY8ArURW_n07msZdiSvcOnv1UcnjFz_1NBWv41bA3j8MODy9x_jY9QJ9bawIh_9EkUOrkFv5sgdESnUTSzWt9oqSC6DM99ukgUJ0osTKqJxCx8WZD-zpShY_hcL1dIDgZ8Zaun81uz3VIbrtab3yzz9JwyqeZZZZ"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://{{hostname}}/api/inventories/1/histories",
+							"protocol": "https",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"api",
+								"inventories",
+								"1",
+								"histories"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [],
+					"cookie": [],
+					"responseTime": "0",
+					"body": "[\n    {\n        \"data\": {\n            \"field1\": \"val1\",\n            \"field2\": \"val2\"\n        },\n        \"system\": {\n            \"created\": \"2018-02-20T11:37:04.680287Z\",\n            \"creator_id\": \"auth0|asdasdasdasd\",\n            \"description\": \"my brand new system\",\n            \"hostname\": \"test.golang.org\",\n            \"id\": 1,\n            \"public_ip\": \"99.88.77.66\",\n            \"status\": \"active\",\n            \"subscription\": {\n                \"created\": \"2018-02-20T11:37:04.680289Z\",\n                \"id\": 1,\n                \"status\": \"valid\",\n                \"subscription_plan\": {\n                    \"code\": \"trial\",\n                    \"description\": \"Trial of 30d\",\n                    \"id\": 1,\n                    \"name\": \"Trial\",\n                    \"period\": 30,\n                    \"price\": 0\n                },\n                \"user_id\": \"auth0|5a85ac30f5c8213cb27c493b\",\n                \"valid_from\": \"2018-02-20T11:37:04.680287Z\",\n                \"valid_until\": \"2018-03-22T11:37:04.680287Z\"\n            },\n            \"uuid\": \"34033ba5-74b0-4363-8e3e-b1aadfcad789\"\n        },\n        \"timestamp\": \"2018-02-20T14:18:29.238686Z\"\n    },\n    {...},\n    {...}\n]"
+				}
+			]
+		},
+		{
+			"name": "/inventories/store",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "SystemID",
+						"value": "SYSTEM_ID"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"uuid\": \"system_uuid | string\",\n\t\"data\": \"system inventory | json object\"\n}"
+				},
+				"url": {
+					"raw": "https://{{hostname}}/api/inventories/store",
+					"protocol": "https",
+					"host": [
+						"{{hostname}}"
+					],
+					"path": [
+						"api",
+						"inventories",
+						"store"
+					]
+				},
+				"description": null
+			},
+			"response": [
+				{
+					"id": "f8af02ec-ae2a-4c11-ac00-6203ecd688c5",
+					"name": "/inventories/store",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "SystemID",
+								"value": "34033ba5-74b0-4363-8e3e-b1aadfcad789"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"uuid\": \"34033ba5-74b0-4363-8e3e-b1aadfcadasd\",\n\t\"data\": {\n\t\t\"field1\": \"val1\",\n\t\t\"field2\": \"val2\"\n\t}\n}"
+						},
+						"url": {
+							"raw": "https://{{hostname}}/api/inventories/store",
+							"protocol": "https",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"api",
+								"inventories",
+								"store"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [],
+					"cookie": [],
+					"responseTime": "0",
+					"body": "{\"status\":\"success\"}"
+				}
+			]
+		},
+		{
+			"name": "/plans",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer JWT_TOKEN"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://{{hostname}}/api/plans",
+					"protocol": "https",
+					"host": [
+						"{{hostname}}"
+					],
+					"path": [
+						"api",
+						"plans"
+					]
+				},
+				"description": null
+			},
+			"response": [
+				{
+					"id": "eec77c5f-0791-4ddc-ba28-578c0f3d7b1e",
+					"name": "/plans",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1FSTNOalZGUXpFM04wWXdSak0xTWpSR1FrRTRPVEExUkVWQ09VRkJOamRGUTBZMFJEQkZRUSJ9.eyJpc3MiOiJodHRwczovL3NjcmliYS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWE4NWFjMzBmNWM4MjEzY2IyN2M0OTNiIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImh0dHBzOi8vc2NyaWJhLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1MTkwMjkxOTEsImV4cCI6MTUxOTAzNjM5MSwiYXpwIjoicnZ3aDZvY1FWZG92Q2RtQVd4UUJvUThwNUIyTEVkVVYiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIn0.4DXCHLGCv_weeFe3X2L37-dJCGs4cs7BDQNKIGv5WcrDQdy4q89hNRroiNNe6PZiEWjSb3hwcz_XqA04Eo7Hdpx9KCDGEd-MLYGpx5fU2Rw1cgolblwsPyJjPXPVHdE08jvZQN4hiyXjoETAuhcmC2SVxGABq-Oq5bnfIiJSCGJHhTeBTqlv1cIY8ArURW_n07msZdiSvcOnv1UcnjFz_1NBWv41bA3j8MODy9x_jY9QJ9bawIh_9EkUOrkFv5sgdESnUTSzWt9oqSC6DM99ukgUJ0osTKqJxCx8WZD-zpShY_hcL1dIDgZ8Zaun81uz3VIbrtab3yzz9JwyqeZZZZ"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://{{hostname}}/api/plans",
+							"protocol": "https",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"api",
+								"plans"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [],
+					"cookie": [],
+					"responseTime": "0",
+					"body": "[\n    {\n        \"id\": 1,\n        \"code\": \"trial\",\n        \"name\": \"Trial\",\n        \"description\": \"Trial of 30d\",\n        \"price\": 0,\n        \"period\": 30\n    },\n    {\n        \"id\": 2,\n        \"code\": \"plan2\",\n        \"name\": \"Pan Name 2\",\n        \"description\": \"Good Starter\",\n        \"price\": 99,\n        \"period\": 365\n    }\n]"
+				}
+			]
+		},
+		{
+			"name": "/systems",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer JWT_TOKEN"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://{{hostname}}/api/systems?page=:page&limit=:limit",
+					"protocol": "https",
+					"host": [
+						"{{hostname}}"
+					],
+					"path": [
+						"api",
+						"systems"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": ":page",
+							"equals": true
+						},
+						{
+							"key": "limit",
+							"value": ":limit",
+							"equals": true
+						}
+					]
+				},
+				"description": null
+			},
+			"response": [
+				{
+					"id": "5cfb31ff-5cad-490b-9bfa-5a45b14ca726",
+					"name": "/systems",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1FSTNOalZGUXpFM04wWXdSak0xTWpSR1FrRTRPVEExUkVWQ09VRkJOamRGUTBZMFJEQkZRUSJ9.eyJpc3MiOiJodHRwczovL3NjcmliYS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWE4NWFjMzBmNWM4MjEzY2IyN2M0OTNiIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImh0dHBzOi8vc2NyaWJhLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1MTkwMjkxOTEsImV4cCI6MTUxOTAzNjM5MSwiYXpwIjoicnZ3aDZvY1FWZG92Q2RtQVd4UUJvUThwNUIyTEVkVVYiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIn0.4DXCHLGCv_weeFe3X2L37-dJCGs4cs7BDQNKIGv5WcrDQdy4q89hNRroiNNe6PZiEWjSb3hwcz_XqA04Eo7Hdpx9KCDGEd-MLYGpx5fU2Rw1cgolblwsPyJjPXPVHdE08jvZQN4hiyXjoETAuhcmC2SVxGABq-Oq5bnfIiJSCGJHhTeBTqlv1cIY8ArURW_n07msZdiSvcOnv1UcnjFz_1NBWv41bA3j8MODy9x_jY9QJ9bawIh_9EkUOrkFv5sgdESnUTSzWt9oqSC6DM99ukgUJ0osTKqJxCx8WZD-zpShY_hcL1dIDgZ8Zaun81uz3VIbrtab3yzz9JwyqeZZZZ"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://{{hostname}}/api/systems",
+							"protocol": "https",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"api",
+								"systems"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [],
+					"cookie": [],
+					"responseTime": "0",
+					"body": "[{\n    \"id\": 1,\n    \"creator_id\": \"auth0|5a85ac30f5c8213cb27c493b\",\n    \"uuid\": \"34033ba5-74b0-4363-8e3e-b1aadfcad98e\",\n    \"hostname\": \"test.dart.org\",\n    \"description\": \"my brand new system\",\n    \"public_ip\": \"93.57.48.68\",\n    \"status\": \"\",\n    \"created\": \"2018-02-19T09:29:58.606865Z\"\n}\n]"
+				}
+			]
+		},
+		{
+			"name": "/systems/<id>",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer JWT_TOKEN"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://{{hostname}}/api/systems/<id>",
+					"protocol": "https",
+					"host": [
+						"{{hostname}}"
+					],
+					"path": [
+						"api",
+						"systems",
+						"<id>"
+					]
+				},
+				"description": null
+			},
+			"response": [
+				{
+					"id": "b2dad79d-07ce-4997-9344-d348e0960f25",
+					"name": "/systems/1",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1FSTNOalZGUXpFM04wWXdSak0xTWpSR1FrRTRPVEExUkVWQ09VRkJOamRGUTBZMFJEQkZRUSJ9.eyJpc3MiOiJodHRwczovL3NjcmliYS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWE4NWFjMzBmNWM4MjEzY2IyN2M0OTNiIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImh0dHBzOi8vc2NyaWJhLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1MTkwMjkxOTEsImV4cCI6MTUxOTAzNjM5MSwiYXpwIjoicnZ3aDZvY1FWZG92Q2RtQVd4UUJvUThwNUIyTEVkVVYiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIn0.4DXCHLGCv_weeFe3X2L37-dJCGs4cs7BDQNKIGv5WcrDQdy4q89hNRroiNNe6PZiEWjSb3hwcz_XqA04Eo7Hdpx9KCDGEd-MLYGpx5fU2Rw1cgolblwsPyJjPXPVHdE08jvZQN4hiyXjoETAuhcmC2SVxGABq-Oq5bnfIiJSCGJHhTeBTqlv1cIY8ArURW_n07msZdiSvcOnv1UcnjFz_1NBWv41bA3j8MODy9x_jY9QJ9bawIh_9EkUOrkFv5sgdESnUTSzWt9oqSC6DM99ukgUJ0osTKqJxCx8WZD-zpShY_hcL1dIDgZ8Zaun81uz3VIbrtab3yzz9JwyqeZZZZ"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://{{hostname}}/api/systems/1",
+							"protocol": "https",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"api",
+								"systems",
+								"1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [],
+					"cookie": [],
+					"responseTime": "0",
+					"body": "\n    {\n        \"id\": 1,\n        \"creator_id\": \"auth0|5a85ac30f5c8213cb27c493b\",\n        \"uuid\": \"34033ba5-74b0-4363-8e3e-b1aadfcad98e\",\n        \"hostname\": \"test.dart.org\",\n        \"description\": \"my brand new system\",\n        \"public_ip\": \"93.57.48.68\",\n        \"status\": \"\",\n        \"created\": \"2018-02-19T09:29:58.606865Z\"\n    }\n"
+				}
+			]
+		},
+		{
+			"name": "/systems",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer JWT_TOKEN"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"tags\": \"string\"\n}"
+				},
+				"url": {
+					"raw": "https://{{hostname}}/api/systems",
+					"protocol": "https",
+					"host": [
+						"{{hostname}}"
+					],
+					"path": [
+						"api",
+						"systems"
+					]
+				},
+				"description": null
+			},
+			"response": [
+				{
+					"id": "d91daf51-4142-4e07-940a-4eece1559a5e",
+					"name": "/system",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1FSTNOalZGUXpFM04wWXdSak0xTWpSR1FrRTRPVEExUkVWQ09VRkJOamRGUTBZMFJEQkZRUSJ9.eyJpc3MiOiJodHRwczovL3NjcmliYS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWE4NWFjMzBmNWM4MjEzY2IyN2M0OTNiIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImh0dHBzOi8vc2NyaWJhLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1MTkwMjkxOTEsImV4cCI6MTUxOTAzNjM5MSwiYXpwIjoicnZ3aDZvY1FWZG92Q2RtQVd4UUJvUThwNUIyTEVkVVYiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIn0.4DXCHLGCv_weeFe3X2L37-dJCGs4cs7BDQNKIGv5WcrDQdy4q89hNRroiNNe6PZiEWjSb3hwcz_XqA04Eo7Hdpx9KCDGEd-MLYGpx5fU2Rw1cgolblwsPyJjPXPVHdE08jvZQN4hiyXjoETAuhcmC2SVxGABq-Oq5bnfIiJSCGJHhTeBTqlv1cIY8ArURW_n07msZdiSvcOnv1UcnjFz_1NBWv41bA3j8MODy9x_jY9QJ9bawIh_9EkUOrkFv5sgdESnUTSzWt9oqSC6DM99ukgUJ0osTKqJxCx8WZD-zpShY_hcL1dIDgZ8Zaun81uz3VIbrtab3yzz9JwyqeZZZZ"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"tags\": \"trial\"}"
+						},
+						"url": {
+							"raw": "https://{{hostname}}/api/systems",
+							"protocol": "https",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"api",
+								"systems"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [],
+					"cookie": [],
+					"responseTime": "0",
+					"body": "{\n    \"uuid\": \"34033ba5-74b0-4363-8e3e-b1aadfcad787\",\n    \"status\": \"success\"\n}"
+				}
+			]
+		},
+		{
+			"name": "/systems/<id>",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer JWT_TOKEN"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"uuid\": \"string\",\n  \"hostname\": \"string\",\n  \"description\": \"string\",\n  \"public_ip\": \"string\",\n  \"subscription_plan_id\": \"integer\"\n}"
+				},
+				"url": {
+					"raw": "https://{{hostname}}/api/systems/<id>",
+					"protocol": "https",
+					"host": [
+						"{{hostname}}"
+					],
+					"path": [
+						"api",
+						"systems",
+						"<id>"
+					]
+				},
+				"description": null
+			},
+			"response": [
+				{
+					"id": "535a20ac-0481-440b-9d88-ae7bd925f5d3",
+					"name": "/system/1",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1FSTNOalZGUXpFM04wWXdSak0xTWpSR1FrRTRPVEExUkVWQ09VRkJOamRGUTBZMFJEQkZRUSJ9.eyJpc3MiOiJodHRwczovL3NjcmliYS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWE4NWFjMzBmNWM4MjEzY2IyN2M0OTNiIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImh0dHBzOi8vc2NyaWJhLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1MTkwMjkxOTEsImV4cCI6MTUxOTAzNjM5MSwiYXpwIjoicnZ3aDZvY1FWZG92Q2RtQVd4UUJvUThwNUIyTEVkVVYiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIn0.4DXCHLGCv_weeFe3X2L37-dJCGs4cs7BDQNKIGv5WcrDQdy4q89hNRroiNNe6PZiEWjSb3hwcz_XqA04Eo7Hdpx9KCDGEd-MLYGpx5fU2Rw1cgolblwsPyJjPXPVHdE08jvZQN4hiyXjoETAuhcmC2SVxGABq-Oq5bnfIiJSCGJHhTeBTqlv1cIY8ArURW_n07msZdiSvcOnv1UcnjFz_1NBWv41bA3j8MODy9x_jY9QJ9bawIh_9EkUOrkFv5sgdESnUTSzWt9oqSC6DM99ukgUJ0osTKqJxCx8WZD-zpShY_hcL1dIDgZ8Zaun81uz3VIbrtab3yzz9JwyqeZZZZ"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"uuid\": \"34033ba5-74b0-4363-8e3e-b1aadfcad98e\", \"hostname\": \"test.server.org\", \"description\": \"my brand new system\", \"public_ip\": \"55.44.33.22\", \"subscription_plan_id\": 2}"
+						},
+						"url": {
+							"raw": "https://{{hostname}}/api/systems/1",
+							"protocol": "https",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"api",
+								"systems",
+								"1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [],
+					"cookie": [],
+					"responseTime": "0",
+					"body": "{\n    \"status\": \"success\"\n}"
+				}
+			]
+		},
+		{
+			"name": "/systems/<id>/renewal",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer JWT_TOKEN"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"payment_id\": \"string (paypal payment id)\"\n}"
+				},
+				"url": {
+					"raw": "https://{{hostname}}/api/systems/<id>/renewal",
+					"protocol": "https",
+					"host": [
+						"{{hostname}}"
+					],
+					"path": [
+						"api",
+						"systems",
+						"<id>",
+						"renewal"
+					]
+				},
+				"description": null
+			},
+			"response": [
+				{
+					"id": "a458e026-de13-4f80-8015-2aecf6dddb9b",
+					"name": "/system/1/renewal",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1FSTNOalZGUXpFM04wWXdSak0xTWpSR1FrRTRPVEExUkVWQ09VRkJOamRGUTBZMFJEQkZRUSJ9.eyJpc3MiOiJodHRwczovL3NjcmliYS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWE4NWFjMzBmNWM4MjEzY2IyN2M0OTNiIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImh0dHBzOi8vc2NyaWJhLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1MTkwMjkxOTEsImV4cCI6MTUxOTAzNjM5MSwiYXpwIjoicnZ3aDZvY1FWZG92Q2RtQVd4UUJvUThwNUIyTEVkVVYiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIn0.4DXCHLGCv_weeFe3X2L37-dJCGs4cs7BDQNKIGv5WcrDQdy4q89hNRroiNNe6PZiEWjSb3hwcz_XqA04Eo7Hdpx9KCDGEd-MLYGpx5fU2Rw1cgolblwsPyJjPXPVHdE08jvZQN4hiyXjoETAuhcmC2SVxGABq-Oq5bnfIiJSCGJHhTeBTqlv1cIY8ArURW_n07msZdiSvcOnv1UcnjFz_1NBWv41bA3j8MODy9x_jY9QJ9bawIh_9EkUOrkFv5sgdESnUTSzWt9oqSC6DM99ukgUJ0osTKqJxCx8WZD-zpShY_hcL1dIDgZ8Zaun81uz3VIbrtab3yzz9JwyqeZZZZ"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"payment_id\": \"PAYZ-2C241928MK989384WLKFPT4I\"}"
+						},
+						"url": {
+							"raw": "https://{{hostname}}/api/systems/1/renewal",
+							"protocol": "https",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"api",
+								"systems",
+								"1",
+								"renewal"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [],
+					"cookie": [],
+					"responseTime": "0",
+					"body": "{\n    \"status\": \"success\"\n}"
+				}
+			]
+		},
+		{
+			"name": "/systems/<id>/upgrade_price",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer JWT_TOKEN"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"payment_id\": \"string (paypal payment id)\"\n}"
+				},
+				"url": {
+					"raw": "https://{{hostname}}/api/systems/<id>/upgrade_price?plan=:plan_code",
+					"protocol": "https",
+					"host": [
+						"{{hostname}}"
+					],
+					"path": [
+						"api",
+						"systems",
+						"<id>",
+						"upgrade_price"
+					],
+					"query": [
+						{
+							"key": "plan",
+							"value": ":plan_code",
+							"equals": true
+						}
+					]
+				},
+				"description": null
+			},
+			"response": [
+				{
+					"id": "40951a71-eded-4e5c-aaee-b341aef2bf6f",
+					"name": "/system/1/upgrade_price",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1FSTNOalZGUXpFM04wWXdSak0xTWpSR1FrRTRPVEExUkVWQ09VRkJOamRGUTBZMFJEQkZRUSJ9.eyJpc3MiOiJodHRwczovL3NjcmliYS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWE4NWFjMzBmNWM4MjEzY2IyN2M0OTNiIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImh0dHBzOi8vc2NyaWJhLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1MTkwMjkxOTEsImV4cCI6MTUxOTAzNjM5MSwiYXpwIjoicnZ3aDZvY1FWZG92Q2RtQVd4UUJvUThwNUIyTEVkVVYiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIn0.4DXCHLGCv_weeFe3X2L37-dJCGs4cs7BDQNKIGv5WcrDQdy4q89hNRroiNNe6PZiEWjSb3hwcz_XqA04Eo7Hdpx9KCDGEd-MLYGpx5fU2Rw1cgolblwsPyJjPXPVHdE08jvZQN4hiyXjoETAuhcmC2SVxGABq-Oq5bnfIiJSCGJHhTeBTqlv1cIY8ArURW_n07msZdiSvcOnv1UcnjFz_1NBWv41bA3j8MODy9x_jY9QJ9bawIh_9EkUOrkFv5sgdESnUTSzWt9oqSC6DM99ukgUJ0osTKqJxCx8WZD-zpShY_hcL1dIDgZ8Zaun81uz3VIbrtab3yzz9JwyqeZZZZ"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"payment_id\": \"string (paypal payment id)\"\n}"
+						},
+						"url": {
+							"raw": "https://{{hostname}}/api/systems/1/upgrade_price?plan=my_plan",
+							"protocol": "https",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"api",
+								"systems",
+								"1",
+								"upgrade_price"
+							],
+							"query": [
+								{
+									"key": "plan",
+									"value": "my_plan",
+									"equals": true
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [],
+					"cookie": [],
+					"responseTime": "0",
+					"body": "{\n    \"name\": \"my_plan\",\n    \"price\": 401.91\n}\n"
+				}
+			]
+		},
+		{
+			"name": "/systems/<id>/upgrade",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer JWT_TOKEN"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"subscription_plan_id\": \"integer\",\n\t\"payment_id\": \"string (paypal payment id)\"\n}"
+				},
+				"url": {
+					"raw": "https://{{hostname}}/api/systems/<id>/upgrade",
+					"protocol": "https",
+					"host": [
+						"{{hostname}}"
+					],
+					"path": [
+						"api",
+						"systems",
+						"<id>",
+						"upgrade"
+					]
+				},
+				"description": null
+			},
+			"response": [
+				{
+					"id": "14af6f5e-a433-4616-8a2f-89f5ea4715ca",
+					"name": "/system/1/upgrade",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1FSTNOalZGUXpFM04wWXdSak0xTWpSR1FrRTRPVEExUkVWQ09VRkJOamRGUTBZMFJEQkZRUSJ9.eyJpc3MiOiJodHRwczovL3NjcmliYS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWE4NWFjMzBmNWM4MjEzY2IyN2M0OTNiIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImh0dHBzOi8vc2NyaWJhLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1MTkwMjkxOTEsImV4cCI6MTUxOTAzNjM5MSwiYXpwIjoicnZ3aDZvY1FWZG92Q2RtQVd4UUJvUThwNUIyTEVkVVYiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIn0.4DXCHLGCv_weeFe3X2L37-dJCGs4cs7BDQNKIGv5WcrDQdy4q89hNRroiNNe6PZiEWjSb3hwcz_XqA04Eo7Hdpx9KCDGEd-MLYGpx5fU2Rw1cgolblwsPyJjPXPVHdE08jvZQN4hiyXjoETAuhcmC2SVxGABq-Oq5bnfIiJSCGJHhTeBTqlv1cIY8ArURW_n07msZdiSvcOnv1UcnjFz_1NBWv41bA3j8MODy9x_jY9QJ9bawIh_9EkUOrkFv5sgdESnUTSzWt9oqSC6DM99ukgUJ0osTKqJxCx8WZD-zpShY_hcL1dIDgZ8Zaun81uz3VIbrtab3yzz9JwyqeZZZZ"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"subscription_plan_id\": 2, \"payment_id\": \"PAY-2C241928MK989384WLKFPT4I\"}"
+						},
+						"url": {
+							"raw": "https://{{hostname}}/api/systems/1",
+							"protocol": "https",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"api",
+								"systems",
+								"1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [],
+					"cookie": [],
+					"responseTime": "0",
+					"body": "{\n    \"status\": \"success\"\n}"
+				},
+				{
+					"id": "12fd0c0e-2528-4596-bcf5-b4a7155c2de2",
+					"name": "/system/1/upgrade",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1FSTNOalZGUXpFM04wWXdSak0xTWpSR1FrRTRPVEExUkVWQ09VRkJOamRGUTBZMFJEQkZRUSJ9.eyJpc3MiOiJodHRwczovL3NjcmliYS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWE4NWFjMzBmNWM4MjEzY2IyN2M0OTNiIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImh0dHBzOi8vc2NyaWJhLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1MTkwMjkxOTEsImV4cCI6MTUxOTAzNjM5MSwiYXpwIjoicnZ3aDZvY1FWZG92Q2RtQVd4UUJvUThwNUIyTEVkVVYiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIn0.4DXCHLGCv_weeFe3X2L37-dJCGs4cs7BDQNKIGv5WcrDQdy4q89hNRroiNNe6PZiEWjSb3hwcz_XqA04Eo7Hdpx9KCDGEd-MLYGpx5fU2Rw1cgolblwsPyJjPXPVHdE08jvZQN4hiyXjoETAuhcmC2SVxGABq-Oq5bnfIiJSCGJHhTeBTqlv1cIY8ArURW_n07msZdiSvcOnv1UcnjFz_1NBWv41bA3j8MODy9x_jY9QJ9bawIh_9EkUOrkFv5sgdESnUTSzWt9oqSC6DM99ukgUJ0osTKqJxCx8WZD-zpShY_hcL1dIDgZ8Zaun81uz3VIbrtab3yzz9JwyqeZZZZ"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"subscription_plan_id\": 2, \"payment_id\": \"PAYZ-2C241928MK989384WLKFPT4I\"}"
+						},
+						"url": {
+							"raw": "https://{{hostname}}/api/systems/1/upgrade",
+							"protocol": "https",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"api",
+								"systems",
+								"1",
+								"upgrade"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [],
+					"cookie": [],
+					"responseTime": "0",
+					"body": "{\n    \"status\": \"success\"\n}"
+				}
+			]
+		},
+		{
+			"name": "/systems/<id>",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer JWT_TOKEN"
+					}
+				],
+				"body": {},
+				"url": {
+					"raw": "https://{{hostname}}/api/systems/<id>",
+					"protocol": "https",
+					"host": [
+						"{{hostname}}"
+					],
+					"path": [
+						"api",
+						"systems",
+						"<id>"
+					]
+				},
+				"description": null
+			},
+			"response": [
+				{
+					"id": "8d238f16-3afa-47a1-812a-da23782f2694",
+					"name": "/systems/1",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImtpZCI6Ik1FSTNOalZGUXpFM04wWXdSak0xTWpSR1FrRTRPVEExUkVWQ09VRkJOamRGUTBZMFJEQkZRUSJ9.eyJpc3MiOiJodHRwczovL3NjcmliYS5hdXRoMC5jb20vIiwic3ViIjoiYXV0aDB8NWE4NWFjMzBmNWM4MjEzY2IyN2M0OTNiIiwiYXVkIjpbImh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImh0dHBzOi8vc2NyaWJhLmF1dGgwLmNvbS91c2VyaW5mbyJdLCJpYXQiOjE1MTkwMjkxOTEsImV4cCI6MTUxOTAzNjM5MSwiYXpwIjoicnZ3aDZvY1FWZG92Q2RtQVd4UUJvUThwNUIyTEVkVVYiLCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIn0.4DXCHLGCv_weeFe3X2L37-dJCGs4cs7BDQNKIGv5WcrDQdy4q89hNRroiNNe6PZiEWjSb3hwcz_XqA04Eo7Hdpx9KCDGEd-MLYGpx5fU2Rw1cgolblwsPyJjPXPVHdE08jvZQN4hiyXjoETAuhcmC2SVxGABq-Oq5bnfIiJSCGJHhTeBTqlv1cIY8ArURW_n07msZdiSvcOnv1UcnjFz_1NBWv41bA3j8MODy9x_jY9QJ9bawIh_9EkUOrkFv5sgdESnUTSzWt9oqSC6DM99ukgUJ0osTKqJxCx8WZD-zpShY_hcL1dIDgZ8Zaun81uz3VIbrtab3yzz9JwyqeZZZZ"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "https://{{hostname}}/api/systems/1",
+							"protocol": "https",
+							"host": [
+								"{{hostname}}"
+							],
+							"path": [
+								"api",
+								"systems",
+								"1"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [],
+					"cookie": [],
+					"responseTime": "0",
+					"body": "{\n    \"status\": \"success\"\n}"
+				}
+			]
+		}
+	]
+}
