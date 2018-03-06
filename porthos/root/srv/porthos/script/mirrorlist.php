@@ -48,7 +48,7 @@ if( ! $valid_arch || ! $valid_repo || ! $valid_version ) {
 }
 
 if($use_tier) {
-    echo "http://m1.nethserver.com/autoupdate/${version}/${repo}/${arch}\n";
+    echo "https://m1.nethserver.com/autoupdate/${version}/${repo}/${arch}\n";
 } else {
-    echo "http://m1.nethserver.com/stable/${version}/${repo}/${arch}\n";
+    echo "https://m1.nethserver.com/stable/${version}/${repo}/${arch}\n";
 }

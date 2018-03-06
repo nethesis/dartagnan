@@ -10,10 +10,11 @@ On CentOS 7 - porthos,
 
 On your local system,
 
-    rsync -ai --no-super --no-o --no-g porthos/root/ root@porthos:/
+    rsync -Cai --no-super --no-o --no-g porthos/root/ root@porthos:/
 
 On CentOS 7 - porthos, configure and apply SELinux context
 
+    systemctl daemon-reload
     semanage fcontext -a -t httpd_sys_content_t '/srv/porthos(/.*)?'
     restorecon -vvRF /srv/porthos
 
@@ -21,6 +22,25 @@ Run initial synchronization, then start daemons
 
     repo-bulk-hinit
     systemctl start nginx php-fpm redis@athos
+
+## Certbot configuration
+
+    yum install certbot
+    systemctl enable --now certbot-renew.timer
+    certbot certonly -n --cert-name porthos --allow-subset-of-names \
+        --agree-tos --email nethinfra@nethesis.it \
+        --webroot -w /srv/porthos/certbot/ \
+        -d $(hostname) -d mirrorlist.nethserver.com
+    restorecon -vvRF /etc
+    
+Edit `/etc/nginx/conf.d/porthos.conf` and `/etc/nginx/conf.d/mirrorlist.conf`
+and uncomment the following line:
+
+    # include porthos-certbot.conf;
+
+Restart nginx:
+
+    systemctl restart nginx
 
 ## YUM client
 
@@ -40,8 +60,8 @@ repository mirrors for the given parameters.
 
 HTTP repository metadata query (HTTP Basic authentication required):
 
-    http://m1.nethserver.com/autoupdate/<repo_version>/<repo_name>/<repo_arch>/repodata/repomd.xml
-    http://m1.nethserver.com/stable/<repo_version>/<repo_name>/<repo_arch>/repodata/repomd.xml
+    https://m1.nethserver.com/autoupdate/<repo_version>/<repo_name>/<repo_arch>/repodata/repomd.xml
+    https://m1.nethserver.com/stable/<repo_version>/<repo_name>/<repo_arch>/repodata/repomd.xml
 
 * `autoupdate` returns data from the tier associated to the credentials provided
 * `stable` always returns data from `t0`
@@ -62,7 +82,10 @@ The `repomd.php` script expects the following storage format in redis DB:
     key: <system_id>
     value: hash{ tier_id => <integer>, secret => <string> }
 
-If `tier_id` is not set, the access is denied (403 - forbidden).
+If `tier_id` is not set, the access is denied (403 - forbidden). For instance to create a key on athos
+
+    redis-cli -p PORT
+    redis-cli PORT> HMSET 0ILD29RH-D78A-C444-1F82-EE92-3211-FC47-43AD-DQFD tier_id 2 secret S3Cr3t
 
 ## Repository management commands
 
@@ -87,3 +110,4 @@ called by the commands above.
 
 - configure `iptables`
 - configure `rsync` replica to other m*.nethserver.com nodes
+- cleanup of old repo tiers
