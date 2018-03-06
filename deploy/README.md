@@ -46,7 +46,16 @@ Instruction for a clean CentOS 7.
    openssl rand -base64 12
    ```
 
-5. Prepare the working directory and download the files:
+5. Change database authentication:
+
+   Copy `pg_hba.conf` to `/var/opt/rh/rh-postgresql96/lib/pgsql/data/`:
+
+   ```
+   cp ./roles/athos/files/pg_hba.conf /var/opt/rh/rh-postgresql96/lib/pgsql/data/
+   systemctl restart rh-postgresql96-postgresql
+   ```
+
+6. Prepare the working directory and download the files:
 
    ```
    mkdir -p /opt/dartagnan
@@ -55,7 +64,7 @@ Instruction for a clean CentOS 7.
    cp ./roles/athos/files/athos.service /etc/system/athos.service
    ```
 
-6. Create a configuration file:
+7. Create a configuration file:
 
    ```
    cp ./roles/athos/files/config.json /opt/dartagnan/
@@ -69,14 +78,14 @@ Instruction for a clean CentOS 7.
    - auth0 domain
    - Paypal credentials
 
-7. Start athos daemon:
+8. Start athos daemon:
 
    ```
    systemctl start athos
    systemctl enable athos
    ```
 
-8. Configure Let's Encrypt with Digital Ocean DNS:
+9. Configure Let's Encrypt with Digital Ocean DNS:
 
    ```
    mkdir -p /etc/letsencrypt/
@@ -90,7 +99,7 @@ Instruction for a clean CentOS 7.
  
    Replace `XXXXXXX` with your valid token and `YOUR_DOMAIN` with your server public FQDN.
 
-9. Configure nginx
+10. Configure nginx
 
    Given configuration is built to work with Let's Encrypt Certbot
 
@@ -103,7 +112,7 @@ Instruction for a clean CentOS 7.
    system enable nginx
    ```
 
-   Change YOUR_DOMAIN` with your domain inside `ssl.conf` and `virtualhost.conf`.
+   Change `YOUR_DOMAIN` with your domain inside `ssl.conf` and `virtualhost.conf`.
 
 # Aramis installation
 
