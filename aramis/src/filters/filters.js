@@ -51,7 +51,7 @@ var Filters = {
   formatDate: function (value, hours = true) {
     var moment = require("patternfly/node_modules/moment/moment.js")
     if (+new Date(value) > 0)
-      return moment(String(value)).format('DD MMMM YYYY' + (hours ? ', HH:mm' : ''))
+      return moment(value).format('DD MMMM YYYY' + (hours ? ', HH:mm' : ''))
     else
       return '-'
   },
