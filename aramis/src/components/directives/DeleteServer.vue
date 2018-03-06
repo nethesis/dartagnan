@@ -37,7 +37,6 @@
     props: ['obj', 'update', 'redir'],
     mixins: [StorageService],
     data() {
-      console.log("added", this.obj.id)
       return {
         toDelete: this.obj,
       }

@@ -116,8 +116,8 @@
             <div class="card-pf-body">
               <span>{{$t('servers.last_check')}}</span>
               <span class="right">
-                <strong v-if="!isLoadingHeartbeat" class="soft">{{server.heartbeat | dateFromNow}}</strong>
-                <div v-if="isLoadingHeartbeat" class="spinner spinner-sm"></div>
+                <strong v-show="!isLoadingHeartbeat" class="soft">{{server.heartbeat | dateFromNow}}</strong>
+                <div v-show="isLoadingHeartbeat" class="spinner spinner-sm"></div>
               </span>
             </div>
           </div>
@@ -134,8 +134,8 @@
             <div class="card-pf-body">
               <span>{{$t('servers.last_update')}}</span>
               <span class="right">
-                <strong v-if="!isLoadingInventory" class="soft">{{server.inventory && server.inventory.timestamp | dateFromNow}}</strong>
-                <div v-if="isLoadingInventory" class="spinner spinner-sm"></div>
+                <strong v-show="!isLoadingInventory" class="soft">{{server.inventory && server.inventory.timestamp | dateFromNow}}</strong>
+                <div v-show="isLoadingInventory" class="spinner spinner-sm"></div>
               </span>
             </div>
           </div>
