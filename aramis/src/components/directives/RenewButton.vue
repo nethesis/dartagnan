@@ -221,7 +221,7 @@
         $('#paymentModalRenew-' + this.obj.id).modal('hide')
       },
       plansList() {
-        this.$http.get('http://' + this.$root.$options.api_host + '/api/ui/plans', {
+        this.$http.get('https://' + this.$root.$options.api_host + '/api/ui/plans', {
           headers: {
             'Authorization': 'Bearer ' + this.get('access_token', false) || ''
           }
@@ -248,7 +248,7 @@
       },
       calculateUpgradePrice(plan, callback) {
         this.onUpgradePriceCalc = true
-        this.$http.get('http://' + this.$root.$options.api_host + '/api/ui/systems/' + this.obj.id +
+        this.$http.get('https://' + this.$root.$options.api_host + '/api/ui/systems/' + this.obj.id +
           '/upgrade_price?plan=' + plan, {
             headers: {
               'Authorization': 'Bearer ' + this.get('access_token', false) || ''
@@ -266,7 +266,7 @@
         return moment(date, "YYYY-MM-DDTHH:mm:ss").add(subscription.period, 'days');
       },
       renewCheck(payment) {
-        this.$http.post('http://' + this.$root.$options.api_host + '/api/ui/systems/' + this.obj.id + '/renewal', {
+        this.$http.post('https://' + this.$root.$options.api_host + '/api/ui/systems/' + this.obj.id + '/renewal', {
           payment_id: payment.paymentID
         }, {
           headers: {
@@ -286,7 +286,7 @@
         });
       },
       upgradeCheck(payment) {
-        this.$http.post('http://' + this.$root.$options.api_host + '/api/ui/systems/' + this.obj.id + '/upgrade', {
+        this.$http.post('https://' + this.$root.$options.api_host + '/api/ui/systems/' + this.obj.id + '/upgrade', {
           payment_id: payment.paymentID,
           subscription_plan_id: this.currentPlan.id,
         }, {

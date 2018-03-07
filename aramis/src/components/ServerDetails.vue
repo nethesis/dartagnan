@@ -288,7 +288,7 @@
       },
       getServerInfo() {
         this.isLoadingInfo = true
-        this.$http.get('http://' + this.$root.$options.api_host + '/api/ui/systems/' + this.$route.params.id, {
+        this.$http.get('https://' + this.$root.$options.api_host + '/api/ui/systems/' + this.$route.params.id, {
           headers: {
             'Authorization': 'Bearer ' + this.get('access_token', false) || ''
           }
@@ -302,7 +302,7 @@
       },
       getServerInventory() {
         this.isLoadingInventory = true
-        this.$http.get('http://' + this.$root.$options.api_host + '/api/ui/inventories/' + this.$route.params.id, {
+        this.$http.get('https://' + this.$root.$options.api_host + '/api/ui/inventories/' + this.$route.params.id, {
           headers: {
             'Authorization': 'Bearer ' + this.get('access_token', false) || ''
           }
@@ -317,7 +317,7 @@
       },
       getServerAlerts() {
         this.isLoadingAlerts = true
-        this.$http.get('http://' + this.$root.$options.api_host + '/api/ui/alerts/' + this.$route.params.id, {
+        this.$http.get('https://' + this.$root.$options.api_host + '/api/ui/alerts/' + this.$route.params.id, {
           headers: {
             'Authorization': 'Bearer ' + this.get('access_token', false) || ''
           }
@@ -331,7 +331,7 @@
       },
       getServerHeartbeats() {
         this.isLoadingHeartbeat = true
-        this.$http.get('http://' + this.$root.$options.api_host + '/api/ui/heartbeats/' + this.$route.params.id, {
+        this.$http.get('https://' + this.$root.$options.api_host + '/api/ui/heartbeats/' + this.$route.params.id, {
           headers: {
             'Authorization': 'Bearer ' + this.get('access_token', false) || ''
           }

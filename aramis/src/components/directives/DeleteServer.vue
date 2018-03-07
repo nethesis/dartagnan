@@ -47,7 +47,7 @@
       },
       deleteServer() {
         var closeId = this.obj.id
-        this.$http.delete('http://' + this.$root.$options.api_host + '/api/ui/systems/' + this.obj.id, {
+        this.$http.delete('https://' + this.$root.$options.api_host + '/api/ui/systems/' + this.obj.id, {
           headers: {
             'Authorization': 'Bearer ' + this.get('access_token', false) || ''
           }
