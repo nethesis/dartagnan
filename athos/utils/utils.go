@@ -204,11 +204,19 @@ func BulkSetValidSystems() (bool, []string) {
 		client.Close()
 		return false, []string{fmt.Sprintf("Can't connect to Redis instance '%s:%s': %s", configuration.Config.RedisHost, configuration.Config.RedisPort, err)}
 	}
-	err = client.Cmd("FLUSHALL").Err
+
+	err = client.Cmd("MULTI").Err
 	if err != nil {
 		client.Close()
-		return false, []string{fmt.Sprintf("Can't FLUSH Redis instance: %s", err)}
+		return false, []string{fmt.Sprintf("Can't start Redis transaction: %s", err)}
 	}
+
+        err = client.Cmd("FLUSHALL").Err
+        if err != nil {
+                client.Close()
+                return false, []string{fmt.Sprintf("Can't FLUSH Redis instance: %s", err)}
+        }
+
 
 	for _, system := range systems {
 		ret, err := SetValidSystem(system, client)
@@ -216,6 +224,13 @@ func BulkSetValidSystems() (bool, []string) {
 			errors = append(errors, err)
 		}
 	}
+
+	err = client.Cmd("EXEC").Err
+	if err != nil {
+		client.Close()
+		return false, []string{fmt.Sprintf("Can't finish Redis transaction: %s", err)}
+	}
+
 	client.Close()
 
 	if len(errors) > 0 {
