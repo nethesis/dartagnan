@@ -18,7 +18,7 @@ Currently, installation is supported only on [NethServer 7](https://www.nethserv
 
    Access a shell and execute:
    ```
-   yum --enablerepo=nethserver-testing install nethserver-subscription nethserver-alerts nethserver-inventory
+   yum --enablerepo=nethserver-testing install nethserver-subscription-ui nethserver-alerts nethserver-inventory nethserver-yum-cron
    ```
 
 2. Access the ``Subscription`` page inside the Server Manager (``http://<SERVER_FQDN>:980``)
