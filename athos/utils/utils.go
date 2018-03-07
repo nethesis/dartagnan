@@ -28,7 +28,6 @@ import (
 	"math"
 	"strconv"
 	"time"
-	"os"
 
 	"hash/fnv"
 
