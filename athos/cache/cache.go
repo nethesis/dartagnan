@@ -60,6 +60,14 @@ func setRedisRecord(system models.System, client *redis.Client) (bool, string) {
 	return true, ""
 }
 
+func deleteRedisRecord(uuid string, client *redis.Client) (bool, string) {
+	err := client.Cmd("DEL", uuid).Err
+	if err != nil {
+		return false, fmt.Sprintf("Can't delete '%s' system inside Redis: %s", uuid, err)
+	}
+	return true, ""
+}
+
 func CalculateTier(uuid string, tiers uint32) uint32 {
         h := fnv.New32a()
         h.Write([]byte(uuid))
@@ -68,10 +76,21 @@ func CalculateTier(uuid string, tiers uint32) uint32 {
 	return tier
 }
 
-
 func SetValidSystem(system models.System) bool {
 	client := Cache()
 	ret, _ := setRedisRecord(system, client)
+	if !ret {
+		client.Close()
+		return false
+	}
+
+	client.Close()
+	return true
+}
+
+func DeleteValidSystem(system models.System) bool {
+	client := Cache()
+	ret, _ := deleteRedisRecord(system.UUID, client)
 	if !ret {
 		client.Close()
 		return false
