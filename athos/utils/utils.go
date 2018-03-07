@@ -28,9 +28,12 @@ import (
 	"math"
 	"strconv"
 	"time"
+	"os"
 
 	"github.com/satori/go.uuid"
+	"github.com/mediocregopher/radix.v2/redis"
 
+	"github.com/nethesis/dartagnan/athos/configuration"
 	"github.com/nethesis/dartagnan/athos/database"
 	"github.com/nethesis/dartagnan/athos/models"
 )
@@ -147,11 +150,65 @@ func GetSystemFromUUID(uuid string) models.System {
 }
 
 func GetSystemFromSecret(secret string) models.System {
-        var system models.System
-        db := database.Database()
-        db.Where("secret = ?", secret).First(&system)
-        db.Close()
+	var system models.System
+	db := database.Database()
+	db.Where("secret = ?", secret).First(&system)
+	db.Close()
 
-        return system
+	return system
 }
 
+func GetValidSystems() []models.System {
+	var systems []models.System
+
+	db := database.Database()
+	db.Preload("Subscription.SubscriptionPlan").Joins("JOIN subscriptions ON systems.subscription_id = subscriptions.id").Where("valid_until > NOW()").Find(&systems)
+	db.Close()
+
+	return systems
+}
+
+func SetValidSystem(system models.System, client *redis.Client) (bool, string) {
+	now := time.Now()
+	difference := system.Subscription.ValidUntil.Sub(now).Seconds()
+	err := client.Cmd("HMSET", system.UUID, "tier_id", 1, "secret", system.Secret, "EX", int(difference)).Err
+	if err != nil {
+		return false, fmt.Sprintf("Can't save '%s' system inside Redis instance: %s", system.UUID, err)
+	}
+	// Set key expiration equal to Subscription.ValidUntil
+	err = client.Cmd("EXPIRE", system.UUID, int(difference)).Err
+	if err != nil {
+		return false, fmt.Sprintf("Can't set expiratation on '%s' system inside Redis instance: %s", system.UUID, err)
+	}
+	return true, ""
+}
+
+func BulkSetValidSystems() (bool, []string) {
+	var errors []string;
+	systems := GetValidSystems()
+
+	client, err := redis.Dial("tcp", fmt.Sprintf("%s:%s", configuration.Config.RedisHost, configuration.Config.RedisPort))
+	if err != nil {
+		client.Close()
+		return false, []string{fmt.Sprintf("Can't connect to Redis instance '%s:%s': %s", configuration.Config.RedisHost, configuration.Config.RedisPort, err)}
+	}
+	err = client.Cmd("FLUSHALL").Err
+	if err != nil {
+		client.Close()
+		return false, []string{fmt.Sprintf("Can't FLUSH Redis instance: %s", err)}
+	}
+
+	for _, system := range systems {
+		ret, err := SetValidSystem(system, client)
+		if !ret {
+			errors = append(errors, err)
+		}
+	}
+	client.Close()
+
+	if len(errors) > 0 {
+		return false, errors
+	} else {
+		return true, errors
+	}
+}
