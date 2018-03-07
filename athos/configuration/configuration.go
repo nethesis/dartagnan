@@ -35,6 +35,8 @@ type Configuration struct {
 	DbUser     string `json:"db_user"`
 	DbName     string `json:"db_name"`
 	DbPassword string `json:"db_password"`
+	RedisHost  string `json:"redis_host"`
+	RedisPort  string `json:"redis_port"`
 	Cors       struct {
 		Headers []string `json:"headers"`
 		Origins []string `json:"origins"`
