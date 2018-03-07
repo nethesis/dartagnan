@@ -4,6 +4,8 @@
     "db_name":"dartagnan",
     "db_user": "dtuser",
     "db_password": "SECRET",
+    "redis_host": "localhost",
+    "redis_port": "63791",
     "cors": {
         "origins": ["https://YOUR_DOMAIN"],
         "headers": ["Authorization", "Content-Type"],

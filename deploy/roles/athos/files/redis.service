@@ -1,0 +1,9 @@
+[Unit]
+Description=SSL tunnel for network daemons
+ConditionPathExists=/etc/stunnel/%i.conf
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/stunnel /etc/stunnel/%i.conf
+User=nobody
+Group=nobody

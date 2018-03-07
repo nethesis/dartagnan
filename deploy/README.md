@@ -8,7 +8,7 @@ Instruction for a clean CentOS 7.
    ```
    yum install epel-release centos-release-scl -y
    yum install git wget  -y
-   yum install rh-postgresql96 nginx -y
+   yum install rh-postgresql96 nginx stunnel redis -y
    yum install certbot python2-certbot-dns-digitalocean -y
    ```
 
@@ -132,6 +132,22 @@ Instruction for a clean CentOS 7.
     systemctl enable iptables
     ```
 
+12. Configure redis:
+
+    ```
+    cp ./roles/athos/files/redis.conf /etc/redis
+    systemctl start redis
+    systemctl enable redis
+    ```
+
+13. Configure stunnel:
+
+    ```
+    cp ./roles/athos/files/stunnel-redis.conf /etc/stunnel/redis.conf
+    cp ./roles/athos/files/redis.service /etc/systemd/system
+    systemctl start stunnel@redis
+    systemctl enable stunnel@redis
+    ```
 
 # Aramis installation
 
