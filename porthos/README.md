@@ -106,8 +106,3 @@ called by the commands above.
 - `repo-tier-pull`  upstream snapshot for a specific repo
 - `xrsync` run rsync and try to repeat the operation if fails
 
-## TODO
-
-- configure `iptables`
-- configure `rsync` replica to other m*.nethserver.com nodes
-- cleanup of old repo tiers
