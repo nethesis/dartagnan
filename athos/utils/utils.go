@@ -29,12 +29,9 @@ import (
 	"strconv"
 	"time"
 
-	"hash/fnv"
 
 	"github.com/satori/go.uuid"
-	"github.com/mediocregopher/radix.v2/redis"
 
-	"github.com/nethesis/dartagnan/athos/configuration"
 	"github.com/nethesis/dartagnan/athos/database"
 	"github.com/nethesis/dartagnan/athos/models"
 )
@@ -159,83 +156,3 @@ func GetSystemFromSecret(secret string) models.System {
 	return system
 }
 
-func GetValidSystems() []models.System {
-	var systems []models.System
-
-	db := database.Database()
-	db.Preload("Subscription.SubscriptionPlan").Joins("JOIN subscriptions ON systems.subscription_id = subscriptions.id").Where("valid_until > NOW()").Find(&systems)
-	db.Close()
-
-	return systems
-}
-
-func CalculateTier(uuid string, tiers uint32) uint32 {
-        h := fnv.New32a()
-        h.Write([]byte(uuid))
-        tier := h.Sum32() % tiers
-
-	return tier
-}
-
-func SetValidSystem(system models.System, client *redis.Client) (bool, string) {
-	// Use 4 tiers
-	tiers := uint32(4)
-
-	now := time.Now()
-	difference := system.Subscription.ValidUntil.Sub(now).Seconds()
-	err := client.Cmd("HMSET", system.UUID, "tier_id", CalculateTier(system.UUID, tiers), "secret", system.Secret, "EX", int(difference)).Err
-	if err != nil {
-		return false, fmt.Sprintf("Can't save '%s' system inside Redis instance: %s", system.UUID, err)
-	}
-	// Set key expiration equal to Subscription.ValidUntil
-	err = client.Cmd("EXPIRE", system.UUID, int(difference)).Err
-	if err != nil {
-		return false, fmt.Sprintf("Can't set expiratation on '%s' system inside Redis instance: %s", system.UUID, err)
-	}
-	return true, ""
-}
-
-func BulkSetValidSystems() (bool, []string) {
-	var errors []string;
-	systems := GetValidSystems()
-
-	client, err := redis.Dial("tcp", fmt.Sprintf("%s:%s", configuration.Config.RedisHost, configuration.Config.RedisPort))
-	if err != nil {
-		client.Close()
-		return false, []string{fmt.Sprintf("Can't connect to Redis instance '%s:%s': %s", configuration.Config.RedisHost, configuration.Config.RedisPort, err)}
-	}
-
-	err = client.Cmd("MULTI").Err
-	if err != nil {
-		client.Close()
-		return false, []string{fmt.Sprintf("Can't start Redis transaction: %s", err)}
-	}
-
-        err = client.Cmd("FLUSHALL").Err
-        if err != nil {
-                client.Close()
-                return false, []string{fmt.Sprintf("Can't FLUSH Redis instance: %s", err)}
-        }
-
-
-	for _, system := range systems {
-		ret, err := SetValidSystem(system, client)
-		if !ret {
-			errors = append(errors, err)
-		}
-	}
-
-	err = client.Cmd("EXEC").Err
-	if err != nil {
-		client.Close()
-		return false, []string{fmt.Sprintf("Can't finish Redis transaction: %s", err)}
-	}
-
-	client.Close()
-
-	if len(errors) > 0 {
-		return false, errors
-	} else {
-		return true, errors
-	}
-}
