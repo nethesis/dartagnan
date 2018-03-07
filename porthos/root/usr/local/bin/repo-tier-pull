@@ -1,0 +1,50 @@
+#!/usr/bin/bash
+
+#
+# Copyright (C) 2018 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+set -e
+
+. /etc/porthos/repos.conf
+
+repo_id=$1
+date_dir=$2
+if [[ -z ${repo_id} || -z "${repos[$repo_id]}" || -z ${date_dir} ]]; then
+    echo -e "Usage:\n  $(basename $0) REPO_ID DATE_DIR" 1>&2
+    exit 1
+fi
+
+
+head_dir=${dest_dir}/head/${repo_id}
+backup_dir=${dest_dir}/${date_dir}/$repo_id
+
+repomd_file=${head_dir}/repodata/repomd.xml
+if [[ ! -f "${repomd_file}" ]]; then
+    echo "[ERROR] Couldn't find ${repomd_file}" 1>&2
+    exit 1
+fi
+
+if [[ -d ${backup_dir} ]]; then
+    echo "[WARNING] the repository backup directory already exists. Quit now ${backup_dir}"
+    exit 0
+fi
+
+mkdir -p ${backup_dir}
+exec /usr/local/bin/xrsync ${repos[$repo_id]}/ ${head_dir} --delete-after --backup --backup-dir=${backup_dir}
