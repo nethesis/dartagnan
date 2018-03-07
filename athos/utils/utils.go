@@ -30,6 +30,8 @@ import (
 	"time"
 	"os"
 
+	"hash/fnv"
+
 	"github.com/satori/go.uuid"
 	"github.com/mediocregopher/radix.v2/redis"
 
@@ -168,10 +170,21 @@ func GetValidSystems() []models.System {
 	return systems
 }
 
+func CalculateTier(uuid string, tiers uint32) uint32 {
+        h := fnv.New32a()
+        h.Write([]byte(uuid))
+        tier := h.Sum32() % tiers
+
+	return tier
+}
+
 func SetValidSystem(system models.System, client *redis.Client) (bool, string) {
+	// Use 4 tiers
+	tiers := uint32(4)
+
 	now := time.Now()
 	difference := system.Subscription.ValidUntil.Sub(now).Seconds()
-	err := client.Cmd("HMSET", system.UUID, "tier_id", 1, "secret", system.Secret, "EX", int(difference)).Err
+	err := client.Cmd("HMSET", system.UUID, "tier_id", CalculateTier(system.UUID, tiers), "secret", system.Secret, "EX", int(difference)).Err
 	if err != nil {
 		return false, fmt.Sprintf("Can't save '%s' system inside Redis instance: %s", system.UUID, err)
 	}
