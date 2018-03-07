@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Dartagnan.  If not, see COPYING.
  *
- * author: Edoardo Spadoni <edoardo.spadoni@nethesis.it>
  */
 
 package main
@@ -29,7 +28,7 @@ import (
         _ "github.com/jinzhu/gorm/dialects/mysql"
 
         "github.com/nethesis/dartagnan/athos/configuration"
-        "github.com/nethesis/dartagnan/athos/utils"
+        "github.com/nethesis/dartagnan/athos/cache"
 )
 
 
@@ -39,7 +38,7 @@ func main() {
         flag.Parse()
         configuration.Init(ConfigFilePtr)
 
-	ret, errors := utils.BulkSetValidSystems()
+	ret, errors := cache.BulkSetValidSystems()
 	for _, err := range errors {
 		fmt.Fprintf(os.Stderr, err)
 	}
