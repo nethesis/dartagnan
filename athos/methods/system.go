@@ -25,6 +25,7 @@ package methods
 import (
 	"net/http"
 	"time"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -32,6 +33,7 @@ import (
 	"github.com/nethesis/dartagnan/athos/database"
 	"github.com/nethesis/dartagnan/athos/middleware"
 	"github.com/nethesis/dartagnan/athos/models"
+	"github.com/nethesis/dartagnan/athos/cache"
 	"github.com/nethesis/dartagnan/athos/utils"
 )
 
@@ -76,6 +78,11 @@ func CreateSystem(c *gin.Context) {
 		return
 	}
 	db.Close()
+
+	if res := cache.SetValidSystem(system); ! res {
+		// Soft fail, chache can be restored later
+		fmt.Println("[ERROR]: can't save %s inside the cache", system.UUID)
+	}
 
 	if system.ID == 0 {
 		c.JSON(http.StatusConflict, gin.H{"status": "system not added"})
@@ -213,6 +220,10 @@ func DeleteSystem(c *gin.Context) {
 		return
 	}
 	db.Close()
+	if res := cache.DeleteValidSystem(system); ! res {
+		// Soft fail, chache can be restored later
+		fmt.Println("[ERROR]: can't delete %s from cache", system.UUID)
+	}
 
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }
@@ -249,6 +260,10 @@ func RenewalPlan(c *gin.Context) {
 		if err := db.Save(&system).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "system subscription plan not renewed", "error": err.Error()})
 			return
+		}
+		if res := cache.SetValidSystem(system); ! res {
+			// Soft fail, chache can be restored later
+			fmt.Println("[ERROR]: can't save %s inside the cache", system.UUID)
 		}
 	} else {
 		c.JSON(http.StatusNotFound, gin.H{"message": "no payment related to this plan for this server found"})
@@ -317,6 +332,10 @@ func UpgradePlan(c *gin.Context) {
 			if err := db.Save(&system).Error; err != nil {
 				c.JSON(http.StatusBadRequest, gin.H{"message": "system subscription plan not updated", "error": err.Error()})
 				return
+			}
+			if res := cache.SetValidSystem(system); ! res {
+				// Soft fail, chache can be restored later
+				fmt.Println("[ERROR]: can't save %s inside the cache", system.UUID)
 			}
 		} else {
 			c.JSON(http.StatusNotFound, gin.H{"message": "no payment related to this plan for this server found"})
