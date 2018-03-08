@@ -88,13 +88,12 @@ Instruction for a clean CentOS 7.
 9. Configure Let's Encrypt with Digital Ocean DNS:
 
    ```
-   mkdir -p /etc/letsencrypt/
-   echo -e '#!/bin/bash\nsystemctl restart nginx' > /usr/local/bin/letsencrypt-hook.sh
-   chmod a+x /usr/local/bin/letsencrypt-hook.sh
+   mkdir -p /etc/systemd/system/certbot-renew.service.d/
+   cp ./roles/athos/files/athos.conf /etc/systemd/system/certbot-renew.service.d/
    echo "dns_digitalocean_token=XXXXXXX" > /etc/letsencrypt/digitalocean.ini
    chmod 600 /etc/letsencrypt/digitalocean.ini
-   echo "certbot certonly --dns-digitalocean --dns-digitalocean-credentials /etc/letsencrypt/digitalocean.ini --dns-digitalocean-propagation-seconds 60 --register-unsafely-without-email --non-interactive --agree-tos --post-hook letsencrypt-hook.sh  -d YOUR_DOMAIN" > /etc/cron.daily/letsencrypt
-   chmod a+x /etc/cron.daily/letsencrypt
+   systemctl enable --now certbot-renew.timer
+   certbot certonly --dns-digitalocean --dns-digitalocean-credentials /etc/letsencrypt/digitalocean.ini --dns-digitalocean-propagation-seconds 60 --register-unsafely-without-email --non-interactive --agree-tos --cert-name athos -d YOUR_DOMAIN
    ```
  
    Replace `XXXXXXX` with your valid token and `YOUR_DOMAIN` with your server public FQDN.
@@ -112,7 +111,7 @@ Instruction for a clean CentOS 7.
    system enable nginx
    ```
 
-   Change `YOUR_DOMAIN` with your domain inside `ssl.conf` and `virtualhost.conf`.
+   Change `YOUR_DOMAIN` with your domain inside `virtualhost.conf`.
 
 11. Configure the firewall
 
