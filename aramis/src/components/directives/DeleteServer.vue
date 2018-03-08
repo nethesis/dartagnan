@@ -10,7 +10,7 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
               <span class="pficon pficon-close"></span>
             </button>
-            <h4 class="modal-title" id="myModalLabel">{{$t('servers.delete')}} {{toDelete.hostname || '-'}}</h4>
+            <h4 class="modal-title" id="myModalLabel">{{$t('servers.delete')}} {{obj.hostname || '-'}}</h4>
           </div>
           <div class="modal-body">
             <form class="form-horizontal">
@@ -38,7 +38,6 @@
     mixins: [StorageService],
     data() {
       return {
-        toDelete: this.obj,
       }
     },
     methods: {

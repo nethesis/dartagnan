@@ -60,12 +60,12 @@
       <div class="nav-pf-vertical nav-pf-vertical-with-sub-menus nav-pf-persistent-secondary">
         <ul class="list-group">
 
-          <li v-bind:class="[getCurrentPath('dashboard') ? 'active' : '', 'list-group-item']">
+          <!-- <li v-bind:class="[getCurrentPath('dashboard') ? 'active' : '', 'list-group-item']">
             <router-link to="/dashboard">
               <span class="fa fa-dashboard"></span>
               <span class="list-group-item-value">{{ $t('menu.dashboard') }}</span>
             </router-link>
-          </li>
+          </li> -->
 
           <li v-bind:class="[getCurrentPath('alerts') ? 'active' : '', 'list-group-item']">
             <router-link to="/alerts">

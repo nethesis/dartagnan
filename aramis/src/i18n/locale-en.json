@@ -60,15 +60,16 @@
       "ns_lookup": "NS Lookup",
       "version": "Version",
       "uptime": "Uptime",
-      "license_valid": "License valid"
+      "license_valid": "License valid",
+      "subscription": "Subscription"
     },
     "payment": {
       "renew": "Renew plan",
-      "upgrade": "Change plan",
+      "upgrade": "Upgrade plan",
       "renew_button": "Renew",
       "upgrade_button": "Upgrade",
       "renew_proceed": "Proceed with subscription renew?",
-      "upgrade_proceed": "Proceed with subscription change?",
+      "upgrade_proceed": "Proceed with subscription upgrade?",
       "details": "Details",
       "plan": "Plan",
       "price": "Annual price",

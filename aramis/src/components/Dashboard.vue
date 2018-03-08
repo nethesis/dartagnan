@@ -22,6 +22,11 @@
 
       this.initGraphics()
 
+      // handle default route
+      this.$router.push({
+        path: '/servers'
+      })
+
       return {
         user: this.$parent.user,
       }
@@ -56,5 +61,6 @@
 </script>
 
 <style scoped>
+
 
 </style>

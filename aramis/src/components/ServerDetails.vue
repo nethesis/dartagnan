@@ -13,25 +13,25 @@
             </h2>
             <div class="card-pf-body">
               <div v-if="!isLoadingInventory">
-                <div>
+                <div class="details-info">
                   <span>{{$t('servers.version')}}</span>
                   <span class="right">
                     <strong class="soft">{{server.inventory && server.inventory.os.release.full || '-'}}</strong>
                   </span>
                 </div>
-                <div>
+                <div class="details-info">
                   <span>{{$t('servers.public_ip')}}</span>
                   <span class="right">
                     <strong class="soft">{{server.info.public_ip || '-'}}</strong>
                   </span>
                 </div>
-                <div>
+                <div class="details-info">
                   <span>{{$t('servers.ns_lookup')}}</span>
                   <span class="right">
                     <strong class="soft">{{server.info.public_ip || '-'}}</strong>
                   </span>
                 </div>
-                <div>
+                <div class="details-info">
                   <span>{{$t('servers.uptime')}}</span>
                   <span class="right">
                     <strong class="soft">{{server.inventory && server.inventory.system_uptime.seconds | secondsInReadable}}</strong>
@@ -55,30 +55,30 @@
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
           <div class="card-pf card-pf-accented">
             <h2 class="card-pf-title">
-              {{$t('servers.plan')}}
+              {{$t('servers.subscription')}}
             </h2>
             <div class="card-pf-body">
               <div v-if="!isLoadingInfo">
-                <div>
+                <div class="details-info">
                   <span>{{$t('servers.plan_type')}}</span>
                   <span class="right">
                     <strong class="soft">{{server.info.subscription.subscription_plan && server.info.subscription.subscription_plan.name || '-'}}</strong>
                   </span>
                 </div>
-                <div>
+                <div class="details-info">
                   <span>{{$t('servers.description')}}</span>
                   <span class="right">
                     <strong class="soft">{{server.info.subscription.subscription_plan && server.info.subscription.subscription_plan.description
                       || '-'}}</strong>
                   </span>
                 </div>
-                <div>
+                <div class="details-info">
                   <span>{{$t('servers.until')}}</span>
                   <span class="right">
-                    <strong class="soft">{{server.info.subscription && server.info.subscription.valid_until || '-' | formatDate}}</strong>
+                    <strong class="soft">{{server.info.subscription && server.info.subscription.valid_until || '-' | formatDate(false)}}</strong>
                   </span>
                 </div>
-                <div>
+                <div class="details-info">
                   <span>{{$t('servers.status')}}</span>
                   <span class="right">
                     <span data-toggle="tooltip" data-placement="left" :title="$t('servers.license_valid')" v-if="!isExpired(server.info.subscription.valid_until)"
@@ -92,7 +92,7 @@
             </div>
             <div class="card-pf-footer">
               <div class="dropdown card-pf-time-frame-filter">
-                <renew-button v-if="server.info.id" v-bind:obj="server.info" :update="getServerInventory"></renew-button>
+                <renew-button v-if="server.info.id" v-bind:obj="server.info" :update="getServerInfo"></renew-button>
               </div>
               <p>
                 <a class="card-pf-link-with-icon">

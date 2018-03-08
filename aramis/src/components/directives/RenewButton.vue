@@ -1,8 +1,8 @@
 <template>
   <span>
-    <button @click="showRenewModal()" type="button" class="btn btn-primary">
+    <button v-if="isExpired(obj.subscription.valid_until) || plans.length > 0 && plans[plans.length-1].code != currentPlan.code" @click="showRenewModal()" type="button" class="btn btn-primary">
       <span class="fa fa-paypal"></span>
-      {{obj.subscription.subscription_plan.code == 'trial' ? $t('payment.upgrade_button') : $t('payment.renew_button')}}
+      {{isExpired(obj.subscription.valid_until) ? $t('payment.renew_button') : $t('payment.upgrade_button')}}
     </button>
     <div class="modal fade" :id="'paymentModalRenew-'+obj.id" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
       aria-hidden="true">
@@ -18,7 +18,7 @@
             <div class="card-pf-view">
               <div>
                 <div class="card-pf-top-element">
-                  <span :class="['fa', onUpgrade ? 'fa-certificate' : 'fa-refresh', 'card-pf-icon-circle', 'adjust-icon-size']"></span>
+                  <span :class="['fa', onUpgrade ? 'fa-arrow-up' : 'fa-refresh', 'card-pf-icon-circle', 'adjust-icon-size']"></span>
                 </div>
                 <h2 class="card-pf-title text-center">
                   {{onUpgrade ? $t('payment.upgrade_proceed') : $t('payment.renew_proceed')}}
@@ -36,8 +36,9 @@
                         <span class="caret"></span>
                       </button>
                       <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                        <li v-for="p in plans" v-if="p.code !== 'trial'" v-bind:key="p.code" role="presentation" :class="[p.code == currentPlan.code ? 'selected' : '']">
-                          <a @click="changePlan(p)" role="menuitem" tabindex="-1" href="#">{{p.name}}</a>
+                        <li v-for="p in plans" v-if="p.code !== 'trial'" v-bind:key="p.code" role="presentation" :class="[p.code == currentPlan.code ? 'selected' : '', p.code != obj.subscription.subscription_plan.code && (p.full_price || p.price) <= obj.subscription.subscription_plan.price ? 'disabled' : '']">
+                          <a @click="p.code != obj.subscription.subscription_plan.code && (p.full_price || p.price) <= obj.subscription.subscription_plan.price ? null : changePlan(p)"
+                            role="menuitem" tabindex="-1" href="#">{{p.name}}</a>
                         </li>
                       </ul>
                     </div>
@@ -61,7 +62,7 @@
                     </span>
                   </div>
                   <div class="card-pf-item details-pay-item">
-                    <span v-if="!onUpgradePriceCalc" class="card-pf-item-text">{{currentPlan.price > 0 ? currentPlan.price : 0}}€
+                    <span v-if="!onUpgradePriceCalc" class="card-pf-item-text"><strong>{{currentPlan.price > 0 ? currentPlan.price : 0}}€</strong>
                       <span v-if="onUpgrade && currentPlan.price != currentPlan.full_price">({{$t('payment.full_price')}}: {{currentPlan.full_price > 0 ? currentPlan.full_price : 0}}€)</span>
                     </span>
                     <div v-if="onUpgradePriceCalc" class="spinner spinner-sm"></div>
@@ -201,6 +202,9 @@
       }
     },
     methods: {
+      isExpired(date) {
+        return new Date().toISOString() > date
+      },
       showRenewModal() {
         this.payment.done = false
         this.payment.onProgress = false
