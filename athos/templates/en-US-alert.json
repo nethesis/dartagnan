@@ -1,0 +1,35 @@
+[
+  {
+    "id": "Alert report",
+    "translation": "Alert report"
+  },
+  {
+    "id": "Public IP",
+    "translation": "Public IP"
+  },
+  {
+    "id": "Help",
+    "translation": "Help"
+  },
+  {
+    "id": "Details",
+    "translation": "Details"
+  },
+  {
+    "id": "Docs",
+    "translation": "Documentation"
+  },
+  {
+    "id": "Issue",
+    "translation": "Issue"
+  },
+  {
+    "id": "Status",
+    "translation": "Status"
+  },
+  {
+    "id": "This is an automatic mail, please do not reply",
+    "translation": "This is an automatic mail, please do not reply"
+  }
+
+]
