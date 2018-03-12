@@ -132,7 +132,8 @@
             <div class="card-pf-items text-center">
               <div class="card-pf-item">
                 <span class="fa fa-star"></span>
-                <span data-toggle="tooltip" data-placement="top" :title="s.subscription.subscription_plan.description" v-if="!isExpired(s.subscription.valid_until)" class="card-pf-item-text">{{s && s.subscription && s.subscription.subscription_plan && s.subscription.subscription_plan.name || '-'}}</span>
+                <span data-toggle="tooltip" data-placement="top" :title="s.subscription.subscription_plan.description" v-if="!isExpired(s.subscription.valid_until)"
+                  class="card-pf-item-text">{{s && s.subscription && s.subscription.subscription_plan && s.subscription.subscription_plan.name || '-'}}</span>
                 <span v-if="isExpired(s.subscription.valid_until)" class="card-pf-item-text">{{$t('servers.expired')}}</span>
               </div>
               <div class="card-pf-item">
@@ -301,7 +302,13 @@
         return new Date().toISOString() > date
       },
       addServer() {
-        this.$http.post('https://' + this.$root.$options.api_host + '/api/ui/systems', {}, {
+        this.$http.post('https://' + this.$root.$options.api_host + '/api/ui/systems', {
+          notification: {
+            emails: [
+              this.get('logged_user').email
+            ]
+          }
+        }, {
           headers: {
             'Authorization': 'Bearer ' + this.get('access_token', false) || ''
           }
