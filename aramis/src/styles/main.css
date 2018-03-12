@@ -297,6 +297,14 @@ input[type=radio].form-control {
   color: #cc0000;
 }
 
+.green {
+  color: #3f9c35;
+}
+
+.blue {
+  color: #00b9e4;
+}
+
 .gray {
   color: #8b8d8f;
 }
@@ -410,4 +418,27 @@ input[type=radio].form-control {
 .row-divider {
   border-bottom: 1px solid #d1d1d1;
   margin-bottom: 20px;
+}
+
+.icon-header-panel {
+  float: right;
+  margin-top: 0;
+  padding-right: 4px;
+}
+
+.resources-container {
+  margin-top: -10px !important;
+}
+
+.resources-panel {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.donut-title-big-pf {
+  font-size: 22px !important;
+}
+
+.resource-info-details {
+  min-height: 20px;
 }
