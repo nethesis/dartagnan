@@ -28,8 +28,10 @@ import (
 	"math"
 	"strconv"
 	"time"
+	"strings"
 
 	"github.com/satori/go.uuid"
+	"github.com/nicksnyder/go-i18n/i18n"
 
 	"github.com/nethesis/dartagnan/athos/database"
 	"github.com/nethesis/dartagnan/athos/models"
@@ -106,8 +108,102 @@ func Contains(intSlice []int, searchInt int) bool {
 	return false
 }
 
+func GetAlertHumanName(alertId string, locale string) string {
+	i18n.MustLoadTranslationFile("templates/en-US-alert.json")
+	T, _ := i18n.Tfunc(locale, locale, locale)
+	parts := strings.Split(alertId, ":")
+
+	switch parts[0] {
+	/*
+		system:heartbeat:link
+		system:backup:failure
+	*/
+	case "system":
+		if parts[1] == "heartbeat" && parts[2] == "link" {
+			return T("Link failed")
+		} else if parts[1] == "backup" && parts[2] == "failure" {
+			return T("Backup failed")
+		}
+	/*
+		load:load
+	*/
+	case "load":
+		return T("System load")
+	/*
+		service:([a-z0-9-@]+):stopped
+	*/
+	case "service":
+		return fmt.Sprintf("%s %s", strings.ToUpper(parts[1]), T(parts[2]))
+	/*
+		df:boot:percent_bytes:free
+		df:root:percent_bytes:free
+	*/
+	case "df":
+		if parts[1] == "boot" {
+			return T("Boot partition")
+		} else if parts[1] == "root" {
+			return T("Root partition")
+		}
+	/*
+		swap:percent:free
+	*/
+	case "swap":
+		return T("SWAP partition")
+	/*
+		md:([a-z0-9-]+):md_disks:([a-z]+)
+	*/
+	case "md":
+		return fmt.Sprintf("%s %s %s", T("RAID"), parts[1], T("failed"))
+	/*
+		wan:([a-z0-9-]+):down
+	*/
+	case "wan":
+		return fmt.Sprintf("%s %s %s", T("WAN"), parts[1], T("down"))
+	/*
+		ping:ping:([a-z0-9-.]+)
+		ping:ping_([a-z]+):([a-z0-9-.]+)
+	*/
+	case "ping":
+		if strings.Index(parts[1], "_") > 0 {
+			n := strings.Split(parts[1], "_")
+			return fmt.Sprintf("%s %s (%s)", T("PING"), n[1], parts[2])
+		} else {
+			return fmt.Sprintf("%s %s", T("PING"), parts[2])
+		}
+	/*
+		nut:ups:voltage:input
+	*/
+	case "nut":
+		return T("UPS on battery")
+	}
+	return alertId
+}
+
+
 func GetAlertPriority(alertID string) string {
-	return "HIGH"
+	parts := strings.Split(alertID, ":")
+	switch parts[0] {
+	case "system":
+		return "HIGH"
+	case "load":
+		return "HIGH"
+	case "service":
+		return "AVERAGE"
+	case "df":
+		return "AVERAGE"
+	case "swap":
+		return "WARNING"
+	case "md":
+		return "HIGH"
+	case "wan":
+		return "WARNING"
+	case "ping":
+		return "AVERAGE"
+	case "nut":
+		return "HIGH"
+	}
+
+	return "AVERAGE"
 }
 
 func GetSubscriptionPlanByCode(code string) models.SubscriptionPlan {

@@ -206,6 +206,10 @@ func GetAlerts(c *gin.Context) {
 	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id = ?", systemID).Offset(offsets[0]).Limit(offsets[1]).Find(&alerts)
 	db.Close()
 
+        for i, alert := range alerts {
+                alerts[i].NameI18n = utils.GetAlertHumanName(alert.AlertID, "en-US")
+        }
+
 	c.JSON(http.StatusOK, alerts)
 }
 
