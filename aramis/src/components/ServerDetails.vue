@@ -148,7 +148,11 @@
               <span :class="['pficon', server.alerts.length == 0 ? 'pficon-ok' : 'pficon-error-circle-o', 'right']"></span>
             </h2>
             <div class="card-pf-body">
-              <p v-if="!isLoadingAlerts">{{$t('servers.no_alerts_found')}}</p>
+              <p v-if="!isLoadingAlerts && server.alerts.length == 0">{{$t('servers.no_alerts_found')}}</p>
+              <span v-if="!isLoadingAlerts && server.alerts.length > 0">{{$t('servers.total')}}</span>
+              <span class="right">
+                <strong v-show="!isLoadingAlerts && server.alerts.length > 0" class="soft">{{server.alerts.length}}</strong>
+              </span>
               <div v-if="isLoadingAlerts" class="spinner spinner-sm"></div>
             </div>
           </div>
@@ -198,32 +202,28 @@
               {{$t('servers.alerts_details')}}
             </h2>
             <div class="card-pf-body">
-              <p v-if="!isLoadingAlerts">[card contents]</p>
+              <vue-good-table v-if="!isLoadingAlerts" :perPage="5" :columns="columns" :rows="server.alerts" :lineNumbers="false" :defaultSortBy="{field: 'priority', type: 'asc'}"
+                :globalSearch="true" :paginate="true" styleClass="table" :nextText="tableLangsTexts.nextText" :prevText="tableLangsTexts.prevText"
+                :rowsPerPageText="tableLangsTexts.rowsPerPageText" :globalSearchPlaceholder="tableLangsTexts.globalSearchPlaceholder"
+                :ofText="tableLangsTexts.ofText" class="container-fluid">
+                <template slot="table-row" slot-scope="props">
+                  <td>
+                    <strong>{{ props.row.alert_id }}</strong>
+                  </td>
+                  <td class="fancy">{{ props.row.timestamp | formatDate}}</td>
+                  <td>
+                    <strong>{{ props.row.status }}</strong>
+                  </td>
+                  <td class="fancy">
+                    <p>{{ props.row.note || '-' }}</p>
+                  </td>
+                  <td class="fancy">
+                    <span :class="['fa fa-exclamation-triangle details-info', props.row.priority == 'HIGH'? 'red' : props.row.priority == 'AVERAGE' ? 'orange' : 'yellow' ]"
+                      data-toggle="tooltip" data-placement="left" :title="$t('alert.'+props.row.priority)"></span>
+                  </td>
+                </template>
+              </vue-good-table>
               <div v-if="isLoadingAlerts" class="spinner spinner-sm"></div>
-            </div>
-            <div class="card-pf-footer">
-              <div class="dropdown card-pf-time-frame-filter">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                  Last 30 Days
-                  <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-right" role="menu">
-                  <li class="selected">
-                    <a href="#">Last 30 Days</a>
-                  </li>
-                  <li>
-                    <a href="#">Last 60 Days</a>
-                  </li>
-                  <li>
-                    <a href="#">Last 90 Days</a>
-                  </li>
-                </ul>
-              </div>
-              <p>
-                <a href="#" class="card-pf-link-with-icon">
-                  <span class="pficon pficon-add-circle-o"></span>Add New Cluster
-                </a>
-              </p>
             </div>
           </div>
         </div>
@@ -278,8 +278,35 @@
           isLoadingInfo: true,
           isLoadingInventory: true,
           isLoadingHeartbeat: true,
-          isLoadingAlerts: true
-        }
+          isLoadingAlerts: true,
+        },
+        columns: [{
+            label: this.$i18n.t('alert.alert_id'),
+            field: 'alert_id',
+            filterable: true,
+          }, {
+            label: this.$i18n.t('alert.timestamp'),
+            field: 'timestamp',
+            filterable: true,
+          },
+          {
+            label: this.$i18n.t('alert.status'),
+            field: 'status',
+            filterable: true,
+          },
+          {
+            label: this.$i18n.t('alert.note'),
+            field: 'note',
+            filterable: true,
+          },
+          {
+            label: this.$i18n.t('alert.priority'),
+            field: 'priority',
+            filterable: true,
+          },
+        ],
+        rows: [],
+        tableLangsTexts: this.tableLangs(),
       }
     },
     methods: {

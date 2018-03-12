@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueResource from 'vue-resource'
 import VueI18n from 'vue-i18n'
 import VueClipboard from 'vue-clipboards'
+import VueGoodTable from 'vue-good-table'
 
 import App from './App'
 import router from './routes/router'
@@ -12,6 +13,7 @@ Vue.config.productionTip = true
 Vue.use(VueResource)
 Vue.use(VueI18n)
 Vue.use(VueClipboard)
+Vue.use(VueGoodTable);
 
 window.$ = window.jQuery = require('patternfly/node_modules/jquery/dist/jquery.min.js')
 require('patternfly/node_modules/bootstrap/dist/js/bootstrap.min.js');

@@ -61,7 +61,8 @@
       "version": "Version",
       "uptime": "Uptime",
       "license_valid": "License valid",
-      "subscription": "Subscription"
+      "subscription": "Subscription",
+      "total": "Total"
     },
     "payment": {
       "renew": "Renew plan",
@@ -80,6 +81,23 @@
       "payment_error": "Error",
       "payment_error_details": "Something went wrong...",
       "full_price": "Full price"
-    }
+    },
+    "alert": {
+      "alert_id": "Alert ID",
+      "timestamp": "Created",
+      "status": "Status",
+      "note": "Note",
+      "priority": "Priority",
+      "delete": "Delete",
+      "HIGH": "Critical",
+      "AVERAGE": "Medium",
+      "WARNING": "Warning"
+    },
+    "action": "Action",
+    "next": "Next",
+    "prev": "Prev",
+    "of": "of",
+    "search": "Search",
+    "rows_per_page": "Rows per page"
   }
 }
