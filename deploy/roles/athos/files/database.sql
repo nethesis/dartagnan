@@ -38,6 +38,7 @@ CREATE TABLE systems (
     public_ip character varying(1024) null,
     status character varying(1024) default null,
     created timestamp default current_timestamp,
+    notification jsonb,
     UNIQUE(uuid),
     UNIQUE(secret)
 );

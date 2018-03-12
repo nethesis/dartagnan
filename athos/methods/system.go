@@ -59,6 +59,7 @@ func CreateSystem(c *gin.Context) {
 		Tags:      "trial",
 		PublicIP:  "",
 		Status:    "active",
+		Notification: json.Notification,
 		Created:   time.Now().UTC(),
 		Subscription: models.Subscription{
 			UserID:             creatorID,

@@ -263,3 +263,12 @@ func CheckSystemOwnership(systemID string, creatorID string) bool {
 
 	return true
 }
+
+func GetSystemById(systemID int) models.System {
+	var system models.System
+	db := database.Database()
+        db.Preload("Subscription.SubscriptionPlan").Where("id = ?", systemID).First(&system)
+        db.Close()
+
+	return system
+}

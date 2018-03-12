@@ -32,6 +32,7 @@ import (
 	"github.com/nethesis/dartagnan/athos/database"
 	"github.com/nethesis/dartagnan/athos/models"
 	"github.com/nethesis/dartagnan/athos/utils"
+	"github.com/nethesis/dartagnan/athos/notifications"
 )
 
 func alertExists(SystemID int, AlertID string) (bool, models.Alert) {
@@ -81,6 +82,12 @@ func SetAlert(c *gin.Context) {
 				EndTime:    time.Now().UTC(),
 				SystemID:   system.ID,
 			}
+
+			// send alert notification
+			var toSend = alert
+			toSend.Status = "OK"
+			toSend.NameI18n = utils.GetAlertHumanName(toSend.AlertID, "en-US")
+			notifications.AlertNotification(toSend, false)
 
 			// save to history
 			db := database.Database()
@@ -149,12 +156,17 @@ func SetAlert(c *gin.Context) {
 			SystemID:  system.ID,
 		}
 
+
 		// save alert
 		db := database.Database()
 		if err := db.Save(&alert).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "alert not saved", "error": err.Error()})
 			return
 		}
+
+		// send alert notification
+		alert.NameI18n = utils.GetAlertHumanName(alert.AlertID, "en-US")
+	        notifications.AlertNotification(alert, true)
 
 		db.Close()
 	}
