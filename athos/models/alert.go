@@ -27,7 +27,7 @@ import (
 )
 
 type Alert struct {
-	ID        int       `db:"id" json:"-"`
+	ID        int       `db:"id" json:"id"`
 	AlertID   string    `db:"alert_id" json:"alert_id"`
 	Priority  string    `db:"priority" json:"priority"`
 	Note      string    `db:"note" json:"note"`
@@ -57,4 +57,9 @@ type AlertJSON struct {
 	AlertID  string `json:"alert_id"`
 	Status   string `json:"status"`
 	Message  string `json:"message"`
+}
+
+type AlertNoteJSON struct {
+	SystemID string `json:"system_id"`
+	Note     string `json:"note"`
 }

@@ -18,6 +18,11 @@ input[type=radio].form-control {
   height: 15px;
 }
 
+textarea {
+  resize: vertical;
+  min-height: 150px;
+}
+
 .not-logged {
   background: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.75)), url('../assets/background.jpg');
   background-repeat: round;
@@ -441,4 +446,11 @@ input[type=radio].form-control {
 
 .resource-info-details {
   min-height: 20px;
+}
+
+.system-note {
+  display: inline-block;
+  width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

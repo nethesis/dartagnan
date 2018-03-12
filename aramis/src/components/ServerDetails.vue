@@ -172,6 +172,8 @@
                 :ofText="tableLangsTexts.ofText" class="container-fluid">
                 <template slot="table-row" slot-scope="props">
                   <td>
+                    <span :class="['fa fa-exclamation-triangle details-info', props.row.priority == 'HIGH'? 'red' : props.row.priority == 'AVERAGE' ? 'orange' : 'yellow' ]"
+                      data-toggle="tooltip" data-placement="left" :title="$t('alert.'+props.row.priority)"></span>
                     <strong>{{ props.row.alert_id }}</strong>
                   </td>
                   <td class="fancy">{{ props.row.timestamp | formatDate}}</td>
@@ -179,11 +181,10 @@
                     <strong>{{ props.row.status }}</strong>
                   </td>
                   <td class="fancy">
-                    <p>{{ props.row.note || '-' }}</p>
-                  </td>
-                  <td class="fancy">
-                    <span :class="['fa fa-exclamation-triangle details-info', props.row.priority == 'HIGH'? 'red' : props.row.priority == 'AVERAGE' ? 'orange' : 'yellow' ]"
-                      data-toggle="tooltip" data-placement="left" :title="$t('alert.'+props.row.priority)"></span>
+                    <span class="system-note">{{ props.row.note || '-' }}</span>
+                    <button class="btn btn-default right" type="button" @click="openAlertNoteModal(props.row)">
+                      <span class="pficon pficon-edit"></span>
+                    </button>
                   </td>
                 </template>
               </vue-good-table>
@@ -231,7 +232,7 @@
                               </a>{{$t('servers.os')}}</h3>
                           </div>
                           <div class="panel-body">
-                            <span class="details-info " ng-class="">{{server.inventory.os.name}}</span>
+                            <span class="details-info ">{{server.inventory.os.name}}</span>
                             <div class="text-right">{{$t('servers.vendor')}}:
                               <b>
                                 <span class="">{{server.inventory.os.family}}</span>
@@ -253,7 +254,7 @@
                               </a>{{$t('servers.kernel')}}</h3>
                           </div>
                           <div class="panel-body">
-                            <span class="details-info " ng-class="">{{server.inventory.kernel}}</span>
+                            <span class="details-info ">{{server.inventory.kernel}}</span>
                             <div class="text-right">{{$t('servers.release')}}:
                               <b>
                                 <span class="">{{server.inventory.kernelrelease}}</span>
@@ -275,7 +276,7 @@
                               </a>{{$t('servers.machine')}}</h3>
                           </div>
                           <div class="panel-body">
-                            <span class="details-info " ng-class="">{{server.inventory.virtual}}</span>
+                            <span class="details-info ">{{server.inventory.virtual}}</span>
                             <div class="text-right ">{{$t('servers.uuid')}}:
                               <b>
                                 <span class="">{{server.inventory.dmi.product.uuid}}</span>
@@ -295,7 +296,7 @@
                               </a>{{$t('servers.cpu')}}</h3>
                           </div>
                           <div class="panel-body">
-                            <span class="details-info" ng-class="">{{server.inventory.processors.count}} Core</span>
+                            <span class="details-info">{{server.inventory.processors.count}} Core</span>
                             <div class="text-right">{{$t('servers.model')}}:
                               <b>
                                 <span class="">{{server.inventory.processors.models[0]}}</span>
@@ -315,7 +316,7 @@
                               </a>{{$t('servers.bios')}}</h3>
                           </div>
                           <div class="panel-body">
-                            <span class="details-info " ng-class="">{{server.inventory.dmi.bios.version}}</span>
+                            <span class="details-info ">{{server.inventory.dmi.bios.version}}</span>
                             <div class="text-right">{{$t('servers.vendor')}}:
                               <b>
                                 <span class="">{{server.inventory.dmi.bios.vendor}}</span>
@@ -399,15 +400,21 @@
                         <div class="panel-body">
                           <div>
                             <span>{{$t('servers.ip')}}</span>
-                            <span class="details-info" ng-class="">{{e.props.ipaddr || '-'}}</span>
+                            <span>
+                              <strong class="soft">{{e.props.ipaddr || '-'}}</strong>
+                            </span>
                           </div>
                           <div>
                             <span>{{$t('servers.netmask')}}</span>
-                            <span class="details-info" ng-class="">{{e.props.netmask || '-'}}</span>
+                            <span>
+                              <strong class="soft">{{e.props.netmask || '-'}}</strong>
+                            </span>
                           </div>
                           <div>
                             <span>{{$t('servers.gateway')}}</span>
-                            <span class="details-info" ng-class="">{{e.props.gateway || '-'}}</span>
+                            <span>
+                              <strong class="soft">{{e.props.gateway || '-'}}</strong>
+                            </span>
                           </div>
                           <div class="text-right">{{$t('servers.type')}}:
                             <b>
@@ -416,7 +423,9 @@
                           </div>
                           <div class="text-right">{{$t('servers.role')}}:
                             <b>
-                              <span :class="e.props.role">{{e.props.role}}</span>
+                              <span :class="e.props.role">{{e.props.role}}
+                                <span v-if="e.props.bridge">({{e.props.bridge}})</span>
+                              </span>
                             </b>
                           </div>
                         </div>
@@ -431,6 +440,32 @@
 
       </div>
 
+    </div>
+    <div class="modal fade" id="noteAlert" tabindex="-1" role="dialog" aria-labelledby="noteAlert" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+              <span class="pficon pficon-close"></span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">{{$t('servers.note_alert_for')}} {{currentAlert.alert_id}}</h4>
+          </div>
+          <div class="modal-body">
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label class="col-sm-3 control-label" for="textInput-modal-markup">{{$t('servers.note')}}</label>
+                <div class="col-sm-9">
+                  <textarea v-model="currentAlert.note" type="text" id="textInput-modal-markup" class="form-control"></textarea>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{{$t('servers.cancel')}}</button>
+            <button @click="saveAlertNote()" type="button" class="btn btn-primary">{{$t('servers.save')}}</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -501,15 +536,12 @@
             label: this.$i18n.t('alert.note'),
             field: 'note',
             filterable: true,
-          },
-          {
-            label: this.$i18n.t('alert.priority'),
-            field: 'priority',
-            filterable: true,
+            sortable: false
           },
         ],
         rows: [],
         tableLangsTexts: this.tableLangs(),
+        currentAlert: {}
       }
     },
     methods: {
@@ -666,7 +698,24 @@
               .used_bytes),
             " Used");
         }
-
+      },
+      openAlertNoteModal(alert) {
+        this.currentAlert = alert
+        $('#noteAlert').modal('toggle')
+      },
+      saveAlertNote() {
+        this.$http.put('http://' + this.$root.$options.api_host + '/api/ui/alerts/' + this.currentAlert.id, {
+          system_id: this.$route.params.id,
+          note: this.currentAlert.note
+        }, {
+          headers: {
+            'Authorization': 'Bearer ' + this.get('access_token', false) || ''
+          }
+        }).then(function (success) {
+          $('#noteAlert').modal('hide')
+        }, function (error) {
+          console.error(error)
+        });
       }
     }
   }

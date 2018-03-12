@@ -162,6 +162,37 @@ func SetAlert(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }
 
+func UpdateAlertNote(c *gin.Context) {
+	var alert models.Alert
+	creatorID := c.MustGet("authUser").(string)
+	alertID := c.Param("alert_id")
+
+	var json models.AlertNoteJSON
+	if err := c.BindJSON(&json); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "request fields malformed", "error": err.Error()})
+		return
+	}
+
+	if !utils.CheckSystemOwnership(json.SystemID, creatorID) {
+		c.JSON(http.StatusForbidden, gin.H{"message": "this systems is not yours!"})
+		return
+	}
+
+	db := database.Database()
+	db.Where("id = ? AND system_id = ?", alertID, json.SystemID).First(&alert)
+
+	if alert.ID == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"message": "no alert found!"})
+		return
+	}
+
+	alert.Note = json.Note
+	db.Save(&alert)
+	db.Close()
+
+	c.JSON(http.StatusOK, gin.H{"status": "success"})
+}
+
 func GetAlerts(c *gin.Context) {
 	var alerts []models.Alert
 	creatorID := c.MustGet("authUser").(string)

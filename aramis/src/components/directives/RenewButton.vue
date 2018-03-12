@@ -1,7 +1,7 @@
 <template>
   <span>
-    <button v-if="isExpired(obj.subscription.valid_until) || plans.length > 0 && plans[plans.length-1].code != currentPlan.code" @click="showRenewModal()" type="button" class="btn btn-primary">
-      <span class="fa fa-paypal"></span>
+    <button v-if="isExpired(obj.subscription.valid_until) || plans.length > 0 && plans[plans.length-1].code != obj.subscription.subscription_plan.code" @click="showRenewModal()" type="button" class="btn btn-primary">
+      <span class="fa fa-shopping-cart"></span>
       {{isExpired(obj.subscription.valid_until) ? $t('payment.renew_button') : $t('payment.upgrade_button')}}
     </button>
     <div class="modal fade" :id="'paymentModalRenew-'+obj.id" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"

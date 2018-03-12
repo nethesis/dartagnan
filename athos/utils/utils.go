@@ -29,7 +29,6 @@ import (
 	"strconv"
 	"time"
 
-
 	"github.com/satori/go.uuid"
 
 	"github.com/nethesis/dartagnan/athos/database"
@@ -156,3 +155,15 @@ func GetSystemFromSecret(secret string) models.System {
 	return system
 }
 
+func CheckSystemOwnership(systemID string, creatorID string) bool {
+	var system models.System
+	db := database.Database()
+	db.Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
+	db.Close()
+
+	if system.ID == 0 {
+		return false
+	}
+
+	return true
+}

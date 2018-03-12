@@ -86,7 +86,10 @@
       "role": "Role",
       "ip": "IP",
       "netmask": "Netmask",
-      "gateway": "Gateway"
+      "gateway": "Gateway",
+      "save": "Save",
+      "note_alert_for": "Note for",
+      "note": "Note"
     },
     "payment": {
       "renew": "Renew plan",

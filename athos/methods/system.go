@@ -23,17 +23,17 @@
 package methods
 
 import (
+	"fmt"
 	"net/http"
 	"time"
-	"fmt"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 
+	"github.com/nethesis/dartagnan/athos/cache"
 	"github.com/nethesis/dartagnan/athos/database"
 	"github.com/nethesis/dartagnan/athos/middleware"
 	"github.com/nethesis/dartagnan/athos/models"
-	"github.com/nethesis/dartagnan/athos/cache"
 	"github.com/nethesis/dartagnan/athos/utils"
 )
 
@@ -79,7 +79,7 @@ func CreateSystem(c *gin.Context) {
 	}
 	db.Close()
 
-	if res := cache.SetValidSystem(system); ! res {
+	if res := cache.SetValidSystem(system); !res {
 		// Soft fail, chache can be restored later
 		fmt.Println("[ERROR]: can't save %s inside the cache", system.UUID)
 	}
@@ -126,18 +126,18 @@ func UpdateSystem(c *gin.Context) {
 }
 
 func getStatus(id int) string {
-        var heartbeat models.Heartbeat
-        db := database.Database()
-        db.Where("system_id = ?", id).First(&heartbeat)
-        db.Close()
+	var heartbeat models.Heartbeat
+	db := database.Database()
+	db.Where("system_id = ?", id).First(&heartbeat)
+	db.Close()
 
-        if (heartbeat.ID == 0) {
-                return "no_comm"
-        }
+	if heartbeat.ID == 0 {
+		return "no_comm"
+	}
 
 	sanity := heartbeat.Timestamp.Add(time.Minute * 30)
-	if (time.Now().After(sanity)) {
-		return "no_active";
+	if time.Now().After(sanity) {
+		return "no_active"
 	} else {
 		return "active"
 	}
@@ -168,17 +168,17 @@ func GetSystems(c *gin.Context) {
 }
 
 func GetSystemBySecret(c *gin.Context) {
-        var system models.System
-        sentSecret := middleware.GetSecret(c)
+	var system models.System
+	sentSecret := middleware.GetSecret(c)
 
-        db := database.Database()
-        db.Where("secret = ?", sentSecret).First(&system)
+	db := database.Database()
+	db.Where("secret = ?", sentSecret).First(&system)
 
-        db.Preload("Subscription.SubscriptionPlan").Where("id = ? ", system.ID).First(&system)
-        db.Close()
+	db.Preload("Subscription.SubscriptionPlan").Where("id = ? ", system.ID).First(&system)
+	db.Close()
 
-        system.Secret = ""
-        c.JSON(http.StatusOK, system)
+	system.Secret = ""
+	c.JSON(http.StatusOK, system)
 }
 
 func GetSystem(c *gin.Context) {
@@ -220,7 +220,7 @@ func DeleteSystem(c *gin.Context) {
 		return
 	}
 	db.Close()
-	if res := cache.DeleteValidSystem(system); ! res {
+	if res := cache.DeleteValidSystem(system); !res {
 		// Soft fail, chache can be restored later
 		fmt.Println("[ERROR]: can't delete %s from cache", system.UUID)
 	}
@@ -261,7 +261,7 @@ func RenewalPlan(c *gin.Context) {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "system subscription plan not renewed", "error": err.Error()})
 			return
 		}
-		if res := cache.SetValidSystem(system); ! res {
+		if res := cache.SetValidSystem(system); !res {
 			// Soft fail, chache can be restored later
 			fmt.Println("[ERROR]: can't save %s inside the cache", system.UUID)
 		}
@@ -333,7 +333,7 @@ func UpgradePlan(c *gin.Context) {
 				c.JSON(http.StatusBadRequest, gin.H{"message": "system subscription plan not updated", "error": err.Error()})
 				return
 			}
-			if res := cache.SetValidSystem(system); ! res {
+			if res := cache.SetValidSystem(system); !res {
 				// Soft fail, chache can be restored later
 				fmt.Println("[ERROR]: can't save %s inside the cache", system.UUID)
 			}

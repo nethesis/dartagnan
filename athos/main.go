@@ -86,6 +86,7 @@ func main() {
 		{
 			alerts.GET("/:system_id", methods.GetAlerts)
 			alerts.GET("/:system_id/histories", methods.GetAlertHistories)
+			alerts.PUT("/:alert_id", methods.UpdateAlertNote)
 		}
 		inventories := ui.Group("/inventories")
 		{

@@ -67,18 +67,18 @@
             </router-link>
           </li> -->
 
-          <li v-bind:class="[getCurrentPath('alerts') ? 'active' : '', 'list-group-item']">
-            <router-link to="/alerts">
-              <span class="pficon pficon-warning-triangle-o"></span>
-              <span class="list-group-item-value">{{ $t("menu.alerts") }}</span>
-
-            </router-link>
-          </li>
-
           <li v-bind:class="[getCurrentPath('servers') ? 'active' : '', 'list-group-item']">
             <router-link to="/servers">
               <span class="pficon pficon-server"></span>
               <span class="list-group-item-value">{{ $t("menu.servers") }}</span>
+
+            </router-link>
+          </li>
+
+          <li v-bind:class="[getCurrentPath('alerts') ? 'active' : '', 'list-group-item']">
+            <router-link to="/alerts">
+              <span class="pficon pficon-warning-triangle-o"></span>
+              <span class="list-group-item-value">{{ $t("menu.alerts") }}</span>
 
             </router-link>
           </li>
