@@ -206,6 +206,7 @@ func UpdateAlertNote(c *gin.Context) {
 
 func GetAlerts(c *gin.Context) {
 	var alerts []models.Alert
+	var ret []models.Alert
 	creatorID := c.MustGet("authUser").(string)
 	systemID := c.Param("system_id")
 
@@ -219,9 +220,17 @@ func GetAlerts(c *gin.Context) {
 
 	for i, alert := range alerts {
 		alerts[i].NameI18n = utils.GetAlertHumanName(alert.AlertID, "en-US")
+
+		if utils.CanAccessAlerts(alert.System.Subscription.SubscriptionPlan) {
+			ret = append(ret, alert)
+		}
 	}
 
-	c.JSON(http.StatusOK, alerts)
+	if len(ret) > 0 {
+		c.JSON(http.StatusOK, ret)
+	} else {
+		c.JSON(http.StatusNotFound, gin.H{"message": "no alert found!"})
+	}
 }
 
 func GetAlertHistories(c *gin.Context) {

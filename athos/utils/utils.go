@@ -271,3 +271,15 @@ func GetSystemById(systemID int) models.System {
 
 	return system
 }
+
+func CanAccessAlerts(plan models.SubscriptionPlan) bool {
+	switch plan.ID {
+	case 1: // Trial
+		return true
+	case 4: // Fiorentina
+		return true
+	case 5: // Pizza
+		return true
+	}
+	return false
+}

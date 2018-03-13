@@ -30,8 +30,7 @@ func AlertNotification(alert models.Alert, isNew bool) {
 	if alert.System.Subscription.SubscriptionPlan.Code == "" {
 		alert.System = utils.GetSystemById(alert.SystemID)
 	}
-	plan := alert.System.Subscription.SubscriptionPlan
-	if plan.Code == "fiorentina" || plan.Code == "pizza" {
+	if utils.CanAccessAlerts(alert.System.Subscription.SubscriptionPlan) {
 		switch x := alert.System.Notification["emails"].(type) {
 		case []interface{}:
 			for _, e := range x {
