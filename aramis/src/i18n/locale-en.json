@@ -111,7 +111,15 @@
       "payment_error_details": "Something went wrong...",
       "full_price": "Full price"
     },
-    "alert": {
+    "alerts": {
+      "all": "All",
+      "high": "Critical",
+      "average": "Medium",
+      "warning": "Warning",
+      "filter_by": "Filter by alert id",
+      "results": "Results",
+      "active_filters": "Active filters",
+      "clear_filters": "Clear filters",
       "alert_id": "Alert ID",
       "timestamp": "Created",
       "status": "Status",
@@ -120,7 +128,10 @@
       "delete": "Delete",
       "HIGH": "Critical",
       "AVERAGE": "Medium",
-      "WARNING": "Warning"
+      "WARNING": "Warning",
+      "no_alerts_title": "No alerts",
+      "no_alerts_subtitle": "You don't have any alerts triggered. Good job!",
+      "search": "Search"
     },
     "action": "Action",
     "next": "Next",

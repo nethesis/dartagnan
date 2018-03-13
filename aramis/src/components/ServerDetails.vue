@@ -173,7 +173,7 @@
                 <template slot="table-row" slot-scope="props">
                   <td>
                     <span :class="['fa fa-exclamation-triangle details-info', props.row.priority == 'HIGH'? 'red' : props.row.priority == 'AVERAGE' ? 'orange' : 'yellow' ]"
-                      data-toggle="tooltip" data-placement="left" :title="$t('alert.'+props.row.priority)"></span>
+                      data-toggle="tooltip" data-placement="left" :title="$t('alerts.'+props.row.priority)"></span>
                     <strong>{{ props.row.namei18n }}</strong>
                   </td>
                   <td class="fancy">{{ props.row.timestamp | formatDate}}</td>
@@ -182,9 +182,7 @@
                   </td>
                   <td class="fancy">
                     <span class="system-note">{{ props.row.note || '-' }}</span>
-                    <button class="btn btn-default right" type="button" @click="openAlertNoteModal(props.row)">
-                      <span class="pficon pficon-edit"></span>
-                    </button>
+                    <edit-note :obj="props.row"></edit-note>
                   </td>
                 </template>
               </vue-good-table>
@@ -479,6 +477,7 @@
 
   import RenewButton from './directives/RenewButton.vue';
   import DeleteServer from './directives/DeleteServer.vue';
+  import EditNote from './directives/EditNote.vue';
   import {
     setTimeout
   } from 'timers';
@@ -488,7 +487,8 @@
     mixins: [LoginService, StorageService, UtilService],
     components: {
       renewButton: RenewButton,
-      deleteServer: DeleteServer
+      deleteServer: DeleteServer,
+      editNote: EditNote
     },
     created() {
       // get server info
@@ -519,21 +519,21 @@
           isLoadingAlerts: true,
         },
         columns: [{
-            label: this.$i18n.t('alert.alert_id'),
+            label: this.$i18n.t('alerts.alert_id'),
             field: 'namei18n',
             filterable: true,
           }, {
-            label: this.$i18n.t('alert.timestamp'),
+            label: this.$i18n.t('alerts.timestamp'),
             field: 'timestamp',
             filterable: true,
           },
           {
-            label: this.$i18n.t('alert.status'),
+            label: this.$i18n.t('alerts.status'),
             field: 'status',
             filterable: true,
           },
           {
-            label: this.$i18n.t('alert.note'),
+            label: this.$i18n.t('alerts.note'),
             field: 'note',
             filterable: true,
             sortable: false

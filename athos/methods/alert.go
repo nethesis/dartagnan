@@ -238,10 +238,10 @@ func GetAlerts(c *gin.Context) {
 
 func getSystemsByCreator(creatorID string) []models.System {
 	var systems []models.System
-        db := database.Database()
+	db := database.Database()
 	db.Set("gorm:auto_preload", false)
-        db.Select("systems.id").Where("creator_id = ?", creatorID).Find(&systems)
-        db.Close()
+	db.Select("systems.id").Where("creator_id = ?", creatorID).Find(&systems)
+	db.Close()
 
 	return systems
 }

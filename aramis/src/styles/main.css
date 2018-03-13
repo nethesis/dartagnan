@@ -273,6 +273,7 @@ textarea {
 
 .details-info {
   font-size: 15px !important;
+  margin-right: 5px;
 }
 
 .details-arrow {
@@ -288,6 +289,10 @@ textarea {
 
 .select-search {
   margin-left: 15px !important;
+}
+
+.no-color::before {
+  color: black
 }
 
 .orange {
@@ -312,6 +317,18 @@ textarea {
 
 .gray {
   color: #8b8d8f;
+}
+
+.red-top {
+  border-top-color: #cc0000 !important;
+}
+
+.yellow-top {
+  border-top-color: #f0ab00 !important;
+}
+
+.orange-top {
+  border-top-color: #ec7a08 !important;
 }
 
 .unsplash {
@@ -454,6 +471,10 @@ textarea {
 
 .resource-info-details {
   min-height: 20px;
+}
+
+.inline-block {
+  display: inline-block;
 }
 
 .system-note {
