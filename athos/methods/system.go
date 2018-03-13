@@ -53,14 +53,14 @@ func CreateSystem(c *gin.Context) {
 	uuid := utils.GenerateUUID()
 	secret := utils.GenerateSecret(uuid)
 	system := models.System{
-		CreatorID: creatorID,
-		UUID:      uuid,
-		Secret:    secret,
-		Tags:      "trial",
-		PublicIP:  "",
-		Status:    "active",
+		CreatorID:    creatorID,
+		UUID:         uuid,
+		Secret:       secret,
+		Tags:         "trial",
+		PublicIP:     "",
+		Status:       "active",
 		Notification: json.Notification,
-		Created:   time.Now().UTC(),
+		Created:      time.Now().UTC(),
 		Subscription: models.Subscription{
 			UserID:             creatorID,
 			ValidFrom:          time.Now().UTC(),

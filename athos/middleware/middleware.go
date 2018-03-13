@@ -43,10 +43,10 @@ func respondWithError(code int, message string, c *gin.Context) {
 
 func GetSecret(c *gin.Context) string {
 	/* Header format:
-		Authorization: token <TOKEN>
+	Authorization: token <TOKEN>
 	*/
 	authHeader := strings.Split(c.GetHeader("Authorization"), " ")
-	if (len(authHeader) > 1) {
+	if len(authHeader) > 1 {
 		return authHeader[1]
 	} else {
 		return ""
@@ -55,18 +55,17 @@ func GetSecret(c *gin.Context) string {
 
 func AuthSecret(c *gin.Context) {
 	secret := GetSecret(c)
-	if (secret == "") {
-                respondWithError(http.StatusUnauthorized, "invalid Secret", c)
-                return
+	if secret == "" {
+		respondWithError(http.StatusUnauthorized, "invalid Secret", c)
+		return
 	}
-        if utils.GetSystemFromSecret(secret).ID != 0 {
-                c.Next()
-        } else {
-                respondWithError(http.StatusUnauthorized, "invalid Secret", c)
-                return
-        }
+	if utils.GetSystemFromSecret(secret).ID != 0 {
+		c.Next()
+	} else {
+		respondWithError(http.StatusUnauthorized, "invalid Secret", c)
+		return
+	}
 }
-
 
 func AuthJWT(c *gin.Context) {
 	// define api endpoint and audience

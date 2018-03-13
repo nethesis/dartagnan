@@ -27,12 +27,11 @@ import (
 
 	gomail "gopkg.in/gomail.v2"
 
-	"github.com/nicksnyder/go-i18n/i18n"
-	"github.com/nethesis/dartagnan/athos/models"
-	"github.com/nethesis/dartagnan/athos/configuration"
 	"github.com/cbroglie/mustache"
+	"github.com/nethesis/dartagnan/athos/configuration"
+	"github.com/nethesis/dartagnan/athos/models"
+	"github.com/nicksnyder/go-i18n/i18n"
 )
-
 
 func statusColor(status string) string {
 	switch status {
@@ -50,7 +49,7 @@ func alertHtmlBody(alert models.Alert) string {
 	values := make(map[string]string)
 	T, _ := i18n.Tfunc("en-US", "en-US", "en-US")
 
-	values["labelName"] =  T("Name")
+	values["labelName"] = T("Name")
 	values["labelAlertReport"] = T("Alert report")
 	values["labelPublicIp"] = T("Public IP")
 	values["labelDetails"] = T("Details")
@@ -68,8 +67,8 @@ func alertHtmlBody(alert models.Alert) string {
 
 	values["serverName"] = alert.System.UUID
 	values["serverDetails"] = fmt.Sprintf(fmt.Sprintf("%s/servers/%d", configuration.Config.Notifications.PortalUrl, alert.System.ID))
-	values["alertId"] =  alert.NameI18n
-	values["alertStatus"] =  alert.Status
+	values["alertId"] = alert.NameI18n
+	values["alertStatus"] = alert.Status
 	values["alertStatusColor"] = statusColor(alert.Status)
 	values["serverIp"] = alert.System.PublicIP
 
@@ -98,12 +97,12 @@ func alertTextBody(alert models.Alert) string {
 func MailNotification(address string, alert models.Alert, isNew bool) bool {
 	i18n.MustLoadTranslationFile("templates/en-US-alert.json")
 	T, _ := i18n.Tfunc("en-US", "en-US", "en-US")
-		status := true
-		m := gomail.NewMessage()
-		m.SetHeader("From", configuration.Config.Notifications.Email.From)
-		m.SetHeader("To", address)
+	status := true
+	m := gomail.NewMessage()
+	m.SetHeader("From", configuration.Config.Notifications.Email.From)
+	m.SetHeader("To", address)
 	subject := fmt.Sprintf("[%s][%s] %s", T("ALERT"), T(alert.Status), alert.NameI18n)
-		m.SetHeader("Subject", subject)
+	m.SetHeader("Subject", subject)
 	m.SetBody("text/plain", alertTextBody(alert))
 	if isNew {
 		m.SetHeader("Message-Id", fmt.Sprintf("%d@dartagnan.project", alert.ID))
@@ -128,4 +127,3 @@ func MailNotification(address string, alert models.Alert, isNew bool) bool {
 
 	return status
 }
-

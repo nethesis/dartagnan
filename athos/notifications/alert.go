@@ -26,7 +26,6 @@ import (
 	"github.com/nethesis/dartagnan/athos/utils"
 )
 
-
 func AlertNotification(alert models.Alert, isNew bool) {
 	if alert.System.Subscription.SubscriptionPlan.Code == "" {
 		alert.System = utils.GetSystemById(alert.SystemID)

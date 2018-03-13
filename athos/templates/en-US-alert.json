@@ -1,5 +1,4 @@
-[
-  {
+[{
     "id": "Alert report",
     "translation": "Alert report"
   },
@@ -31,5 +30,4 @@
     "id": "This is an automatic mail, please do not reply",
     "translation": "This is an automatic mail, please do not reply"
   }
-
 ]

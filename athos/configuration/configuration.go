@@ -30,19 +30,18 @@ import (
 )
 
 type Notifications struct {
-	PortalUrl    string `json:"portal_url"`
-	HelpUrl      string `json:"help_url"`
-	DocsUrl      string `json:"docs_url"`
-	PortalTitle  string `json:"portal_title"`
-        Email struct {
-                From         string `json:"from"`
-                SMTPHost     string `json:"smtp_host"`
-                SMTPPort     int    `json:"smtp_port"`
-                SMTPUser     string `json:"smtp_user"`
-                SMTPPassword string `json:"smtp_password"`
-        } `json:"email"`
+	PortalUrl   string `json:"portal_url"`
+	HelpUrl     string `json:"help_url"`
+	DocsUrl     string `json:"docs_url"`
+	PortalTitle string `json:"portal_title"`
+	Email       struct {
+		From         string `json:"from"`
+		SMTPHost     string `json:"smtp_host"`
+		SMTPPort     int    `json:"smtp_port"`
+		SMTPUser     string `json:"smtp_user"`
+		SMTPPassword string `json:"smtp_password"`
+	} `json:"email"`
 }
-
 
 type Configuration struct {
 	DbHost     string `json:"db_host"`
@@ -65,7 +64,7 @@ type Configuration struct {
 		ClientID     string `json:"client_id"`
 		ClientSecret string `json:"client_secret"`
 	} `json:"paypal"`
-        Notifications    Notifications  `json:"notifications"`
+	Notifications Notifications `json:"notifications"`
 }
 
 var Config = Configuration{}

@@ -27,11 +27,11 @@ import (
 	"fmt"
 	"math"
 	"strconv"
-	"time"
 	"strings"
+	"time"
 
-	"github.com/satori/go.uuid"
 	"github.com/nicksnyder/go-i18n/i18n"
+	"github.com/satori/go.uuid"
 
 	"github.com/nethesis/dartagnan/athos/database"
 	"github.com/nethesis/dartagnan/athos/models"
@@ -179,7 +179,6 @@ func GetAlertHumanName(alertId string, locale string) string {
 	return alertId
 }
 
-
 func GetAlertPriority(alertID string) string {
 	parts := strings.Split(alertID, ":")
 	switch parts[0] {
@@ -267,8 +266,8 @@ func CheckSystemOwnership(systemID string, creatorID string) bool {
 func GetSystemById(systemID int) models.System {
 	var system models.System
 	db := database.Database()
-        db.Preload("Subscription.SubscriptionPlan").Where("id = ?", systemID).First(&system)
-        db.Close()
+	db.Preload("Subscription.SubscriptionPlan").Where("id = ?", systemID).First(&system)
+	db.Close()
 
 	return system
 }

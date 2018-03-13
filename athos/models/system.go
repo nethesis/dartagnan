@@ -27,24 +27,22 @@ import (
 )
 
 type System struct {
-	ID        int       `db:"id" json:"id"`
-	CreatorID string    `db:"creator_id" json:"creator_id"`
-	UUID      string    `db:"uuid" json:"uuid"`
-	Secret    string    `db:"secret" json:"secret"`
-	Tags      string    `db:"tags" json:"tags"`
-	PublicIP  string    `db:"public_ip" json:"public_ip"`
-	Status    string    `db:"status" json:"status"`
-	Created   time.Time `db:"created" json:"created"`
-	Notification  NotificationMap `db:"notification" json:"notification"`
+	ID           int             `db:"id" json:"id"`
+	CreatorID    string          `db:"creator_id" json:"creator_id"`
+	UUID         string          `db:"uuid" json:"uuid"`
+	Secret       string          `db:"secret" json:"secret"`
+	Tags         string          `db:"tags" json:"tags"`
+	PublicIP     string          `db:"public_ip" json:"public_ip"`
+	Status       string          `db:"status" json:"status"`
+	Created      time.Time       `db:"created" json:"created"`
+	Notification NotificationMap `db:"notification" json:"notification"`
+	Hostname     string          `sql:"-" json:"hostname"`
 
 	Subscription   Subscription `json:"subscription"`
 	SubscriptionID int          `db:"subscription_id" json:"-"`
-
-	Hostname string `sql:"-" json:"hostname"`
 }
 
 type SystemJSON struct {
-	Tags string `db:"tags" json:"tags"`
-	//Notification string `json:notification`
+	Tags         string `db:"tags" json:"tags"`
 	Notification NotificationMap
 }

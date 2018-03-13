@@ -23,14 +23,14 @@ package cache
 
 import (
 	"fmt"
-	"time"
 	"hash/fnv"
+	"time"
 
 	"github.com/mediocregopher/radix.v2/redis"
 
 	"github.com/nethesis/dartagnan/athos/configuration"
-	"github.com/nethesis/dartagnan/athos/models"
 	"github.com/nethesis/dartagnan/athos/database"
+	"github.com/nethesis/dartagnan/athos/models"
 )
 
 func Cache() *redis.Client {
@@ -69,9 +69,9 @@ func deleteRedisRecord(uuid string, client *redis.Client) (bool, string) {
 }
 
 func CalculateTier(uuid string, tiers uint32) uint32 {
-        h := fnv.New32a()
-        h.Write([]byte(uuid))
-        tier := h.Sum32() % tiers
+	h := fnv.New32a()
+	h.Write([]byte(uuid))
+	tier := h.Sum32() % tiers
 
 	return tier
 }
@@ -101,7 +101,7 @@ func DeleteValidSystem(system models.System) bool {
 }
 
 func BulkSetValidSystems() (bool, []string) {
-	var errors []string;
+	var errors []string
 	systems := getValidSystems()
 
 	client := Cache()
@@ -112,12 +112,11 @@ func BulkSetValidSystems() (bool, []string) {
 		return false, []string{fmt.Sprintf("Can't start Redis transaction: %s", err)}
 	}
 
-        err = client.Cmd("FLUSHALL").Err
-        if err != nil {
-                client.Close()
-                return false, []string{fmt.Sprintf("Can't FLUSH Redis keys: %s", err)}
-        }
-
+	err = client.Cmd("FLUSHALL").Err
+	if err != nil {
+		client.Close()
+		return false, []string{fmt.Sprintf("Can't FLUSH Redis keys: %s", err)}
+	}
 
 	for _, system := range systems {
 		ret, err := setRedisRecord(system, client)
@@ -128,8 +127,8 @@ func BulkSetValidSystems() (bool, []string) {
 
 	err = client.Cmd("EXEC").Err
 	if err != nil {
-	client.Close()
-	return false, []string{fmt.Sprintf("Can't finish Redis transaction: %s", err)}
+		client.Close()
+		return false, []string{fmt.Sprintf("Can't finish Redis transaction: %s", err)}
 	}
 
 	client.Close()

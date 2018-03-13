@@ -174,7 +174,7 @@
                   <td>
                     <span :class="['fa fa-exclamation-triangle details-info', props.row.priority == 'HIGH'? 'red' : props.row.priority == 'AVERAGE' ? 'orange' : 'yellow' ]"
                       data-toggle="tooltip" data-placement="left" :title="$t('alert.'+props.row.priority)"></span>
-                    <strong>{{ props.row.alert_id }}</strong>
+                    <strong>{{ props.row.namei18n }}</strong>
                   </td>
                   <td class="fancy">{{ props.row.timestamp | formatDate}}</td>
                   <td>
@@ -448,7 +448,7 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
               <span class="pficon pficon-close"></span>
             </button>
-            <h4 class="modal-title" id="myModalLabel">{{$t('servers.note_alert_for')}} {{currentAlert.alert_id}}</h4>
+            <h4 class="modal-title" id="myModalLabel">{{$t('servers.note_alert_for')}} {{currentAlert.namei18n}}</h4>
           </div>
           <div class="modal-body">
             <form class="form-horizontal">
@@ -520,7 +520,7 @@
         },
         columns: [{
             label: this.$i18n.t('alert.alert_id'),
-            field: 'alert_id',
+            field: 'namei18n',
             filterable: true,
           }, {
             label: this.$i18n.t('alert.timestamp'),

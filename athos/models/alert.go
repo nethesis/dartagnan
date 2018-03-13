@@ -33,10 +33,10 @@ type Alert struct {
 	Note      string    `db:"note" json:"note"`
 	Status    string    `db:"status" json:"status"`
 	Timestamp time.Time `db:"timestamp" json:"timestamp"`
+	NameI18n  string    `sql:"-" json:"namei18n"`
 
-	System    System `json:"system"`
-	SystemID  int    `db:"system_id" json:"-"`
-	NameI18n  string `sql:"-" json:"namei18n"`
+	System   System `json:"system"`
+	SystemID int    `db:"system_id" json:"-"`
 }
 
 type AlertHistory struct {

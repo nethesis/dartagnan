@@ -31,8 +31,8 @@ import (
 
 	"github.com/nethesis/dartagnan/athos/database"
 	"github.com/nethesis/dartagnan/athos/models"
-	"github.com/nethesis/dartagnan/athos/utils"
 	"github.com/nethesis/dartagnan/athos/notifications"
+	"github.com/nethesis/dartagnan/athos/utils"
 )
 
 func alertExists(SystemID int, AlertID string) (bool, models.Alert) {
@@ -156,7 +156,6 @@ func SetAlert(c *gin.Context) {
 			SystemID:  system.ID,
 		}
 
-
 		// save alert
 		db := database.Database()
 		if err := db.Save(&alert).Error; err != nil {
@@ -166,7 +165,7 @@ func SetAlert(c *gin.Context) {
 
 		// send alert notification
 		alert.NameI18n = utils.GetAlertHumanName(alert.AlertID, "en-US")
-	        notifications.AlertNotification(alert, true)
+		notifications.AlertNotification(alert, true)
 
 		db.Close()
 	}
@@ -218,9 +217,9 @@ func GetAlerts(c *gin.Context) {
 	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id = ?", systemID).Offset(offsets[0]).Limit(offsets[1]).Find(&alerts)
 	db.Close()
 
-        for i, alert := range alerts {
-                alerts[i].NameI18n = utils.GetAlertHumanName(alert.AlertID, "en-US")
-        }
+	for i, alert := range alerts {
+		alerts[i].NameI18n = utils.GetAlertHumanName(alert.AlertID, "en-US")
+	}
 
 	c.JSON(http.StatusOK, alerts)
 }

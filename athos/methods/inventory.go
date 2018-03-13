@@ -60,7 +60,6 @@ func SetInventory(c *gin.Context) {
 	// prepare the db for all queries
 	db := database.Database()
 
-	//db.Model(&system).Update("PublicIP",c.ClientIP());
 	if err := db.Model(&system).Where("uuid = ?", json.Data.SystemID).Update("PublicIP", c.ClientIP()).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "PublicIP not updated", "error": err.Error()})
 		db.Close()
