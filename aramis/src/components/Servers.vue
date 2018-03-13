@@ -108,6 +108,7 @@
       <div v-for="s in filteredServers()" v-bind:key="s.id" class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
         <div :class="[isExpired(s.subscription.valid_until) ? 'disabled-top' : '', 'card-pf card-pf-view card-pf-accented']">
           <div class="card-pf-body">
+            <span v-if="s.alerts > 0" class="fa fa-exclamation-triangle fa-big orange pull-right fa-2x" data-toggle="tooltip" data-placement="right" :title="$t('servers.alerts')+': '+s.alerts"></span>
             <div @click="$parent.routeTo('servers/'+s.id)" class="card-pf-top-element click-hover">
               <span :class="[isExpired(s.subscription.valid_until) ? 'disabled-circle' : '', 'pficon pficon-server card-pf-icon-circle adjust-icon-size']"></span>
             </div>
