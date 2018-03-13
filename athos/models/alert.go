@@ -36,7 +36,7 @@ type Alert struct {
 
 	System    System `json:"system"`
 	SystemID  int    `db:"system_id" json:"-"`
-	NameI18n  string `sql:"-" json:"-"`
+	NameI18n  string `sql:"-" json:"namei18n"`
 }
 
 type AlertHistory struct {
