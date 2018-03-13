@@ -25,6 +25,9 @@ package methods
 import (
 	"net/http"
 	"time"
+	"fmt"
+	"strings"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -48,11 +51,61 @@ func alertExists(SystemID int, AlertID string) (bool, models.Alert) {
 	return true, alert
 }
 
+func cleanupStaleAlerts(creatorID string, systemID string) {
+	var alerts []models.Alert
+	db := database.Database()
+	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id = ?", systemID).Find(&alerts)
+	db.Close()
+
+	for _, alert := range alerts {
+		// do not reset backup, raid and wan alerts
+		if alert.AlertID == "system:backup:failure" || strings.Index(alert.AlertID,"md:") == 0 || strings.Index(alert.AlertID,"wan:") == 0 {
+			continue
+		}
+
+		id, _ := strconv.Atoi(systemID)
+
+		// add to history with RESOLVED
+		alertHistory := models.AlertHistory{
+			AlertID:    alert.AlertID,
+			Priority:   alert.Priority,
+			Resolution: "RESOLVED",
+			StatusFrom: alert.Status,
+			StatusTo:   alert.Status,
+			StartTime:  alert.Timestamp,
+			EndTime:    time.Now().UTC(),
+			SystemID:   id,
+		}
+
+		// send alert notification
+		alert.Status = "OK"
+		alert.NameI18n = utils.GetAlertHumanName(alert.AlertID, "en-US")
+		notifications.AlertNotification(alert, false)
+
+		// save to history
+		db := database.Database()
+		if err := db.Save(&alertHistory).Error; err != nil {
+			fmt.Printf("[ERROR] Alert not moved to history: %d\n", alert.AlertID)
+		}
+
+		// delete current alert
+		if err := db.Delete(&alert).Error; err != nil {
+			fmt.Printf("[ERROR] Alert not deleted: %d\n", alert.AlertID)
+		}
+	}
+
+}
+
 func SetAlert(c *gin.Context) {
 	var json models.AlertJSON
 	if err := c.BindJSON(&json); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "request fields malformed", "error": err.Error()})
 		return
+	}
+
+	// reboot: cleanup stale alerts
+	if json.AlertID == "uptime:uptime" {
+		cleanupStaleAlerts(c.MustGet("authUser").(string), json.SystemID)
 	}
 
 	// get system from uuid
