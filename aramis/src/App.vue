@@ -243,10 +243,10 @@
         return this.$route.path.split('/')[1] === route
       },
       doLogout() {
+        this.$router.push('/login')
         this.auth0Logout()
         this.isLogged = false
         this.resetGraphics()
-        this.auth0Logout()
       },
       initGraphics() {
         $('body').addClass('logged')

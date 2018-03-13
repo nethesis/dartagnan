@@ -3,6 +3,10 @@
     <span id="badge">
       <img class="brand-logo" src="./../assets/logo.png" alt=" logo" />
     </span>
+    <div v-if="sessionExpired" class="alert alert-warning alert-dismissable absolute-center-message">
+      <span class="pficon pficon-warning-triangle-o"></span>
+      <strong>{{$t('login.session_expired')}}</strong>. {{$t('login.session_expired_desc')}}.
+    </div>
     <div class="container">
       <div class="row">
         <div class="col-sm-12 col-brand">
@@ -47,7 +51,14 @@
     name: 'login',
     mixins: [LoginService, StorageService, UtilService],
     data() {
-      return {}
+      var sessionExpired = false
+      if (this.$parent.action == 'sessionExpired') {
+        sessionExpired = true
+        this.delete('query_params')
+      }
+      return {
+        sessionExpired: sessionExpired
+      }
     },
     methods: {
       doLogin() {

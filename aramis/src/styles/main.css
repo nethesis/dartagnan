@@ -344,6 +344,14 @@ textarea {
   right: 0;
 }
 
+.absolute-center-message {
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+
 .brand-logo {
   height: 85px;
 }

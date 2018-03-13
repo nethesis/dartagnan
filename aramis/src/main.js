@@ -36,6 +36,19 @@ Vue.filter('secondsInReadable', filters.secondsInReadable)
 Vue.filter('formatDate', filters.formatDate)
 Vue.filter('dateFromNow', filters.dateFromNow)
 
+// handle 401 logout
+Vue.http.interceptors.push((request, next) => {
+  next(function (response) {
+    if (response.status == 401) {
+      this.set('query_params', {
+        action: 'sessionExpired'
+      })
+      this.set('expires_at', new Date().getTime())
+      window.location.reload()
+    }
+  });
+})
+
 // init Vue app
 new Vue({
   el: '#app',
