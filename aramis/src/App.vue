@@ -37,18 +37,9 @@
               </ul>
             </li>
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle nav-item-iconic" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                <span :title="$t('menu.help')" class="fa pficon-help"></span>
-                <span class="caret"></span>
+              <a href="#" class="dropdown-toggle nav-item-iconic" id="dropdownMenu1">
+                <span :title="$t('menu.help')" class="fa pficon-help" data-toggle="modal" data-target="#about-modal"></span>
               </a>
-              <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                <li>
-                  <a target="blank" href="https://github.com/nethesis/dartagnan">{{ $t("menu.help") }}</a>
-                </li>
-                <li>
-                  <a href="" data-toggle="modal" data-target="#about-modal">{{ $t("menu.about") }}</a>
-                </li>
-              </ul>
             </li>
           </ul>
         </nav>
@@ -109,25 +100,6 @@
               </ul>
             </div>
           </li>
-          <li class="list-group-item secondary-nav-item-pf mobile-nav-item-pf visible-xs-block" data-target="#help-secondary">
-            <a href="#">
-              <span class="pficon pficon-help" data-toggle="tooltip" title="" data-original-title="Help"></span>
-              <span class="list-group-item-value">{{ $t("menu.help") }}</span>
-            </a>
-            <div id="help-secondary" class="nav-pf-secondary-nav">
-              <div class="nav-item-pf-header">
-                <a href="#" class="secondary-collapse-toggle-pf" data-toggle="collapse-secondary-nav"></a>
-                <span>{{ $t("menu.help") }}</span>
-              </div>
-              <ul class="list-group">
-                <li class="list-group-item">
-                  <a target="blank" href="https://github.com/nethesis/dartagnan">
-                    <span class="list-group-item-value">{{ $t("menu.help") }}</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </li>
 
         </ul>
 
@@ -153,16 +125,16 @@
             </button>
           </div>
           <div class="modal-body">
-            <h1>Aramis</h1>
+            <h1>Dartagnan</h1>
             <div class="product-versions-pf">
               <ul class="list-unstyled">
                 <li>
-                  <strong>Athos</strong>
-                  <a target="blank" href="https://github.com/nethesis/dartagnan/tree/master/athos">GitHub</a>
+                  <strong>Dartagnan on</strong>
+                  <a target="blank" href="https://github.com/nethesis/dartagna">GitHub</a>
                 </li>
                 <li>
-                  <strong>Aramis</strong>
-                  <a target="blank" href="https://github.com/nethesis/dartagnan/tree/master/aramis">GitHub</a>
+                  <strong>Docs</strong>
+                  <a target="blank" href="https://nethesis.github.io/dartagnan/">Link</a>
                 </li>
               </ul>
             </div>

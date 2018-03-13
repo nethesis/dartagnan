@@ -108,8 +108,10 @@
       <div v-for="s in filteredServers()" v-bind:key="s.id" class="col-xs-12 col-sm-12 col-md-6 col-lg-3">
         <div :class="[isExpired(s.subscription.valid_until) ? 'disabled-top' : '', 'card-pf card-pf-view card-pf-accented']">
           <div class="card-pf-body">
-            <span v-if="s.alerts > 0" class="fa fa-exclamation-triangle fa-big orange pull-right fa-2x" data-toggle="tooltip" data-placement="left" :title="$t('servers.alerts')+': '+s.alerts"></span>
+            <span v-if="s.alerts > 0" class="fa fa-exclamation-triangle fa-big orange pull-right fa-2x" data-toggle="tooltip" data-placement="left"
+              :title="$t('servers.alerts')+': '+s.alerts"></span>
             <div @click="$parent.routeTo('servers/'+s.id)" class="card-pf-top-element click-hover">
+              <img :src="getImage(s)" class="plan-icon">
               <span :class="[isExpired(s.subscription.valid_until) ? 'disabled-circle' : '', 'pficon pficon-server card-pf-icon-circle adjust-icon-size']"></span>
             </div>
             <h2 @click="$parent.routeTo('servers/'+s.id)" class="card-pf-title text-center click-hover">
@@ -296,6 +298,21 @@
       }
     },
     methods: {
+      getImage(s) {
+        if (s.subscription.subscription_plan.code == 'fiorentina') {
+          return require('./../assets/fiorentina.svg')
+        }
+        if (s.subscription.subscription_plan.code == 'pizza') {
+          return require('./../assets/pizza.svg')
+        }
+        if (s.subscription.subscription_plan.code == 'crostino') {
+          return require('./../assets/crostino.svg')
+        }
+        if (s.subscription.subscription_plan.code == 'lasagna') {
+          return require('./../assets/lasagna.svg')
+        }
+        return require('./../assets/trial.svg')
+      },
       handleCopy(status) {
         this.copySucceeded = status
       },
@@ -411,7 +428,8 @@
         if (this.filters.search.length > 0) {
           var context = this
           filtered = _.filter(filtered, function (item) {
-            return item.hostname.toLowerCase().startsWith(context.filters.search.toLowerCase()) || item.public_ip.toLowerCase().startsWith(context.filters.search.toLowerCase())
+            return item.hostname.toLowerCase().startsWith(context.filters.search.toLowerCase()) || item.public_ip.toLowerCase()
+              .startsWith(context.filters.search.toLowerCase())
           })
         }
         return _.orderBy(filtered, ['hostname'], 'asc')

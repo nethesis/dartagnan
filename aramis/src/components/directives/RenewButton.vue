@@ -145,7 +145,7 @@
             payment: {
               transactions: [{
                 amount: {
-                  total: context.currentPlan.price > 0 ? context.currentPlan.price : 0.01,
+                  total: context.currentPlan.price,
                   currency: 'EUR'
                 },
                 "item_list": {
@@ -153,7 +153,7 @@
                     "name": context.currentPlan.code,
                     "description": context.currentPlan.name,
                     "sku": context.obj.uuid,
-                    "price": context.currentPlan.price > 0 ? context.currentPlan.price : 0.01,
+                    "price": context.currentPlan.price,
                     "currency": "EUR",
                     "quantity": "1",
                   }, ],

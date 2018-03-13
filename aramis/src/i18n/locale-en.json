@@ -10,6 +10,12 @@
       "login": "Login",
       "logout": "Logout"
     },
+    "profile": {
+      "profile": "Profile",
+      "verified": "Verified",
+      "last_login": "Last login",
+      "email_is": "Email is"
+    },
     "login": {
       "login": "Login",
       "welcome_title": "Welcome to Aramis Monitoring Portal",

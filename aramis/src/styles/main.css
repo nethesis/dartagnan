@@ -483,3 +483,18 @@ textarea {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.plan-icon {
+  border: 2px solid #39a5dd;
+  border-radius: 50%;
+  height: auto;
+  width: 42px;
+  position: absolute;
+  left: 55%;
+  top: 15%;
+  background: white;
+}
+
+.profile-picture-main {
+  padding: 4px;
+}

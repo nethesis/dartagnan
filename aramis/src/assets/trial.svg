@@ -1,0 +1,26 @@
+<?xml version="1.0"?><svg width="400" height="400" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <linearGradient id="linearGradient4121">
+   <stop stop-color="#e80000" id="stop4123" offset="0"/>
+   <stop stop-color="#ef6565" stop-opacity="0" id="stop6077" offset="0.622951"/>
+   <stop stop-color="#f6caca" stop-opacity="0" id="stop4125" offset="1"/>
+  </linearGradient>
+  <linearGradient id="linearGradient3134">
+   <stop stop-color="#ffa1a1" id="stop3136" offset="0"/>
+   <stop stop-color="#b41e1e" id="stop3138" offset="1"/>
+  </linearGradient>
+  <linearGradient y2="0.940962" y1="0.126479" xlink:href="#linearGradient3134" x2="0.899107" x1="0.27927" id="linearGradient3140"/>
+  <linearGradient y2="0.940962" y1="0.126479" xlink:href="#linearGradient3134" x2="0.899107" x1="0.27927" id="linearGradient3148"/>
+  <linearGradient y2="183.58783" x2="202.58235" y1="-13.269632" x1="29.753853" gradientUnits="userSpaceOnUse" id="linearGradient3154" xlink:href="#linearGradient3134"/>
+  <linearGradient y2="183.58783" x2="202.58235" y1="-13.269632" x1="29.753853" gradientUnits="userSpaceOnUse" id="linearGradient3156" xlink:href="#linearGradient3134"/>
+  <linearGradient y2="0.906234" x2="0.871085" y1="0.155876" x1="0.292094" id="linearGradient2184" xlink:href="#linearGradient3134"/>
+ </defs>
+ <metadata id="metadata7">image/svg+xml3D effect warning triangle18/9/07Tim O'Ryan</metadata>
+ <g>
+  <title>Layer 1</title>
+  <g id="layer1">
+   <path fill="#ffffff" stroke-width="20.687786" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="4" id="path19491" d="m199.897186,120.309883c-2.544266,0.13131 -4.850555,1.537369 -6.13269,3.738876l-101.998428,176.000893c-1.351921,2.333221 -1.356201,5.210541 -0.011215,7.547791c1.344978,2.33728 3.834839,3.779297 6.531456,3.782806l203.404121,0.319183c2.697723,0.008087 5.19458,-1.424377 6.549225,-3.757355c1.354614,-2.332947 1.360931,-5.211578 0.016602,-7.550476l-101.428482,-176.320038c-1.419327,-2.457092 -4.096939,-3.9104 -6.930588,-3.761681l0,0z"/>
+   <path fill="#000000" stroke-width="1px" id="text2171" d="m202.363861,249.666687l-4.718536,0c-0.488159,-8.24382 -2.11525,-18.114792 -4.881256,-29.6129l-5.613434,-23.429977c-3.362656,-14.047028 -5.043961,-24.107803 -5.043945,-30.182373c-0.000015,-12.257217 5.938828,-18.38588 17.816544,-18.386032c5.206635,0.000153 9.504822,1.695023 12.894623,5.084641c3.389709,3.389877 5.084579,7.71521 5.084641,12.975967c-0.000061,5.586441 -1.789841,15.755692 -5.36937,30.507797l-5.694794,23.429977c-2.006775,8.243958 -3.49826,18.114899 -4.474472,29.6129l0,0zm-2.196564,15.375916c5.532028,0.000031 9.816681,1.857605 12.853958,5.572754c3.037155,3.71521 4.555771,7.687988 4.555832,11.918396c-0.000061,5.586304 -1.844086,9.884521 -5.532089,12.894623c-3.688095,3.010101 -7.647324,4.515137 -11.877701,4.515137c-5.586349,0 -9.884552,-1.844025 -12.894623,-5.532074c-3.010132,-3.688049 -4.515167,-7.647278 -4.515152,-11.877686c-0.000015,-4.935486 1.66774,-9.084534 5.003281,-12.447205c3.33548,-3.362579 7.470978,-5.043915 12.406494,-5.043945l0,0z"/>
+  </g>
+ </g>
+</svg>
