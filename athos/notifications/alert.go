@@ -22,26 +22,23 @@
 package notifications
 
 import (
-	"encoding/json"
 	"github.com/nethesis/dartagnan/athos/models"
 	"github.com/nethesis/dartagnan/athos/utils"
 )
 
 
-type Notification map[string][]string
-
 func AlertNotification(alert models.Alert, isNew bool) {
-	if (models.System{}) == alert.System {
+	if alert.System.Subscription.SubscriptionPlan.Code == "" {
 		alert.System = utils.GetSystemById(alert.SystemID)
 	}
 	plan := alert.System.Subscription.SubscriptionPlan
 	if plan.Code == "fiorentina" || plan.Code == "pizza" {
-		// find all configured email addresses for this server
-		var t Notification
-		j := alert.System.Notification
-		json.Unmarshal([]byte(j), &t)
-		for _, email := range t["emails"] {
-			MailNotification(email, alert, isNew)
+		switch x := alert.System.Notification["emails"].(type) {
+		case []interface{}:
+			for _, e := range x {
+				MailNotification(e.(string), alert, isNew)
+			}
+		default:
 		}
 	}
 }

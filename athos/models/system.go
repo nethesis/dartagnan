@@ -35,7 +35,7 @@ type System struct {
 	PublicIP  string    `db:"public_ip" json:"public_ip"`
 	Status    string    `db:"status" json:"status"`
 	Created   time.Time `db:"created" json:"created"`
-	Notification  string	`db:"notification" json:"notification"`
+	Notification  NotificationMap `db:"notification" json:"notification"`
 
 	Subscription   Subscription `json:"subscription"`
 	SubscriptionID int          `db:"subscription_id" json:"-"`
@@ -45,5 +45,6 @@ type System struct {
 
 type SystemJSON struct {
 	Tags string `db:"tags" json:"tags"`
-	Notification string `json:notification`
+	//Notification string `json:notification`
+	Notification NotificationMap
 }
