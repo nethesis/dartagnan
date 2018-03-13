@@ -218,10 +218,71 @@ func GetAlerts(c *gin.Context) {
 	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id = ?", systemID).Find(&alerts)
 	db.Close()
 
-	for i, alert := range alerts {
-		alerts[i].NameI18n = utils.GetAlertHumanName(alert.AlertID, "en-US")
-
+	for _, alert := range alerts {
 		if utils.CanAccessAlerts(alert.System.Subscription.SubscriptionPlan) {
+			alert.NameI18n = utils.GetAlertHumanName(alert.AlertID, "en-US")
+			ret = append(ret, alert)
+		}
+	}
+
+	if len(ret) > 0 {
+		if offsets[1] > 0 {
+			c.JSON(http.StatusOK, ret[offsets[0]:offsets[1]])
+		} else {
+			c.JSON(http.StatusOK, ret)
+		}
+	} else {
+		c.JSON(http.StatusNotFound, gin.H{"message": "no alert found!"})
+	}
+}
+
+func getSystemsByCreator(creatorID string) []models.System {
+	var systems []models.System
+        db := database.Database()
+	db.Set("gorm:auto_preload", false)
+        db.Select("systems.id").Where("creator_id = ?", creatorID).Find(&systems)
+        db.Close()
+
+	return systems
+}
+
+func getSystemHostname(systemID int) string {
+	type Result struct {
+		Hostname string
+	}
+
+	var result Result
+	db := database.Database()
+	db.Raw("SELECT inventories.data->'networking'->>'fqdn' AS hostname FROM inventories WHERE system_id = ?", systemID).Scan(&result)
+	db.Close()
+
+	return result.Hostname
+}
+
+func GetAllAlerts(c *gin.Context) {
+	var alerts []models.Alert
+	var ret []models.Alert
+	var systemIds []int
+	creatorID := c.MustGet("authUser").(string)
+
+	page := c.Query("page")
+	limit := c.Query("limit")
+	offsets := utils.OffsetCalc(page, limit)
+
+	systems := getSystemsByCreator(creatorID)
+
+	for _, system := range systems {
+		systemIds = append(systemIds, system.ID)
+	}
+
+	db := database.Database()
+	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id IN (?)", systemIds).Find(&alerts)
+	db.Close()
+
+	for _, alert := range alerts {
+		if utils.CanAccessAlerts(alert.System.Subscription.SubscriptionPlan) {
+			alert.NameI18n = utils.GetAlertHumanName(alert.AlertID, "en-US")
+			alert.System.Hostname = getSystemHostname(alert.System.ID)
 			ret = append(ret, alert)
 		}
 	}
