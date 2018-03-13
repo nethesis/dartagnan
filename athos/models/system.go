@@ -38,6 +38,7 @@ type System struct {
 	Notification NotificationMap `db:"notification" json:"notification"`
 	Hostname     string          `sql:"-" json:"hostname"`
 
+	Alerts       int             `sql:"-" json:"alerts"`
 	Subscription   Subscription `json:"subscription"`
 	SubscriptionID int          `db:"subscription_id" json:"-"`
 }

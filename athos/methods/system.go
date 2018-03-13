@@ -144,6 +144,20 @@ func getStatus(id int) string {
 	}
 }
 
+func getAlertsNumber(system models.System) int {
+	if ! utils.CanAccessAlerts(system.Subscription.SubscriptionPlan) {
+		return -1
+	}
+	var alerts models.Alert
+	var count int
+	db := database.Database()
+	db.Where("system_id = ?", system.ID).First(&alerts).Count(&count)
+	db.Close()
+
+	return count
+}
+
+
 func GetSystems(c *gin.Context) {
 	var systems []models.System
 	creatorID := c.MustGet("authUser").(string)
@@ -163,6 +177,7 @@ func GetSystems(c *gin.Context) {
 
 	for i, system := range systems {
 		systems[i].Status = getStatus(system.ID)
+		systems[i].Alerts = getAlertsNumber(system)
 	}
 
 	c.JSON(http.StatusOK, systems)
