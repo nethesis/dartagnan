@@ -704,7 +704,7 @@
         $('#noteAlert').modal('toggle')
       },
       saveAlertNote() {
-        this.$http.put('http://' + this.$root.$options.api_host + '/api/ui/alerts/' + this.currentAlert.id, {
+        this.$http.put('https://' + this.$root.$options.api_host + '/api/ui/alerts/' + this.currentAlert.id, {
           system_id: this.$route.params.id,
           note: this.currentAlert.note
         }, {
