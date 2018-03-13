@@ -215,7 +215,7 @@ func GetAlerts(c *gin.Context) {
 	offsets := utils.OffsetCalc(page, limit)
 
 	db := database.Database()
-	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id = ?", systemID).Offset(offsets[0]).Limit(offsets[1]).Find(&alerts)
+	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id = ?", systemID).Find(&alerts)
 	db.Close()
 
 	for i, alert := range alerts {
@@ -227,7 +227,11 @@ func GetAlerts(c *gin.Context) {
 	}
 
 	if len(ret) > 0 {
-		c.JSON(http.StatusOK, ret)
+		if offsets[1] > 0 {
+			c.JSON(http.StatusOK, ret[offsets[0]:offsets[1]])
+		} else {
+			c.JSON(http.StatusOK, ret)
+		}
 	} else {
 		c.JSON(http.StatusNotFound, gin.H{"message": "no alert found!"})
 	}
