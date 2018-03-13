@@ -148,13 +148,16 @@ func getAlertsNumber(system models.System) int {
 	if ! utils.CanAccessAlerts(system.Subscription.SubscriptionPlan) {
 		return -1
 	}
-	var alerts models.Alert
-	var count int
-	db := database.Database()
-	db.Where("system_id = ?", system.ID).First(&alerts).Count(&count)
+        type Result struct {
+                Count int
+	}
+
+        var result Result
+        db := database.Database()
+        db.Raw("SELECT COUNT(*) as count FROM alerts WHERE system_id = ?", system.ID).Scan(&result)
 	db.Close()
 
-	return count
+	return result.Count
 }
 
 
