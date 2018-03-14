@@ -76,7 +76,7 @@ Instruction for a clean CentOS 7.
 
    - `YOUR_DOMAIN` with your server public FQDN
    - db_password
-   - auth0 domain
+   - auth0 domain and audience
    - Paypal credentials
    - SMTP host and credentials
 

@@ -62,7 +62,7 @@ type Configuration struct {
 	} `json:"cors"`
 	Auth0 struct {
 		Domain        string `json:"domain"`
-		IdentifierAPI string `json:"identifier_api"`
+		Audience      string `json:"audience"`
 	} `json:"auth0"`
 	PayPal struct {
 		ClientID     string `json:"client_id"`
@@ -123,6 +123,6 @@ func Init(ConfigFilePtr *string) {
 		Config.Auth0.Domain = os.Getenv("AUTH0_DOMAIN")
 	}
 	if os.Getenv("AUTH0_IDENTIFIER_API") != "" {
-		Config.Auth0.IdentifierAPI = os.Getenv("AUTH0_IDENTIFIER_API")
+		Config.Auth0.Audience = os.Getenv("AUTH0_AUDIENCE")
 	}
 }

@@ -74,7 +74,7 @@ func AuthJWT(c *gin.Context) {
 	// define api endpoint and audience
 	AUTH0_DOMAIN := "https://" + configuration.Config.Auth0.Domain + "/"
 	JWKS_URI := "https://" + configuration.Config.Auth0.Domain + "/.well-known/jwks.json"
-	AUDIENCE := []string{configuration.Config.Auth0.IdentifierAPI}
+	AUDIENCE := []string{configuration.Config.Auth0.Audience}
 
 	// create client configuration instance to check jwt
 	client := auth0.NewJWKClient(auth0.JWKClientOptions{URI: JWKS_URI})
