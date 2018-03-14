@@ -68,6 +68,7 @@ Instruction for a clean CentOS 7.
 
    ```
    cp ./roles/athos/files/config.json /opt/dartagnan/
+   cp -r ./athos/templates /opt/dartagnan/
    
    ```
 
@@ -77,6 +78,13 @@ Instruction for a clean CentOS 7.
    - db_password
    - auth0 domain
    - Paypal credentials
+   - SMTP host and credentials
+
+   Following parameters under `notifications` section are used inside the mail templates:
+
+   - portal_title
+   - help_url
+   - docs_url
 
 8. Start athos daemon:
 

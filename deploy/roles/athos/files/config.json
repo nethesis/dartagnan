@@ -18,5 +18,19 @@
     "paypal": {
         "client_id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
         "client_secret": "xxxxxxxxxxxxxxxxxxxxxxx-xxxxxxxxxxx-xxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    "notifications": {
+        "portal_title": "NethServer Subscriptions Portal",
+        "portal_url": "https://my.nethserver.com",
+        "help_url": "https://community.nethserver.org",
+        "docs_url": "http://docs.nethserver.org",
+        "email": {
+                "from": "noreply@YOUR_DOMAIN",
+                "smtp_host": "YOUR_SMTP_HOST",
+                "smtp_port": YOUR_SMTP_PORT,
+                "smtp_user": "YOUR_SMTP_USER",
+                "smtp_password": "YOUR_SMTP_PASSWORD"
+        }
     }
+
 }
