@@ -71,6 +71,12 @@
             <div class="card-pf-body">
               <div v-if="!isLoadingInfo">
                 <div class="details-info">
+                  <span>{{$t('servers.system_id')}}</span>
+                  <span class="right">
+                    <strong class="soft">{{server.info.uuid}}</strong>
+                  </span>
+                </div>
+                <div class="details-info">
                   <span>{{$t('servers.plan_type')}}</span>
                   <span class="right">
                     <strong class="soft">{{server.info.subscription.subscription_plan && server.info.subscription.subscription_plan.name || '-'}}</strong>

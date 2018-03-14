@@ -101,7 +101,8 @@
       "note_alert_for": "Note for",
       "note": "Note",
       "email_not_configured": "Notification email not configured",
-      "email_not_configured_desc": "You cannot receive system alerts by email"
+      "email_not_configured_desc": "You cannot receive system alerts by email",
+      "system_id": "System ID"
     },
     "payment": {
       "renew": "Renew plan",
