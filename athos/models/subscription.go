@@ -57,7 +57,8 @@ type SubscriptionUpgradeJSON struct {
 
 type Payment struct {
 	ID         int       `db:"id" json:"id"`
+	CreatorID  string    `db:"creator_id" json:"creator_id"`
 	Payment    string    `db:"payment" json:"payment"`
-	SystemUUID string    `db:"system_uuid" json:"system_uuid"`
+	SystemID   int    `db:"system_id" json:"system_id"`
 	Created    time.Time `db:"created" json:"created"`
 }

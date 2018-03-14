@@ -126,9 +126,11 @@ func PaymentCheck(paymentID string, planCode string, uuid string) bool {
 
 
 func SavePaymentDetails(paymentID string, systemUUID string) {
-	payment := models.Payment{Payment: paymentID, SystemUUID: systemUUID, Created: time.Now().UTC()}
+	var system models.System
 
 	db := database.Database()
+	db.Set("gorm:auto_preload", false).Where("uuid = ?", systemUUID).First(&system)
+	payment := models.Payment{CreatorID: system.CreatorID, Payment: paymentID, SystemID: system.ID, Created: time.Now().UTC()}
 	db.Create(&payment)
 	db.Close()
 }

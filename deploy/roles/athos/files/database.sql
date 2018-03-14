@@ -89,8 +89,9 @@ CREATE TABLE heartbeats (
 
 CREATE TABLE payments (
   id serial not null primary key,
+  creator_id character varying(1024) not null,
   payment character varying(1024) not null,
-  system_uuid character varying(1024) not null,
+  system_id bigint not null,
   created timestamp default current_timestamp,
   UNIQUE(payment)
 );
