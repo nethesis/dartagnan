@@ -113,6 +113,13 @@ func main() {
 		{
 			plans.GET("", methods.GetSubscriptionPlans)
 		}
+
+		billings := ui.Group("/billings")
+		{
+			billings.GET("", methods.GetBilling)
+			billings.POST("", methods.CreateBilling)
+			billings.PUT("", methods.UpdateBilling)
+		}
 	}
 
 	// handle missing endpoint

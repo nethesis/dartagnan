@@ -45,7 +45,7 @@ CREATE TABLE systems (
 
 CREATE TABLE inventories (
   id serial not null primary key,
-  system_id bigint not null references systems(id),
+  system_id bigint not null references systems(id) on delete cascade,
   timestamp timestamp default current_timestamp,
   data jsonb,
   UNIQUE(system_id)
@@ -94,5 +94,16 @@ CREATE TABLE payments (
   system_id bigint not null,
   created timestamp default current_timestamp,
   UNIQUE(payment)
+);
+
+CREATE TABLE billings (
+  id serial not null primary key,
+  creator_id character varying(1024) not null,
+  name character varying(1024) not null,
+  address character varying(1024) not null,
+  nation character varying(1024) not null,
+  type character varying(1024) not null,
+  vat character varying(1024),
+  UNIQUE(creator_id)
 );
 
