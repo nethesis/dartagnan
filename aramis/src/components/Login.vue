@@ -1,7 +1,7 @@
 <template>
   <div class="login-pf">
     <span id="badge">
-      <img class="brand-logo" src="./../assets/logo.png" alt=" logo" />
+      <img class="brand-logo" src="/static/logo.png" alt=" logo" />
     </span>
     <div v-if="sessionExpired" class="alert alert-warning alert-dismissable absolute-center-message">
       <span class="pficon pficon-warning-triangle-o"></span>
@@ -11,12 +11,12 @@
       <div class="row">
         <div class="col-sm-12 col-brand">
           <div id="brand">
-            <h1>Aramis</h1>
+            <h1>{{appName}}</h1>
           </div>
         </div>
         <div class="col-sm-12 col-md-12 col-lg-12 login">
           <p>
-            <strong>{{ $t("login.welcome_title") }}.</strong>
+            <strong>{{ $t("login.welcome_title_pre") }} {{appName}} {{ $t("login.welcome_title_suf") }}.</strong>
             {{ $t("login.welcome_subtitle") }}
           </p>
           <button @click="doLogin()" class="btn btn-primary btn-lg " type="button">{{ $t("login.login") }}</button>
@@ -57,7 +57,8 @@
         this.delete('query_params')
       }
       return {
-        sessionExpired: sessionExpired
+        sessionExpired: sessionExpired,
+        appName: CONFIG.APP_NAME
       }
     },
     methods: {

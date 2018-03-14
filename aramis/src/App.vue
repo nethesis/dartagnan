@@ -11,8 +11,8 @@
             <span class="icon-bar"></span>
           </button>
           <router-link to="/dashboard" class="navbar-brand">
-            <img class="navbar-brand-icon" src="./assets/logo.png" alt="" />
-            <p class="navbar-brand-name">Aramis</p>
+            <img class="navbar-brand-icon" src="/static/logo.png" alt="" />
+            <p class="navbar-brand-name">{{appName}}</p>
           </router-link>
         </div>
         <nav class="collapse navbar-collapse">
@@ -140,7 +140,7 @@
             </div>
           </div>
           <div class="modal-footer">
-            <img class="about-logo" src="./assets/logo.png" alt="Patternfly Symbol">
+            <img class="about-logo" src="/static/logo.png" alt="Patternfly Symbol">
           </div>
         </div>
       </div>
@@ -199,7 +199,8 @@
       return {
         user: user,
         isLogged: isLogged,
-        action: action
+        action: action,
+        appName: CONFIG.APP_NAME
       }
     },
     methods: {
