@@ -24,7 +24,7 @@ textarea {
 }
 
 .not-logged {
-  background: #2d2d2d !important;
+  background: #2d2d2d;
 }
 
 @media (min-width: 1160px) {

@@ -147,19 +147,6 @@
           <button @click="doLogin()" class="btn btn-primary btn-lg login-big" type="button">{{ $t("login.login") }}</button>
         </div>
       </div>
-      <div class="right">
-        <a class="unsplash" href="https://unsplash.com/@jplenio?utm_medium=referral&amp;utm_campaign=photographer-credit&amp;utm_content=creditBadge"
-          target="_blank" rel="noopener noreferrer" title="Download free do whatever you want high-resolution photos from Johannes Plenio">
-          <span style="display:inline-block;padding:2px 3px;">
-            <svg xmlns="http://www.w3.org/2000/svg" style="height:12px;width:auto;position:relative;vertical-align:middle;top:-1px;fill:white;"
-              viewBox="0 0 32 32">
-              <title>unsplash-logo</title>
-              <path d="M20.8 18.1c0 2.7-2.2 4.8-4.8 4.8s-4.8-2.1-4.8-4.8c0-2.7 2.2-4.8 4.8-4.8 2.7.1 4.8 2.2 4.8 4.8zm11.2-7.4v14.9c0 2.3-1.9 4.3-4.3 4.3h-23.4c-2.4 0-4.3-1.9-4.3-4.3v-15c0-2.3 1.9-4.3 4.3-4.3h3.7l.8-2.3c.4-1.1 1.7-2 2.9-2h8.6c1.2 0 2.5.9 2.9 2l.8 2.4h3.7c2.4 0 4.3 1.9 4.3 4.3zm-8.6 7.5c0-4.1-3.3-7.5-7.5-7.5-4.1 0-7.5 3.4-7.5 7.5s3.3 7.5 7.5 7.5c4.2-.1 7.5-3.4 7.5-7.5z"></path>
-            </svg>
-          </span>
-          <span style="display:inline-block;padding:2px 3px;">Johannes Plenio</span>
-        </a>
-      </div>
     </div>
   </div>
 </template>
@@ -213,82 +200,82 @@
 <style scoped>
   @media (min-width: 768px) {
     #badge {
-      position: absolute;
-      right: 0;
-      top: -10px;
+      position: absolute !important;
+      right: 0 !important;
+      top: -10px !important;
     }
     #plans-table {
-      margin-top: 70px;
-      padding: 40px;
-      margin-bottom: 25px;
+      margin-top: 70px !important;
+      padding: 40px !important;
+      margin-bottom: 25px !important;
     }
   }
 
   @media (max-width: 768px) {
     #plans-table {
-      margin-top: 0px;
-      padding: 40px;
-      margin-bottom: 35px;
+      margin-top: 0px !important;
+      padding: 40px !important;
+      margin-bottom: 35px !important;
     }
     #badge {
-      margin-bottom: 0px;
+      margin-bottom: 0px !important;
 
     }
   }
 
   .sub-desc {
-    margin-top: -15px;
-    font-size: 14px;
-    color: #fff;
+    margin-top: -15px !important;
+    font-size: 14px !important;
+    color: #fff !important;
   }
 
   .logo-container-1 {
-    margin: -20px;
-    background: #82c1e8;
-    margin-bottom: 10px;
-    padding-bottom: 25px;
-    color: white;
+    margin: -20px !important;
+    background: #82c1e8 !important;
+    margin-bottom: 10px !important;
+    padding-bottom: 25px !important;
+    color: white !important;
   }
 
   .logo-container-2 {
-    margin: -20px;
-    background: #212121;
-    margin-bottom: 10px;
-    padding-bottom: 25px;
-    color: white;
+    margin: -20px !important;
+    background: #212121 !important;
+    margin-bottom: 10px !important;
+    padding-bottom: 25px !important;
+    color: white !important;
   }
 
   .logo-container-3 {
-    margin: -20px;
-    background: #b71c1c;
-    margin-bottom: 10px;
-    padding-bottom: 25px;
-    color: white;
+    margin: -20px !important;
+    background: #b71c1c !important;
+    margin-bottom: 10px !important;
+    padding-bottom: 25px !important;
+    color: white !important;
   }
 
   .logo-container-4 {
-    margin: -20px;
-    background: #19425b;
-    margin-bottom: 10px;
-    padding-bottom: 25px;
-    color: white;
+    margin: -20px !important;
+    background: #19425b !important;
+    margin-bottom: 10px !important;
+    padding-bottom: 25px !important;
+    color: white !important;
   }
 
   .logo-plan-img {
     width: 120px;
-    margin-bottom: -15px;
+    margin-bottom: -15px !important;
   }
 
   .disabled {
-    color: #9c9c9c;
+    color: #9c9c9c !important;
   }
 
   .login-cont {
-    position: inherit;
+    position: inherit !important;
   }
 
   .card-plan {
-    margin-bottom: 10px;
+    margin-bottom: 10px !important;
   }
 
   .card-pf-body {
@@ -296,9 +283,9 @@
   }
 
   .login-big {
-    width: 150px;
-    height: 40px;
-    font-size: 18px;
+    width: 150px !important;
+    height: 40px !important;
+    font-size: 18px !important;
   }
 
 </style>
