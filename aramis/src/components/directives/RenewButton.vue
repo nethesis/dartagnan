@@ -137,8 +137,8 @@
           disallowed: [paypal.FUNDING.CREDIT]
         },
         client: {
-          sandbox: 'Aeya87Tf68qIoNsevVnMCv-JsaU8QqjWR40LuU7bVEHR093d-1TV6XGZxXjBeNMpANFC04aZuC1Nwosc',
-          production: '<insert production client id>'
+          sandbox: CONFIG.PAYPAL_SANDBOX,
+          production: CONFIG.PAYPAL_PRODUCTION
         },
         payment: function (data, actions) {
           return actions.payment.create({
