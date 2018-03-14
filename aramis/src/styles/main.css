@@ -24,8 +24,7 @@ textarea {
 }
 
 .not-logged {
-  background: linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.75)), url('../assets/background.jpg');
-  background-repeat: round;
+  background: #2d2d2d !important;
 }
 
 @media (min-width: 1160px) {
