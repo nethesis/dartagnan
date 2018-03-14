@@ -26,6 +26,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	auth0 "github.com/auth0-community/go-auth0"
 	"github.com/gin-gonic/gin"
@@ -34,6 +35,8 @@ import (
 
 	"github.com/nethesis/dartagnan/athos/configuration"
 	"github.com/nethesis/dartagnan/athos/utils"
+	"github.com/nethesis/dartagnan/athos/models"
+	"github.com/nethesis/dartagnan/athos/database"
 )
 
 func respondWithError(code int, message string, c *gin.Context) {
@@ -110,6 +113,8 @@ func PaymentCheck(paymentID string, planCode string, uuid string) bool {
 		fmt.Println(err.Error())
 	}
 
+	SavePaymentDetails(paymentID, uuid)
+
 	if payment.State == "approved" {
 		if payment.Transactions[0].ItemList.Items[0].Name == planCode && payment.Transactions[0].ItemList.Items[0].SKU == uuid {
 			return true
@@ -117,4 +122,13 @@ func PaymentCheck(paymentID string, planCode string, uuid string) bool {
 		return false
 	}
 	return false
+}
+
+
+func SavePaymentDetails(paymentID string, systemUUID string) {
+	payment := models.Payment{Payment: paymentID, SystemUUID: systemUUID, Created: time.Now().UTC()}
+
+	db := database.Database()
+	db.Create(&payment)
+	db.Close()
 }

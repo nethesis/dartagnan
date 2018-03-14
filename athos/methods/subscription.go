@@ -37,7 +37,7 @@ func GetSubscriptionPlans(c *gin.Context) {
 
 	db := database.Database()
 	db.Find(&subscriptionPlans)
-	db.Close()
+	defer db.Close()
 
 	if len(subscriptionPlans) <= 0 {
 		c.JSON(http.StatusNotFound, gin.H{"message": "no subscription plans found!"})
@@ -46,3 +46,4 @@ func GetSubscriptionPlans(c *gin.Context) {
 
 	c.JSON(http.StatusOK, subscriptionPlans)
 }
+

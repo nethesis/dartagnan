@@ -54,3 +54,10 @@ type SubscriptionUpgradeJSON struct {
 	SubscriptionPlanID int    `json:"subscription_plan_id"`
 	PaymentID          string `json:"payment_id"`
 }
+
+type Payment struct {
+	ID         int       `db:"id" json:"id"`
+	Payment    string    `db:"payment" json:"payment"`
+	SystemUUID string    `db:"system_uuid" json:"system_uuid"`
+	Created    time.Time `db:"created" json:"created"`
+}

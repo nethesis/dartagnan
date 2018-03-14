@@ -261,9 +261,9 @@ func RenewalPlan(c *gin.Context) {
 
 	db := database.Database()
 	db.Preload("Subscription").Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
+	defer db.Close()
 
 	if system.ID == 0 {
-		db.Close()
 		c.JSON(http.StatusNotFound, gin.H{"message": "no system found!"})
 		return
 	}
@@ -289,7 +289,6 @@ func RenewalPlan(c *gin.Context) {
 		return
 	}
 
-	db.Close()
 
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }
@@ -328,9 +327,9 @@ func UpgradePlan(c *gin.Context) {
 
 	db := database.Database()
 	db.Preload("Subscription").Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
+	defer db.Close()
 
 	if system.ID == 0 {
-		db.Close()
 		c.JSON(http.StatusNotFound, gin.H{"message": "no system found!"})
 		return
 	}
@@ -365,7 +364,6 @@ func UpgradePlan(c *gin.Context) {
 		return
 	}
 
-	db.Close()
 
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }
