@@ -44,13 +44,17 @@ type Notifications struct {
 }
 
 type Configuration struct {
-	DbHost     string `json:"db_host"`
-	DbPort     string `json:"db_port"`
-	DbUser     string `json:"db_user"`
-	DbName     string `json:"db_name"`
-	DbPassword string `json:"db_password"`
-	RedisHost  string `json:"redis_host"`
-	RedisPort  string `json:"redis_port"`
+	Database struct {
+		Host     string `json:"host"`
+		Port     string `json:"port"`
+		User     string `json:"user"`
+		Name     string `json:"name"`
+		Password string `json:"password"`
+	} `json:"database"`
+	Redis struct {
+		Host  string `json:"host"`
+		Port  string `json:"port"`
+	} `json:"redis"`
 	Cors       struct {
 		Headers []string `json:"headers"`
 		Origins []string `json:"origins"`
@@ -83,19 +87,25 @@ func Init(ConfigFilePtr *string) {
 
 	// read from ENV variables
 	if os.Getenv("DB_USER") != "" {
-		Config.DbUser = os.Getenv("DB_USER")
+		Config.Database.User = os.Getenv("DB_USER")
 	}
 	if os.Getenv("DB_PASSWORD") != "" {
-		Config.DbPassword = os.Getenv("DB_PASSWORD")
+		Config.Database.Password = os.Getenv("DB_PASSWORD")
 	}
 	if os.Getenv("DB_HOST") != "" {
-		Config.DbHost = os.Getenv("DB_HOST")
+		Config.Database.Host = os.Getenv("DB_HOST")
 	}
 	if os.Getenv("DB_PORT") != "" {
-		Config.DbPort = os.Getenv("DB_PORT")
+		Config.Database.Port = os.Getenv("DB_PORT")
 	}
 	if os.Getenv("DB_NAME") != "" {
-		Config.DbName = os.Getenv("DB_NAME")
+		Config.Database.Name = os.Getenv("DB_NAME")
+	}
+	if os.Getenv("REDIS_HOST") != "" {
+		Config.Redis.Host = os.Getenv("REDIS_HOST")
+	}
+	if os.Getenv("REDIS_PORT") != "" {
+		Config.Redis.Port = os.Getenv("REDIS_PORT")
 	}
 
 	if os.Getenv("CORS_ORIGINS") != "" {

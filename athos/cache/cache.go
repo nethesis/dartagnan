@@ -35,7 +35,7 @@ import (
 
 func Cache() *redis.Client {
 
-	client, err := redis.Dial("tcp", fmt.Sprintf("%s:%s", configuration.Config.RedisHost, configuration.Config.RedisPort))
+	client, err := redis.Dial("tcp", fmt.Sprintf("%s:%s", configuration.Config.Redis.Host, configuration.Config.Redis.Port))
 	if err != nil {
 		panic(err.Error())
 	}

@@ -30,7 +30,7 @@ import (
 )
 
 func Database() *gorm.DB {
-	db, err := gorm.Open("postgres", "sslmode=disable dbname="+configuration.Config.DbName+" host="+configuration.Config.DbHost+" port="+configuration.Config.DbPort+" user="+configuration.Config.DbUser+" password="+configuration.Config.DbPassword)
+	db, err := gorm.Open("postgres", "sslmode=disable dbname="+configuration.Config.Database.Name+" host="+configuration.Config.Database.Host+" port="+configuration.Config.Database.Port+" user="+configuration.Config.Database.User+" password="+configuration.Config.Database.Password)
 	if err != nil {
 		panic(err.Error())
 	}
