@@ -1,6 +1,7 @@
 <template>
   <span>
-    <button v-if="isExpired(obj.subscription.valid_until) || plans.length > 0 && plans[plans.length-1].code != obj.subscription.subscription_plan.code" @click="showRenewModal()" type="button" class="btn btn-primary">
+    <button v-if="isExpired(obj.subscription.valid_until) || plans.length > 0 && plans[plans.length-1].code != obj.subscription.subscription_plan.code"
+      @click="showRenewModal()" type="button" class="btn btn-primary">
       <span class="fa fa-shopping-cart"></span>
       {{isExpired(obj.subscription.valid_until) ? $t('payment.renew_button') : $t('payment.upgrade_button')}}
     </button>
@@ -62,7 +63,8 @@
                     </span>
                   </div>
                   <div class="card-pf-item details-pay-item">
-                    <span v-if="!onUpgradePriceCalc" class="card-pf-item-text"><strong>{{currentPlan.price > 0 ? currentPlan.price : 0}}€</strong>
+                    <span v-if="!onUpgradePriceCalc" class="card-pf-item-text">
+                      <strong>{{currentPlan.price > 0 ? currentPlan.price : 0}}€</strong>
                       <span v-if="onUpgrade && currentPlan.price != currentPlan.full_price">({{$t('payment.full_price')}}: {{currentPlan.full_price > 0 ? currentPlan.full_price : 0}}€)</span>
                     </span>
                     <div v-if="onUpgradePriceCalc" class="spinner spinner-sm"></div>

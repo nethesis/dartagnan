@@ -22,7 +22,7 @@
             <div class="card-pf-body">
               <p>
                 <h1>
-                  <strong>800 €</strong> / year
+                  <strong>48 €</strong> / year
                 </h1>
               </p>
               <p>Stable Updates repository</p>
@@ -267,7 +267,7 @@
   }
 
   .disabled {
-    color: #9c9c9c !important;
+    display: none !important;
   }
 
   .login-cont {
