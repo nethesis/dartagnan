@@ -428,8 +428,8 @@
         if (this.filters.search.length > 0) {
           var context = this
           filtered = _.filter(filtered, function (item) {
-            return item.hostname.toLowerCase().startsWith(context.filters.search.toLowerCase()) || item.public_ip.toLowerCase()
-              .startsWith(context.filters.search.toLowerCase())
+            return item.hostname.toLowerCase().search(context.filters.search.toLowerCase()) >= 0 || item.public_ip.toLowerCase()
+              .search(context.filters.search.toLowerCase()) >= 0
           })
         }
         return _.orderBy(filtered, ['hostname'], 'asc')
