@@ -31,6 +31,10 @@ import (
 
 func Database() *gorm.DB {
 	db, err := gorm.Open("postgres", "sslmode=disable dbname="+configuration.Config.Database.Name+" host="+configuration.Config.Database.Host+" port="+configuration.Config.Database.Port+" user="+configuration.Config.Database.User+" password="+configuration.Config.Database.Password)
+	if configuration.Config.Log.Level == "debug" {
+		db.LogMode(true)
+
+	}
 	if err != nil {
 		panic(err.Error())
 	}

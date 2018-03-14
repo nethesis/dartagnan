@@ -68,6 +68,9 @@ type Configuration struct {
 		ClientID     string `json:"client_id"`
 		ClientSecret string `json:"client_secret"`
 	} `json:"paypal"`
+	Log struct {
+		Level        string `json:"level"`
+	} `json:"log"`
 	Notifications Notifications `json:"notifications"`
 }
 
@@ -86,6 +89,10 @@ func Init(ConfigFilePtr *string) {
 	}
 
 	// read from ENV variables
+	if os.Getenv("LOG_LEVEL") != "" {
+		Config.Log.Level = os.Getenv("LOG_LEVEL")
+	}
+
 	if os.Getenv("DB_USER") != "" {
 		Config.Database.User = os.Getenv("DB_USER")
 	}
