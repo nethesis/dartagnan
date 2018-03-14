@@ -58,8 +58,8 @@ var Filters = {
   dateFromNow: function (value) {
     var moment = require("patternfly/node_modules/moment/moment.js")
     var date = new Date(value)
-    if (+new Date(value) > 0)
-      return moment([date.getFullYear(), date.getUTCMonth(), date.getUTCDate()]).fromNow()
+    if (+date > 0)
+      return moment(date).fromNow()
     else
       return '-'
   }
