@@ -60,7 +60,7 @@ CREATE TABLE inventory_histories (
 
 CREATE TABLE alerts (
   id serial not null primary key,
-  system_id bigint not null references systems(id),
+  system_id bigint not null references systems(id) on delete cascade,
   alert_id character varying(1024) not null,
   timestamp timestamp default current_timestamp,
   status character varying(1024) default null,
@@ -70,7 +70,7 @@ CREATE TABLE alerts (
 
 CREATE TABLE alert_histories (
   id serial not null primary key,
-  system_id bigint not null references systems(id),
+  system_id bigint not null references systems(id) on delete cascade,
   alert_id character varying(1024) not null,
   start_time timestamp default null,
   end_time timestamp default null,
@@ -82,7 +82,7 @@ CREATE TABLE alert_histories (
 
 CREATE TABLE heartbeats (
   id serial not null primary key,
-  system_id bigint not null references systems(id),
+  system_id bigint not null references systems(id) on delete cascade,
   timestamp timestamp default current_timestamp,
   UNIQUE(system_id)
 );
