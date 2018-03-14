@@ -4,6 +4,17 @@
       <strong class="soft">{{server.inventory && server.inventory.networking.fqdn || '-'}}</strong>
     </h2>
     <div class="container-fluid container-cards-pf">
+
+      <div v-if="!server.info.notification || server.info.notification.emails.length == 0" class="row row-cards-pf no-padding-top row-divider blank-slate-pf">
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          <div class="alert alert-warning alert-dismissable">
+            <span class="pficon pficon-warning-triangle-o"></span>
+            <strong>{{$t('servers.email_not_configured')}}</strong>. {{$t('servers.email_not_configured_desc')}}.
+          </div>
+        </div>
+      </div>
+
       <div class="row row-cards-pf no-padding-top row-divider">
 
         <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
@@ -387,7 +398,8 @@
                 </div>
                 <div class="tab-pane fade" id="network-tab" role="tabpanel" aria-labelledby="network-tab">
                   <div class="row row-cards-pf">
-                    <div v-if="e.type != 'xdsl-disabled'" v-for="(e, k) in server.inventory.esmithdb.networks" v-bind:key="k" class="col-xs-12 col-sm-6 col-md-4 col-lg-6 resources-panel">
+                    <div v-if="e.type != 'xdsl-disabled' || e.type != 'provider'" v-for="(e, k) in server.inventory.esmithdb.networks" v-bind:key="k"
+                      class="col-xs-12 col-sm-6 col-md-4 col-lg-6 resources-panel">
                       <div class="panel panel-default">
                         <div class="panel-heading">
                           <h3 class="panel-title">
@@ -605,8 +617,8 @@
           this.server.heartbeat = success.body.timestamp
           this.isLoadingHeartbeat = false
         }, function (error) {
-          console.error(error)
           this.isLoadingHeartbeat = false
+          console.error(error)
         });
       },
       initMemoryCharts() {

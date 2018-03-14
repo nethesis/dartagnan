@@ -145,21 +145,20 @@ func getStatus(id int) string {
 }
 
 func getAlertsNumber(system models.System) int {
-	if ! utils.CanAccessAlerts(system.Subscription.SubscriptionPlan) {
+	if !utils.CanAccessAlerts(system.Subscription.SubscriptionPlan) {
 		return -1
 	}
-        type Result struct {
-                Count int
+	type Result struct {
+		Count int
 	}
 
-        var result Result
-        db := database.Database()
-        db.Raw("SELECT COUNT(*) as count FROM alerts WHERE system_id = ?", system.ID).Scan(&result)
+	var result Result
+	db := database.Database()
+	db.Raw("SELECT COUNT(*) as count FROM alerts WHERE system_id = ?", system.ID).Scan(&result)
 	db.Close()
 
 	return result.Count
 }
-
 
 func GetSystems(c *gin.Context) {
 	var systems []models.System
@@ -307,7 +306,7 @@ func UpgradePlanPrice(c *gin.Context) {
 
 	// calculate discount upgrade
 	daysDiff := system.Subscription.ValidUntil.Sub(time.Now().UTC())
-	discount := (system.Subscription.SubscriptionPlan.Price * float64(system.Subscription.SubscriptionPlan.Period)) / (daysDiff.Hours() / 24)
+	discount := (daysDiff.Hours() / 24) * system.Subscription.SubscriptionPlan.Price / float64(system.Subscription.SubscriptionPlan.Period)
 	finalPrice := newSubuscriptionPlan.Price - discount
 
 	c.JSON(http.StatusOK, gin.H{"full_price": newSubuscriptionPlan.Price, "price": utils.Round(finalPrice, 0.5, 2), "name": newSubuscriptionPlan.Code})

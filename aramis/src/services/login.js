@@ -1,14 +1,10 @@
 import auth0 from 'auth0-js'
 
-import {
-  AUTH_CONFIG
-} from './auth0-config'
-
 var auth0Instance = new auth0.WebAuth({
-  domain: AUTH_CONFIG.domain,
-  clientID: AUTH_CONFIG.clientId,
-  redirectUri: AUTH_CONFIG.callbackUrl,
-  audience: AUTH_CONFIG.audience,
+  domain: CONFIG.AUTH0_DOMAIN,
+  clientID: CONFIG.AUTH0_CLIENT_ID,
+  redirectUri: CONFIG.AUTH0_CALLBACK,
+  audience: CONFIG.AUTH0_AUDIENCE,
   responseType: 'token id_token',
   scope: 'openid profile email'
 })

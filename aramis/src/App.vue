@@ -163,6 +163,9 @@
   export default {
     name: 'app',
     mixins: [LoginService, StorageService, UtilService],
+    created() {
+      document.title = CONFIG.APP_NAME
+    },
     data() {
       // is logged
       var isLogged = this.auth0CheckAuth()

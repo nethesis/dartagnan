@@ -111,7 +111,7 @@
             <span v-if="s.alerts > 0" class="fa fa-exclamation-triangle fa-big orange pull-right fa-2x" data-toggle="tooltip" data-placement="left"
               :title="$t('servers.alerts')+': '+s.alerts"></span>
             <div @click="$parent.routeTo('servers/'+s.id)" class="card-pf-top-element click-hover">
-              <img :src="getImage(s)" class="plan-icon">
+              <img data-toggle="tooltip" data-placement="top" :title="s.subscription.subscription_plan.name" :src="getImage(s)" class="plan-icon">
               <span :class="[isExpired(s.subscription.valid_until) ? 'disabled-circle' : '', 'pficon pficon-server card-pf-icon-circle adjust-icon-size']"></span>
             </div>
             <h2 @click="$parent.routeTo('servers/'+s.id)" class="card-pf-title text-center click-hover">
@@ -323,7 +323,7 @@
         this.$http.post('https://' + this.$root.$options.api_host + '/api/ui/systems', {
           notification: {
             emails: [
-              this.get('logged_user').email
+              this.get('logged_user').email || ''
             ]
           }
         }, {
