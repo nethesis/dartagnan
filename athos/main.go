@@ -129,20 +129,6 @@ func main() {
 			taxes.GET("", methods.GetTaxes)
 		}
 	}
-/** DELETE -- **/
-		billings := api.Group("/test/billings")
-		{
-			billings.GET("", methods.GetBilling)
-			billings.POST("", methods.CreateBilling)
-			billings.PUT("", methods.UpdateBilling)
-		}
-
-		taxes := api.Group("/test/taxes")
-		{
-			taxes.GET("", methods.GetTaxes)
-		}
-
-/** DELETE **/
 	// handle missing endpoint
 	router.NoRoute(func(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"message": "API not found"})
