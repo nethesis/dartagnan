@@ -130,7 +130,7 @@
               <ul class="list-unstyled">
                 <li>
                   <strong>Dartagnan on</strong>
-                  <a target="blank" href="https://github.com/nethesis/dartagna">GitHub</a>
+                  <a target="blank" href="https://github.com/nethesis/dartagnan">GitHub</a>
                 </li>
                 <li>
                   <strong>Docs</strong>
