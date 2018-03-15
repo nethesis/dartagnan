@@ -34,13 +34,13 @@
                 <div class="details-info">
                   <span>{{$t('servers.public_ip')}}</span>
                   <span class="right">
-                    <strong class="soft">{{server.info.public_ip || '-'}}</strong>
+                    <a target="_blank" :href="'https://'+server.info.public_ip+':980'" class="soft">{{server.info.public_ip || '-'}}</a>
                   </span>
                 </div>
                 <div class="details-info">
                   <span>{{$t('servers.ns_lookup')}}</span>
                   <span class="right">
-                    <strong class="soft">{{server.info.public_ip || '-'}}</strong>
+                    <a target="_blank" :href="'https://'+server.ns_lookup+':980'" class="soft">{{server.ns_lookup || '-'}}</a>
                   </span>
                 </div>
                 <div class="details-info">
@@ -533,6 +533,7 @@
           inventory: null,
           heartbeat: {},
           alerts: [],
+          ns_lookup: '',
           isLoadingInfo: true,
           isLoadingInventory: true,
           isLoadingHeartbeat: true,
@@ -578,6 +579,19 @@
           this.server.info = success.body
           this.server.hasAlerts = success.body.alerts >= 0
           this.isLoadingInfo = false
+
+          // resolve lookup
+          this.$http.get('https://' + this.$root.$options.api_host + '/api/ui/utils/reverse_lookup/' + this.server.info
+            .public_ip, {
+              headers: {
+                'Authorization': 'Bearer ' + this.get('access_token', false) || ''
+              }
+            }).then(function (success) {
+            this.server.ns_lookup = success.body.map(i => i.slice(0, -1)).join(', ')
+          }, function (error) {
+            console.error(error)
+          });
+
         }, function (error) {
           console.error(error)
           this.isLoadingInfo = false

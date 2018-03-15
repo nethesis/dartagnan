@@ -81,7 +81,7 @@
       "inventory_not_available": "Inventory not available",
       "inventory_not_available_desc": "This system has not already sent its inventory",
       "public_ip": "Public IP",
-      "ns_lookup": "NS Lookup",
+      "ns_lookup": "Reverse DNS Lookup",
       "version": "Version",
       "uptime": "Uptime",
       "license_valid": "License valid",
