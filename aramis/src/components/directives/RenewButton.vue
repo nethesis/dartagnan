@@ -1,7 +1,7 @@
 <template>
   <span>
     <button v-if="isExpired(obj.subscription.valid_until) || plans.length > 0 && plans[plans.length-1].code != obj.subscription.subscription_plan.code"
-      @click="showRenewModal()" type="button" class="btn btn-primary">
+      @click="showRenewModal(obj.id)" type="button" class="btn btn-primary">
       <span class="fa fa-shopping-cart"></span>
       {{isExpired(obj.subscription.valid_until) ? $t('payment.renew_button') : $t('payment.upgrade_button')}}
     </button>
@@ -200,17 +200,10 @@
       // read upgrade ref and show modal
       if (this.get('upgrade_ref', false)) {
         var context = this
-        this.$http.get('https://' + this.$root.$options.api_host + '/api/ui/billings', {
-          headers: {
-            'Authorization': 'Bearer ' + this.get('access_token', false) || ''
-          }
-        }).then(function (success) {
-          this.billingInfo = success.body
-          $('#paymentModalRenew-' + context.get('upgrade_ref', false)).modal('toggle')
+        setTimeout(function () {
+          context.showRenewModal(context.get('upgrade_ref', false))
           context.delete('upgrade_ref')
-        }, function (error) {
-          console.error(error)
-        });
+        }, 0)
       }
 
       return {
@@ -234,7 +227,7 @@
       isExpired(date) {
         return new Date().toISOString() > date
       },
-      showRenewModal() {
+      showRenewModal(id) {
         this.$http.get('https://' + this.$root.$options.api_host + '/api/ui/billings', {
           headers: {
             'Authorization': 'Bearer ' + this.get('access_token', false) || ''
@@ -253,10 +246,10 @@
           }
           this.onUpgradePriceCalc = false
           this.onUpgrade = this.obj.subscription.subscription_plan.code != 'trial' ? false : true
-          $('#paymentModalRenew-' + this.obj.id).modal('toggle')
+          $('#paymentModalRenew-' + id).modal('toggle')
         }, function (error) {
           this.$parent.$parent.action = 'updateBilling'
-          this.set('upgrade_ref', this.obj.id)
+          this.set('upgrade_ref', id)
           this.$router.push({
             path: '/profile'
           })
