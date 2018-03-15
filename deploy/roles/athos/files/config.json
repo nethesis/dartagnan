@@ -1,4 +1,7 @@
 {
+    "billing": {
+        "country": "XXXX"
+    },
     "log" : {
         "level": "info"
     },

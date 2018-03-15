@@ -74,6 +74,7 @@ Instruction for a clean CentOS 7.
 
    Edit at least the following options inside `/opt/dartagnan/config.json`:
 
+   - `XXXX`, pick a valid country from the list inside `database.sql`
    - `YOUR_DOMAIN` with your server public FQDN
    - db_password
    - auth0 domain and audience
