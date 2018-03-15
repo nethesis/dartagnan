@@ -169,7 +169,7 @@
     data() {
       // is logged
       var isLogged = this.auth0CheckAuth()
-      var user = this.get('logged_user') || null
+      var user = this.get('logged_user') || { name: "", email : "", picture: ""}
 
       // save route query params
       if (Object.keys(this.get('query_params') || {}).length == 0) {
@@ -208,6 +208,7 @@
         switch (action) {
           case 'newServer':
             this.isLogged = this.auth0CheckAuth()
+            this.user = this.get('logged_user')
             this.initGraphics()
             return 'servers'
 
