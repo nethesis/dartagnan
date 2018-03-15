@@ -102,7 +102,13 @@ func AuthJWT(c *gin.Context) {
 }
 
 func PaymentCheck(paymentID string, planCode string, uuid string) bool {
-	c, errSDK := paypalsdk.NewClient(configuration.Config.PayPal.ClientID, configuration.Config.PayPal.ClientSecret, paypalsdk.APIBaseSandBox)
+	var apiBase string
+	if configuration.Config.PayPal.Sandbox {
+		apiBase = paypalsdk.APIBaseSandBox
+	} else {
+		apiBase = paypalsdk.APIBaseLive
+	}
+	c, errSDK := paypalsdk.NewClient(configuration.Config.PayPal.ClientID, configuration.Config.PayPal.ClientSecret, apiBase)
 	if errSDK != nil {
 		fmt.Println(errSDK.Error())
 	}

@@ -23,6 +23,7 @@
         "identifier_api":"https://YOUR_DOMAIN"
     },
     "paypal": {
+        "sandbox": true,
         "client_id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
         "client_secret": "xxxxxxxxxxxxxxxxxxxxxxx-xxxxxxxxxxx-xxx-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
     },

@@ -26,6 +26,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -67,6 +68,7 @@ type Configuration struct {
 	PayPal struct {
 		ClientID     string `json:"client_id"`
 		ClientSecret string `json:"client_secret"`
+		Sandbox       bool   `json:"sandbox"`
 	} `json:"paypal"`
 	Log struct {
 		Level        string `json:"level"`
@@ -108,6 +110,7 @@ func Init(ConfigFilePtr *string) {
 	if os.Getenv("DB_NAME") != "" {
 		Config.Database.Name = os.Getenv("DB_NAME")
 	}
+
 	if os.Getenv("REDIS_HOST") != "" {
 		Config.Redis.Host = os.Getenv("REDIS_HOST")
 	}
@@ -124,5 +127,15 @@ func Init(ConfigFilePtr *string) {
 	}
 	if os.Getenv("AUTH0_IDENTIFIER_API") != "" {
 		Config.Auth0.Audience = os.Getenv("AUTH0_AUDIENCE")
+	}
+
+	if os.Getenv("PAYPAL_SANDBOX") != "" {
+		Config.PayPal.Sandbox, _ = strconv.ParseBool(os.Getenv("PAYPAL_SANDBOX"))
+	}
+	if os.Getenv("PAYPAL_CLIENT_ID") != "" {
+		Config.PayPal.ClientID = os.Getenv("PAYPAL_CLIENT_ID")
+	}
+	if os.Getenv("PAYPAL_CLIENT_SECRET") != "" {
+		Config.PayPal.ClientSecret = os.Getenv("PAYPAL_CLIENT_SECRET")
 	}
 }

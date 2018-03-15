@@ -128,7 +128,7 @@
     mounted() {
       var context = this
       paypal.Button.render({
-        env: 'sandbox',
+        env: CONFIG.PAYPAL_PRODUCTION ? 'production' : 'sandbox',
         style: {
           layout: 'vertical', // horizontal | vertical
           size: 'medium', // medium | large | responsive
@@ -148,11 +148,11 @@
             payment: {
               transactions: [{
                 amount: {
-                  total: context.currentPlan.price + (context.currentPlan.price * context.billingInfo.tax / 100),
+                  total: Math.round( (context.currentPlan.price + (context.currentPlan.price * context.billingInfo.tax / 100)) * 100 ) / 100,
                   currency: 'EUR',
                   details: {
-                    subtotal: context.currentPlan.price,
-                    tax: context.currentPlan.price * context.billingInfo.tax / 100
+                    subtotal: Math.round( context.currentPlan.price * 100 ) / 100,
+                    tax: Math.round( (context.currentPlan.price * context.billingInfo.tax / 100) * 100 ) / 100
                   }
                 },
                 "item_list": {
