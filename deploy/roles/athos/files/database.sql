@@ -96,6 +96,11 @@ CREATE TABLE payments (
   UNIQUE(payment)
 );
 
+CREATE TABLE taxes (
+  country character varying(1024) not null primary key,
+  percentage integer
+);
+
 CREATE TABLE billings (
   id serial not null primary key,
   creator_id character varying(1024) not null,
@@ -106,11 +111,6 @@ CREATE TABLE billings (
   country character varying(1024) not null references taxes(country),
   vat character varying(1024),
   UNIQUE(creator_id)
-);
-
-CREATE TABLE taxes (
-  country character varying(1024) not null primary key,
-  percentage integer 
 );
 
 INSERT INTO taxes VALUES ('Other',0);

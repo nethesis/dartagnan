@@ -81,6 +81,10 @@ textarea {
   margin-right: 8px;
 }
 
+.span-radio {
+  margin-right: 20px;
+}
+
 .card-pf-title {
   min-height: 17px;
 }
@@ -378,6 +382,8 @@ textarea {
   border-radius: 50%;
   margin-left: -45px;
   margin-top: -10px;
+  border: 1px solid #39a5dd;
+  padding: 2px;
 }
 
 .clipboard-btn {

@@ -14,7 +14,20 @@
       "profile": "Profile",
       "verified": "Verified",
       "last_login": "Last login",
-      "email_is": "Email is"
+      "email_is": "Email is",
+      "billing_not_configured": "Billing information missing",
+      "billing_not_configured_desc": "Insert your billing information in the fileds below",
+      "info": "Information",
+      "billing": "Billing",
+      "name": "Name",
+      "address": "Address",
+      "city": "City",
+      "postal_code": "Postal code",
+      "country": "Country",
+      "type": "Type",
+      "vat": "VAT",
+      "type_business": "Business",
+      "type_person": "Person"
     },
     "login": {
       "login": "Login",
@@ -120,7 +133,8 @@
       "payment_id_ref": "Your payment reference is:",
       "payment_error": "Error",
       "payment_error_details": "Something went wrong...",
-      "full_price": "Full price"
+      "full_price": "Full price",
+      "taxes": "Taxes"
     },
     "alerts": {
       "all": "All",

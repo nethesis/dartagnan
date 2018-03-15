@@ -3,7 +3,8 @@
     <h2>Server
       <strong class="soft">{{server.inventory && server.inventory.networking.fqdn || '-'}}</strong>
     </h2>
-    <div class="container-fluid container-cards-pf">
+    <div v-show="isLoadingInfo" class="spinner spinner-lg"></div>
+    <div v-show="!isLoadingInfo" class="container-fluid container-cards-pf">
 
       <div v-if="!server.info.notification || server.info.notification.emails.length == 0" class="row row-cards-pf no-padding-top row-divider blank-slate-pf">
 
@@ -121,7 +122,7 @@
       </div>
 
       <div class="row row-cards-pf no-padding-top row-divider">
-        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+        <div :class="[server.hasAlerts ? 'col-xs-12 col-sm-6 col-md-4 col-lg-4' : 'col-xs-12 col-sm-6 col-md-6 col-lg-6']">
           <div class="card-pf card-pf-accented">
             <h2 class="card-pf-title">
               {{$t('servers.status')}}
@@ -140,7 +141,7 @@
           </div>
         </div>
 
-        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+        <div :class="[server.hasAlerts ? 'col-xs-12 col-sm-6 col-md-4 col-lg-4' : 'col-xs-12 col-sm-6 col-md-6 col-lg-6']">
           <div class="card-pf card-pf-accented">
             <h2 class="card-pf-title">
               {{$t('servers.inventory')}}
@@ -158,7 +159,7 @@
           </div>
         </div>
 
-        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+        <div v-if="server.hasAlerts" class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
           <div class="card-pf card-pf-accented">
             <h2 class="card-pf-title">
               {{$t('servers.alerts')}}
@@ -177,7 +178,7 @@
       </div>
 
       <div class="row row-cards-pf no-padding-top">
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+        <div v-if="server.hasAlerts" class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
           <div class="card-pf card-pf-accented">
             <h2 class="card-pf-title">
               {{$t('servers.alerts_details')}}
@@ -208,7 +209,7 @@
           </div>
         </div>
 
-        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-6">
+        <div :class="[server.hasAlerts ? 'col-xs-12 col-sm-12 col-md-12 col-lg-6' : 'col-xs-12 col-sm-12 col-md-12 col-lg-12']">
           <div class="card-pf card-pf-accented">
             <h2 class="card-pf-title">
               {{$t('servers.resources')}}
@@ -527,6 +528,7 @@
       }, 500)
       return {
         server: {
+          hasAlerts: false,
           info: {},
           inventory: null,
           heartbeat: {},
@@ -574,6 +576,7 @@
           }
         }).then(function (success) {
           this.server.info = success.body
+          this.server.hasAlerts = success.body.alerts >= 0
           this.isLoadingInfo = false
         }, function (error) {
           console.error(error)

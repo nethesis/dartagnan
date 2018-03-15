@@ -66,6 +66,7 @@
                     <span v-if="!onUpgradePriceCalc" class="card-pf-item-text">
                       <strong>{{currentPlan.price > 0 ? currentPlan.price : 0}}€</strong>
                       <span v-if="onUpgrade && currentPlan.price != currentPlan.full_price">({{$t('payment.full_price')}}: {{currentPlan.full_price > 0 ? currentPlan.full_price : 0}}€)</span>
+                      <span>+ {{$t('payment.taxes')}}</span>
                     </span>
                     <div v-if="onUpgradePriceCalc" class="spinner spinner-sm"></div>
                   </div>
@@ -147,8 +148,12 @@
             payment: {
               transactions: [{
                 amount: {
-                  total: context.currentPlan.price,
-                  currency: 'EUR'
+                  total: context.currentPlan.price + (context.currentPlan.price * context.billingInfo.tax / 100),
+                  currency: 'EUR',
+                  details: {
+                    subtotal: context.currentPlan.price,
+                    tax: context.currentPlan.price * context.billingInfo.tax / 100
+                  }
                 },
                 "item_list": {
                   "items": [{
@@ -199,6 +204,7 @@
         },
         plans: [],
         currentPlan: this.obj.subscription.subscription_plan,
+        billingInfo: {},
         onUpgradePriceCalc: false,
         onUpgrade: false
       }
@@ -208,19 +214,32 @@
         return new Date().toISOString() > date
       },
       showRenewModal() {
-        this.payment.done = false
-        this.payment.onProgress = false
-        this.payment.details = {}
-        this.errors.message = ''
-        this.errors.state = false
-        this.currentPlan = this.obj.subscription.subscription_plan.code != 'trial' ? this.obj.subscription.subscription_plan :
-          this.plans[1]
-        if (this.obj.subscription.subscription_plan.code == 'trial') {
-          this.currentPlan.full_price = this.plans[1].price
-        }
-        this.onUpgradePriceCalc = false
-        this.onUpgrade = this.obj.subscription.subscription_plan.code != 'trial' ? false : true
-        $('#paymentModalRenew-' + this.obj.id).modal('toggle')
+        this.$http.get('https://' + this.$root.$options.api_host + '/api/ui/billings', {
+          headers: {
+            'Authorization': 'Bearer ' + this.get('access_token', false) || ''
+          }
+        }).then(function (success) {
+          this.billingInfo = success.body
+          this.payment.done = false
+          this.payment.onProgress = false
+          this.payment.details = {}
+          this.errors.message = ''
+          this.errors.state = false
+          this.currentPlan = this.obj.subscription.subscription_plan.code != 'trial' ? this.obj.subscription.subscription_plan :
+            this.plans[1]
+          if (this.obj.subscription.subscription_plan.code == 'trial') {
+            this.currentPlan.full_price = this.plans[1].price
+          }
+          this.onUpgradePriceCalc = false
+          this.onUpgrade = this.obj.subscription.subscription_plan.code != 'trial' ? false : true
+          $('#paymentModalRenew-' + this.obj.id).modal('toggle')
+        }, function (error) {
+          this.$parent.$parent.action = 'updateBilling'
+          this.$router.push({
+            path: '/profile'
+          })
+          console.error(error)
+        });
       },
       hideRenewModal() {
         this.update()
