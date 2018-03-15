@@ -27,7 +27,7 @@
       "type": "Type",
       "vat": "VAT",
       "type_business": "Business",
-      "type_person": "Person"
+      "type_person": "Personal"
     },
     "login": {
       "login": "Login",
