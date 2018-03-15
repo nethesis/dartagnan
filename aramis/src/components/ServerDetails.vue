@@ -637,6 +637,7 @@
           this.isLoadingAlerts = false
         }, function (error) {
           console.error(error)
+          this.server.alerts = []
           this.isLoadingAlerts = false
         });
       },

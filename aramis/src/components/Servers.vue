@@ -363,6 +363,7 @@
           this.isLoading = false
         }, function (error) {
           console.error(error)
+          this.servers = []
           this.isLoading = false
         });
       },

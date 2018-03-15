@@ -49,15 +49,16 @@
         $('#noteAlert-'+this.obj.id).modal('toggle')
       },
       saveAlertNote() {
+        var closeId = this.obj.id
         this.$http.put('https://' + this.$root.$options.api_host + '/api/ui/alerts/' + this.obj.id, {
-          system_id: this.$route.params.id,
+          system_id: this.obj.system.id.toString(),
           note: this.obj.note
         }, {
           headers: {
             'Authorization': 'Bearer ' + this.get('access_token', false) || ''
           }
         }).then(function (success) {
-          $('#noteAlert').modal('hide')
+          $('#noteAlert-'+closeId).modal('hide')
         }, function (error) {
           console.error(error)
         });
