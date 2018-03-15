@@ -194,6 +194,7 @@
           this.isLoading = false
         }, function (error) {
           console.error(error)
+          this.alerts = []
           this.isLoading = false
         });
       },
