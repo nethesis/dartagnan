@@ -46,7 +46,8 @@
         <h2 class="card-pf-title">
           {{$t('profile.billing')}}
         </h2>
-        <div class="card-pf-body">
+        <div v-if="isBillingLoading" class="spinner spinner-lg loader-spinner"></div>
+        <div v-if="!isBillingLoading" class="card-pf-body">
           <form class="form-horizontal" v-on:submit.prevent="updateBillingInfo()">
             <div class="form-group">
               <label class="col-sm-3 control-label" for="textInput-markup">{{$t('profile.name')}}</label>
@@ -86,22 +87,20 @@
               <label class="col-sm-3 control-label" for="textInput-markup">{{$t('profile.type')}}</label>
               <div class="col-sm-9">
                 <span class="span-radio">
-                  <input required v-model="billingInfo.type" class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1"
-                    value="business" checked>
+                  <input required v-model="billingType" class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="business">
                   <label class="form-check-label" for="exampleRadios1">
                     {{$t('profile.type_business')}}
                   </label>
                 </span>
                 <span class="span-radio">
-                  <input required v-model="billingInfo.type" class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2"
-                    value="person">
+                  <input required v-model="billingType" class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="person">
                   <label class="form-check-label" for="exampleRadios2">
                     {{$t('profile.type_person')}}
                   </label>
                 </span>
               </div>
             </div>
-            <div v-if="billingInfo.type == 'business'" class="form-group">
+            <div v-if="billingType == 'business'" class="form-group">
               <label class="col-sm-3 control-label" for="textInput-markup">{{$t('profile.vat')}}</label>
               <div class="col-sm-9">
                 <input v-model="billingInfo.vat" required type="text" id="textInput-markup" class="form-control">
@@ -149,29 +148,34 @@
       return {
         profile: this.get('logged_user'),
         updateBilling: updateBilling,
-        billingInfo: {
-          type: 'person'
-        },
+        billingInfo: {},
+        billingType: 'person',
         billingEmpty: true,
         countries: [],
-        isSaving: false
+        isSaving: false,
+        isBillingLoading: true
       }
     },
     methods: {
       getBillingInfo() {
+        this.isBillingLoading = true
         this.$http.get('https://' + this.$root.$options.api_host + '/api/ui/billings', {
           headers: {
             'Authorization': 'Bearer ' + this.get('access_token', false) || ''
           }
         }).then(function (success) {
-          this.billingInfo = success.body
-          if (this.billingInfo.vat && this.billingInfo.vat.length > 0) {
-            this.billingInfo.type = 'business'
-          } else {
-            this.billingInfo.type = 'person'
-          }
+          this.isBillingLoading = false
           this.billingEmpty = false
+          this.billingInfo = success.body
+          if (success.body.vat && success.body.vat.length > 0) {
+            this.billingType = 'business'
+          } else {
+            this.billingType = 'person'
+          }
         }, function (error) {
+          this.billingEmpty = true
+          this.billingType = 'person'
+          this.isBillingLoading = false
           console.error(error)
         });
       },
@@ -188,6 +192,9 @@
       },
       updateBillingInfo() {
         this.isSaving = true
+        if (this.billingType == 'person') {
+          this.billingInfo.vat = ""
+        }
         this.$http[this.billingEmpty ? 'post' : 'put']('https://' + this.$root.$options.api_host + '/api/ui/billings',
           this.billingInfo, {
             headers: {

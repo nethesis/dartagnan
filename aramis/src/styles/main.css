@@ -77,6 +77,10 @@ textarea {
   margin-bottom: 5px;
 }
 
+.loader-spinner {
+  margin-bottom: 20px;
+}
+
 .card-info-title {
   margin-right: 8px;
 }
