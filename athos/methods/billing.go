@@ -27,20 +27,39 @@ import (
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 
+	"github.com/nethesis/dartagnan/athos/configuration"
 	"github.com/nethesis/dartagnan/athos/database"
 	"github.com/nethesis/dartagnan/athos/models"
 )
 
-//TODO: this probably should be rewritten after legal advice
-func GetTaxPercentage(country string, vat string) int {
+
+/*
+  Alghoritm for VAT, this applies to EU companies selling services
+
+  - customer is a UE company: no VAT
+  - customer is a non-UE company: no VAT
+  - customer is a non-UE physical person: no VAT
+  - customer is UE pyhsical person: VAT from country of selling company
+*/
+func GetVatPercentage(customerCountry string, customerVat string) int {
 	var tax models.Tax
-	if vat != "" {
+
+	// Customer is a company, no VAT applied
+	if customerVat != "" {
 		return 0
 	}
 
 	db := database.Database()
-	db.Where("country = ?", country).First(&tax)
+	db.Where("country = ?", customerCountry).First(&tax)
 	defer db.Close()
+
+	// Customer is from non-UE countries, no VAT applied
+	if tax.Country == "Other" {
+		return 0
+	}
+
+	// Customer is a UE pyhsical person: VAT from company which deployed the application
+	db.Where("country = ?",configuration.Config.Billing.Country).First(&tax)
 	return tax.Percentage
 }
 
@@ -58,7 +77,7 @@ func GetBilling(c *gin.Context) {
 		return
 	}
 
-	billing.Tax = GetTaxPercentage(billing.Country, billing.Vat)
+	billing.Tax = GetVatPercentage(billing.Country, billing.Vat)
 
 	c.JSON(http.StatusOK, billing)
 }

@@ -68,11 +68,14 @@ type Configuration struct {
 	PayPal struct {
 		ClientID     string `json:"client_id"`
 		ClientSecret string `json:"client_secret"`
-		Sandbox       bool   `json:"sandbox"`
+		Sandbox      bool   `json:"sandbox"`
 	} `json:"paypal"`
 	Log struct {
 		Level        string `json:"level"`
 	} `json:"log"`
+	Billing struct {
+		Country string `json:"country"`
+	}
 	Notifications Notifications `json:"notifications"`
 }
 
