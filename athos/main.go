@@ -128,6 +128,11 @@ func main() {
 		{
 			taxes.GET("", methods.GetTaxes)
 		}
+
+		utils := ui.Group("/utils")
+		{
+			utils.GET("/reverse_lookup/:ip", methods.ReverseLookup)
+		}
 	}
 	// handle missing endpoint
 	router.NoRoute(func(c *gin.Context) {
