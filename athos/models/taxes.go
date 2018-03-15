@@ -21,24 +21,8 @@
 
 package models
 
-type Billing struct {
-	ID          int     `db:"id" json:"id"`
-	CreatorID   string  `db:"creator_id" json:"creator_id"`
-	Name        string  `db:"name" json:"name"`
-	Address     string  `db:"address" json:"address"`
+type Tax struct {
 	Country     string  `db:"country" json:"country"`
-	City        string  `db:"city" json:"city"`
-	PostalCode  string  `db:"postal_code" json:"postal_code"`
-	Vat         string  `db:"vat" json:"vat"`
-	Tax         int     `sql:"-" json:"tax"`
-}
-
-type BillingJSON struct {
-	Name        string  `db:"name" json:"name"`
-	Address     string  `db:"address" json:"address"`
-	Country     string  `db:"country" json:"country"`
-	City        string  `db:"city" json:"city"`
-	PostalCode  string  `db:"postal_code" json:"postal_code"`
-	Vat         string  `db:"vat" json:"vat"`
+	Percentage  int  `db:"percentage" json:"percentage"`
 }
 

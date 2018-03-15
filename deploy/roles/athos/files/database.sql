@@ -101,9 +101,44 @@ CREATE TABLE billings (
   creator_id character varying(1024) not null,
   name character varying(1024) not null,
   address character varying(1024) not null,
-  nation character varying(1024) not null,
-  type character varying(1024) not null,
+  city character varying(1024) not null,
+  postal_code character varying(1024) not null,
+  country character varying(1024) not null references taxes(country),
   vat character varying(1024),
   UNIQUE(creator_id)
 );
 
+CREATE TABLE taxes (
+  country character varying(1024) not null primary key,
+  percentage integer 
+);
+
+INSERT INTO taxes VALUES ('Other',0);
+INSERT INTO taxes VALUES ('Belgium',21);
+INSERT INTO taxes VALUES ('Bulgaria',20);
+INSERT INTO taxes VALUES ('Czech Republic',21);
+INSERT INTO taxes VALUES ('Denmark',25);
+INSERT INTO taxes VALUES ('Germany',19);
+INSERT INTO taxes VALUES ('Estonia',20);
+INSERT INTO taxes VALUES ('Ireland',23);
+INSERT INTO taxes VALUES ('Greece',24);
+INSERT INTO taxes VALUES ('Spain',21);
+INSERT INTO taxes VALUES ('France',20);
+INSERT INTO taxes VALUES ('Croatia',25);
+INSERT INTO taxes VALUES ('Italy',22);
+INSERT INTO taxes VALUES ('Cyprus',19);
+INSERT INTO taxes VALUES ('Latvia',21);
+INSERT INTO taxes VALUES ('Lithuania',21);
+INSERT INTO taxes VALUES ('Luxembourg',17);
+INSERT INTO taxes VALUES ('Hungary',27);
+INSERT INTO taxes VALUES ('Malta',18);
+INSERT INTO taxes VALUES ('Netherlands',21);
+INSERT INTO taxes VALUES ('Austria',20);
+INSERT INTO taxes VALUES ('Poland',23);
+INSERT INTO taxes VALUES ('Portugal',23);
+INSERT INTO taxes VALUES ('Romania',19);
+INSERT INTO taxes VALUES ('Slovenia',22);
+INSERT INTO taxes VALUES ('Slovakia',20);
+INSERT INTO taxes VALUES ('Finland',24);
+INSERT INTO taxes VALUES ('Sweden',25);
+INSERT INTO taxes VALUES ('United Kingdom',20);

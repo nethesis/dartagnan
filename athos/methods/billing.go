@@ -31,22 +31,36 @@ import (
 	"github.com/nethesis/dartagnan/athos/models"
 )
 
+//TODO: this probably should be rewritten after legal advice
+func GetTaxPercentage(country string, vat string) int {
+	var tax models.Tax
+	if vat == "" {
+		return 0
+	}
+
+	db := database.Database()
+	db.Where("country = ?", country).First(&tax)
+	defer db.Close()
+	return tax.Percentage
+}
+
 func GetBilling(c *gin.Context) {
-	var billingg models.Billing
+	var billing models.Billing
 	creatorID := c.MustGet("authUser").(string)
 
 	db := database.Database()
-	db.Where("creator_id = ?", creatorID).First(&billingg)
+	db.Where("creator_id = ?", creatorID).First(&billing)
 	defer db.Close()
 
-	if billingg.ID == 0 {
+	if billing.ID == 0 {
 		db.Close()
 		c.JSON(http.StatusNotFound, gin.H{"message": "no billing information found!"})
 		return
 	}
 
+	billing.Tax = GetTaxPercentage(billing.Country, billing.Vat)
 
-	c.JSON(http.StatusOK, billingg)
+	c.JSON(http.StatusOK, billing)
 }
 
 func CreateBilling(c *gin.Context) {
@@ -62,8 +76,9 @@ func CreateBilling(c *gin.Context) {
 		CreatorID:    creatorID,
 		Name:         json.Name,
 		Address:      json.Address,
-		Nation:       json.Nation,
-		Type:         json.Type,
+		Country:      json.Country,
+		City:         json.City,
+		PostalCode:   json.PostalCode,
 		Vat:          json.Vat,
 	}
 
@@ -97,8 +112,9 @@ func UpdateBilling(c *gin.Context) {
 	billing.CreatorID = creatorID
 	billing.Name = json.Name
 	billing.Address = json.Address
-	billing.Nation = json.Nation
-	billing.Type = json.Type
+	billing.Country = json.Country
+	billing.City = json.City
+	billing.PostalCode = json.PostalCode
 	billing.Vat = json.Vat
 
 	db.Save(&billing)
