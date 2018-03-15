@@ -34,7 +34,7 @@ import (
 //TODO: this probably should be rewritten after legal advice
 func GetTaxPercentage(country string, vat string) int {
 	var tax models.Tax
-	if vat == "" {
+	if vat != "" {
 		return 0
 	}
 
@@ -72,7 +72,7 @@ func CreateBilling(c *gin.Context) {
 		return
 	}
 
-	b := models.Billing{
+	billing := models.Billing{
 		CreatorID:    creatorID,
 		Name:         json.Name,
 		Address:      json.Address,
@@ -83,8 +83,11 @@ func CreateBilling(c *gin.Context) {
 	}
 
 	db := database.Database()
-	db.Create(&b)
 	defer db.Close()
+	if err := db.Create(&billing).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "billing not saved", "error": err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }
@@ -117,7 +120,10 @@ func UpdateBilling(c *gin.Context) {
 	billing.PostalCode = json.PostalCode
 	billing.Vat = json.Vat
 
-	db.Save(&billing)
+	if err := db.Save(&billing).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "billing not saved", "error": err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }
