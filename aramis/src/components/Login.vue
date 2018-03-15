@@ -27,7 +27,6 @@
               </p>
               <p>Stable Updates repository</p>
               <p>Community support</p>
-              <p>Professional Support - 100€ per incident</p>
               <p class="disabled">Asset Portal</p>
               <p class="disabled">Monitoring Portal</p>
               <p class="disabled">Phone support</p>

@@ -120,6 +120,9 @@
   import StorageService from './../../services/storage';
 
   import paypal from 'paypal-checkout'
+  import {
+    setTimeout
+  } from 'timers';
 
   export default {
     name: 'RenewButton',
@@ -148,11 +151,13 @@
             payment: {
               transactions: [{
                 amount: {
-                  total: Math.round( (context.currentPlan.price + (context.currentPlan.price * context.billingInfo.tax / 100)) * 100 ) / 100,
+                  total: Math.round((context.currentPlan.price + (context.currentPlan.price * context.billingInfo
+                    .tax / 100)) * 100) / 100,
                   currency: 'EUR',
                   details: {
-                    subtotal: Math.round( context.currentPlan.price * 100 ) / 100,
-                    tax: Math.round( (context.currentPlan.price * context.billingInfo.tax / 100) * 100 ) / 100
+                    subtotal: Math.round(context.currentPlan.price * 100) / 100,
+                    tax: Math.round((context.currentPlan.price * context.billingInfo.tax / 100) * 100) /
+                      100
                   }
                 },
                 "item_list": {
@@ -191,6 +196,22 @@
     data() {
       // get plans
       this.plansList()
+
+      // read upgrade ref and show modal
+      if (this.get('upgrade_ref', false)) {
+        var context = this
+        this.$http.get('https://' + this.$root.$options.api_host + '/api/ui/billings', {
+          headers: {
+            'Authorization': 'Bearer ' + this.get('access_token', false) || ''
+          }
+        }).then(function (success) {
+          this.billingInfo = success.body
+          $('#paymentModalRenew-' + context.get('upgrade_ref', false)).modal('toggle')
+          context.delete('upgrade_ref')
+        }, function (error) {
+          console.error(error)
+        });
+      }
 
       return {
         payment: {
@@ -235,6 +256,7 @@
           $('#paymentModalRenew-' + this.obj.id).modal('toggle')
         }, function (error) {
           this.$parent.$parent.action = 'updateBilling'
+          this.set('upgrade_ref', this.obj.id)
           this.$router.push({
             path: '/profile'
           })

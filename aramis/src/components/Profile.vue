@@ -203,6 +203,11 @@
           }).then(function (success) {
           this.isSaving = false
           this.updateBilling = false
+          if (this.get('upgrade_ref', false)) {
+            this.$router.push({
+              path: '/servers'
+            })
+          }
         }, function (error) {
           this.isSaving = false
           console.error(error)
