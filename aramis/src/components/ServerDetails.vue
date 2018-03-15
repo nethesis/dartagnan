@@ -202,6 +202,9 @@
                     <span class="system-note">{{ props.row.note || '-' }}</span>
                     <edit-note :obj="props.row"></edit-note>
                   </td>
+                  <td>
+                    <delete-alert :obj="props.row" :update="getServerAlerts"></delete-alert>
+                  </td>
                 </template>
               </vue-good-table>
               <div v-if="isLoadingAlerts" class="spinner spinner-sm"></div>
@@ -496,6 +499,7 @@
 
   import RenewButton from './directives/RenewButton.vue';
   import DeleteServer from './directives/DeleteServer.vue';
+  import DeleteAlert from './directives/DeleteAlert.vue';
   import EditNote from './directives/EditNote.vue';
   import {
     setTimeout
@@ -507,7 +511,8 @@
     components: {
       renewButton: RenewButton,
       deleteServer: DeleteServer,
-      editNote: EditNote
+      editNote: EditNote,
+      deleteAlert: DeleteAlert
     },
     created() {
       // get server info
@@ -559,6 +564,11 @@
             filterable: true,
             sortable: false
           },
+          {
+            label: this.$i18n.t('alerts.action'),
+            filterable: false,
+            sortable: false
+          }
         ],
         rows: [],
         tableLangsTexts: this.tableLangs(),

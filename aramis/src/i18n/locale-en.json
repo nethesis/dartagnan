@@ -157,7 +157,8 @@
       "no_alerts_title": "No alerts",
       "no_alerts_subtitle": "You don't have any alerts triggered. Good job!",
       "search": "Search",
-      "server": "Server"
+      "server": "Server",
+      "action": "Action"
     },
     "action": "Action",
     "next": "Next",

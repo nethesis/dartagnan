@@ -23,11 +23,11 @@
 package methods
 
 import (
-	"net/http"
-	"time"
 	"fmt"
-	"strings"
+	"net/http"
 	"strconv"
+	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -59,7 +59,7 @@ func cleanupStaleAlerts(creatorID string, systemID string) {
 
 	for _, alert := range alerts {
 		// do not reset backup, raid and wan alerts
-		if alert.AlertID == "system:backup:failure" || strings.Index(alert.AlertID,"md:") == 0 || strings.Index(alert.AlertID,"wan:") == 0 {
+		if alert.AlertID == "system:backup:failure" || strings.Index(alert.AlertID, "md:") == 0 || strings.Index(alert.AlertID, "wan:") == 0 {
 			continue
 		}
 
@@ -365,4 +365,33 @@ func GetAlertHistories(c *gin.Context) {
 	db.Close()
 
 	c.JSON(http.StatusOK, alertHistories)
+}
+
+func DeleteAlert(c *gin.Context) {
+	var alert models.Alert
+	creatorID := c.MustGet("authUser").(string)
+
+	alertID := c.Param("alert_id")
+
+	db := database.Database()
+	db.Where("id = ?", alertID).First(&alert)
+
+	if alert.ID == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"message": "no alert found!"})
+		return
+	}
+
+	if !utils.CheckSystemOwnership(strconv.Itoa(alert.SystemID), creatorID) {
+		c.JSON(http.StatusForbidden, gin.H{"message": "this alert is not yours!"})
+		return
+	}
+
+	if err := db.Delete(&alert).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "alert not deleted", "error": err.Error()})
+		return
+	}
+
+	db.Close()
+
+	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }

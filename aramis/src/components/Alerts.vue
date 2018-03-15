@@ -95,7 +95,9 @@
               data-toggle="tooltip" data-placement="left" :title="$t('alerts.'+props.row.priority)"></span>
             <strong>{{ props.row.namei18n }}</strong>
           </td>
-          <td class="fancy"><strong @click="$parent.routeTo('servers/'+props.row.system.id)" class="soft click-hover">{{ props.row.system.hostname || '-'}}</strong></td>
+          <td class="fancy">
+            <strong @click="$parent.routeTo('servers/'+props.row.system.id)" class="soft click-hover">{{ props.row.system.hostname || '-'}}</strong>
+          </td>
           <td class="fancy">{{ props.row.timestamp | formatDate}}</td>
           <td>
             <strong>{{ props.row.status }}</strong>
@@ -103,6 +105,9 @@
           <td class="fancy">
             <span class="system-note">{{ props.row.note || '-' }}</span>
             <edit-note :obj="props.row"></edit-note>
+          </td>
+          <td>
+            <delete-alert :obj="props.row" :update="listAlerts"></delete-alert>
           </td>
         </template>
       </vue-good-table>
@@ -120,12 +125,14 @@
   } from 'timers';
 
   import EditNote from './directives/EditNote.vue';
+  import DeleteAlert from './directives/DeleteAlert.vue';
 
   export default {
     name: 'alerts',
     mixins: [LoginService, StorageService, UtilService],
     components: {
-      editNote: EditNote
+      editNote: EditNote,
+      deleteAlert: DeleteAlert
     },
     updated: function () {
       $('[data-toggle="tooltip"]').tooltip()
@@ -166,6 +173,11 @@
             filterable: false,
             sortable: false
           },
+          {
+            label: this.$i18n.t('alerts.action'),
+            filterable: false,
+            sortable: false
+          }
         ],
         tableLangsTexts: this.tableLangs(),
       }
@@ -227,5 +239,6 @@
 </script>
 
 <style scoped>
+
 
 </style>
