@@ -195,6 +195,8 @@ func GetSystemBySecret(c *gin.Context) {
 	db.Preload("Subscription.SubscriptionPlan").Where("id = ? ", system.ID).First(&system)
 	db.Close()
 
+	system.Status = getStatus(system.ID)
+	system.Alerts = getAlertsNumber(system)
 	system.Secret = ""
 	c.JSON(http.StatusOK, system)
 }
@@ -215,6 +217,7 @@ func GetSystem(c *gin.Context) {
 	}
 
 	system.Status = getStatus(system.ID)
+	system.Alerts = getAlertsNumber(system)
 	c.JSON(http.StatusOK, system)
 }
 
