@@ -605,6 +605,11 @@
         }, function (error) {
           console.error(error)
           this.isLoadingInfo = false
+          if (error.status == 404) {
+            this.$router.push({
+              path: '/notfound'
+            })
+          }
         });
       },
       getServerInventory() {
