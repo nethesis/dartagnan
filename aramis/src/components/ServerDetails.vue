@@ -408,7 +408,7 @@
                 </div>
                 <div class="tab-pane fade" id="network-tab" role="tabpanel" aria-labelledby="network-tab">
                   <div class="row row-cards-pf">
-                    <div v-if="e.type != 'xdsl-disabled' || e.type != 'provider'" v-for="(e, k) in server.inventory.esmithdb.networks" v-bind:key="k"
+                    <div v-if="e.type != 'xdsl-disabled' && e.type != 'provider'" v-for="(e, k) in server.inventory.esmithdb.networks" v-bind:key="k"
                       class="col-xs-12 col-sm-6 col-md-4 col-lg-6 resources-panel">
                       <div class="panel panel-default">
                         <div class="panel-heading">
