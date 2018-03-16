@@ -1,152 +1,11 @@
 <template>
   <div class="login-pf">
-    <span id="badge">
-      <img class="brand-logo" src="/static/logo.png" alt=" logo" />
-    </span>
     <div v-if="sessionExpired" class="alert alert-warning alert-dismissable absolute-center-message">
       <span class="pficon pficon-warning-triangle-o"></span>
       <strong>{{$t('login.session_expired')}}</strong>. {{$t('login.session_expired_desc')}}.
     </div>
-    <div id="plans-table">
-      <div class="row row-cards-pf">
-
-        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 card-plan">
-          <div class="card-pf text-center">
-            <div class="logo-container-1">
-              <img :src="getImage('crostino')" class="logo-plan-img">
-              <h2 class="card-pf-title">
-                <strong>Crostino</strong>
-              </h2>
-              <h4 class="sub-desc">Good Starter</h4>
-            </div>
-            <div class="card-pf-body">
-              <p>
-                <h1>
-                  <strong>48 €</strong> / year
-                </h1>
-              </p>
-              <p>Stable Updates repository</p>
-              <p>Community support</p>
-              <p class="disabled">Asset Portal</p>
-              <p class="disabled">Monitoring Portal</p>
-              <p class="disabled">Phone support</p>
-            </div>
-            <div class="card-pf-footer">
-              <p>
-                <a :href="infoUrl" target="_blank" class="btn btn-secondary btn-lg " type="button">{{$t('login.more_info')}}</a>
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 card-plan">
-          <div class="card-pf text-center">
-            <div class="logo-container-2">
-              <img :src="getImage('lasagna')" class="logo-plan-img">
-              <h2 class="card-pf-title">
-                <strong>Lasagna</strong>
-              </h2>
-              <h4 class="sub-desc">Homemade first plate</h4>
-            </div>
-            <div class="card-pf-body">
-              <p>
-                <h1>
-                  <strong>250 €</strong> / year
-                </h1>
-              </p>
-              <p>Stable Updates repository</p>
-              <p>Professional support via Customer Portal + SSH</p>
-              <p>
-                <strong class="soft">3</strong> support tickets/year</p>
-              <p>Asset Portal</p>
-              <p class="disabled">Monitoring Portal</p>
-              <p class="disabled">Phone support</p>
-            </div>
-            <div class="card-pf-footer">
-              <p>
-                <a :href="infoUrl" target="_blank" class="btn btn-secondary btn-lg " type="button">{{$t('login.more_info')}}</a>
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 card-plan">
-          <div class="card-pf text-center">
-            <div class="logo-container-3">
-              <img :src="getImage('fiorentina')" class="logo-plan-img">
-              <h2 class="card-pf-title">
-                <strong>Fiorentina</strong>
-              </h2>
-              <h4 class="sub-desc">The main Course</h4>
-            </div>
-            <div class="card-pf-body">
-              <p>
-                <h1>
-                  <strong>450 €</strong> / year
-                </h1>
-              </p>
-              <p>Stable Updates repository</p>
-              <p>Professional support via Customer Portal + SSH</p>
-              <p>
-                <strong class="soft">6</strong> support tickets/year</p>
-              <p>Asset Portal</p>
-              <p>Monitoring Portal</p>
-              <p class="disabled">Phone support</p>
-            </div>
-            <div class="card-pf-footer">
-              <p>
-                <a :href="infoUrl" target="_blank" class="btn btn-secondary btn-lg " type="button">{{$t('login.more_info')}}</a>
-              </p>
-            </div>
-          </div>
-        </div>
-        <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3 card-plan">
-          <div class="card-pf text-center">
-            <div class="logo-container-4">
-              <img :src="getImage('pizza')" class="logo-plan-img">
-              <h2 class="card-pf-title">
-                <strong>Pizza</strong>
-              </h2>
-              <h4 class="sub-desc">What else?</h4>
-            </div>
-            <div class="card-pf-body">
-              <p>
-                <h1>
-                  <strong>800 €</strong> / year
-                </h1>
-              </p>
-              <p>Stable Updates repository</p>
-              <p>Professional support via Customer Portal + SSH</p>
-              <p>
-                <strong class="soft">12</strong> support tickets/year</p>
-              <p>Asset Portal</p>
-              <p>Monitoring Portal</p>
-              <p>Phone support</p>
-            </div>
-            <div class="card-pf-footer">
-              <p>
-                <a :href="infoUrl" target="_blank" class="btn btn-secondary btn-lg " type="button">{{$t('login.more_info')}}</a>
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <!-- /row -->
-    </div>
-    <div class="container login-cont">
-      <div class="row">
-        <div class="col-sm-12 col-brand">
-          <div id="brand">
-            <h1>{{appName}}</h1>
-          </div>
-        </div>
-        <div class="col-sm-12 col-md-12 col-lg-12 login">
-          <p>
-            <strong>{{ $t("login.welcome_title_pre") }} {{appName}} {{ $t("login.welcome_title_suf") }}.</strong>
-            {{ $t("login.welcome_subtitle") }}
-          </p>
-          <button @click="doLogin()" class="btn btn-primary btn-lg login-big" type="button">{{ $t("login.login") }}</button>
-        </div>
-      </div>
-    </div>
+    <button @click="doLogin()" class="btn btn-primary btn-lg login-big absolute-center-top" type="button">{{ $t("login.login") }}</button>
+    <iframe class="iframe-container" :src="iframeURL"></iframe>
   </div>
 </template>
 
@@ -167,10 +26,14 @@
         sessionExpired = true
         this.delete('query_params')
       }
+      if (this.$parent.action == 'autoLogin') {
+        this.doLogin()
+        this.delete('query_params')
+      }
       return {
         sessionExpired: sessionExpired,
         appName: CONFIG.APP_NAME,
-        infoUrl: CONFIG.INFO_URL
+        iframeURL: CONFIG.FRAME_URL
       }
     },
     methods: {
@@ -282,9 +145,9 @@
   }
 
   .login-big {
-    width: 150px !important;
-    height: 40px !important;
-    font-size: 18px !important;
+    width: 180px !important;
+    height: 50px !important;
+    font-size: 20px !important;
   }
 
 </style>

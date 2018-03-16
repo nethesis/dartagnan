@@ -368,6 +368,24 @@ textarea {
   right: 0;
 }
 
+.absolute-center-top {
+  margin: auto;
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+}
+
+.iframe-container {
+  position: fixed;
+  border: none;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  padding-bottom: 0px;
+  z-index: -1;
+}
+
 .absolute-center-message {
   margin: auto;
   position: absolute !important;
