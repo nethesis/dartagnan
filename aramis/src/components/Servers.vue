@@ -202,6 +202,8 @@
                   <div class="alert alert-info alert-dismissable">
                     <span class="pficon pficon-info"></span>
                     {{$t('servers.paste_it')}}
+                    <a href="http://docs.nethserver.org/en/v7/subscription.html" class="alert-link"
+                      target="_blank">{{$t('servers.more_info')}}</a>.
                   </div>
                 </div>
               </div>
