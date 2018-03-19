@@ -146,7 +146,7 @@
 
   .login-big {
     width: 180px !important;
-    height: 50px !important;
+    height: 40px !important;
     font-size: 20px !important;
   }
 
