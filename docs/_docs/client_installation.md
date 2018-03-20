@@ -3,7 +3,7 @@ title: "Client installation"
 permalinks: /docs/client_installation/
 ---
 
-The [subscription](https://github.com/NethServer/nethserver-subscription) is composed by 3 different parts:
+The [subscription](https://github.com/NethServer/nethserver-subscription) client is composed by 3 different parts:
 
 - Subscription: manages the machine registration and configures yum repositories
 - Inventory: collects the machine information
@@ -23,5 +23,5 @@ Currently, installation is supported only on [NethServer 7](https://www.nethserv
 
 2. Access the ``Subscription`` page inside the Server Manager (``http://<SERVER_FQDN>:980``)
 
-3. Follow the istructions on the screen
+3. Follow the instructions on the screen
 

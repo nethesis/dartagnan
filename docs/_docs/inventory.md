@@ -12,4 +12,4 @@ Any package can provide custom facts to collect extra data, like the number of c
 
 Collected data are accessible for each server and can be used to perform usage analysis on active installations.
 
-More techincal stuff at [nethserver-inventory repository](https://github.com/nethserver/nethserver-inventory).
+More techincal stuff at https://github.com/NethServer/nethserver-subscription/blob/master/README.rst#inventory.
