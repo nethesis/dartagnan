@@ -92,17 +92,22 @@ If `tier_id` is not set, the access is denied (403 - forbidden). For instance to
 The `repo-*` are a set of Bash commands that include (source) the configuration
 from `/etc/porthos.conf`. Upstream YUM rsync URLs are defined there.
 
-- `repo-bulk-hinit` run initial synchronization from upstream repositories
+- `repo-bulk-hinit` runs initial synchronization from upstream repositories
 - `repo-bulk-pull` creates a snapshot date-dir (e.g. `d20180301`) under
   `dest_dir` with differences from upstream repositories. Set `t0` to point at
   it.
 - `repo-bulk-shift [N]` updates `t1` ... `tN` links by shifting tiers of one position
   the optional `N`
+- `repo-bulk-cleanup` erases stale tier snapshots
 
-The following commands shold not be invoked directly. They are intended to be
+The following commands should not be invoked directly. They are intended to be
 called by the commands above.
 
 - `repo-head-init`  initial synchronization from a specific upstream repo
 - `repo-tier-pull`  upstream snapshot for a specific repo
 - `xrsync` run rsync and try to repeat the operation if fails
 
+## Automated schedule
+
+The management commands are executed at specific days of the week, as specified
+by the ``/etc/cron.d/porthos.cron`` crontab.
