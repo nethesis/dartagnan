@@ -80,6 +80,7 @@ Instruction for a clean CentOS 7.
    - auth0 domain and audience
    - Paypal credentials
    - SMTP host and credentials
+   - FRAME_URL home page of the portal. The VueJS app will place a login button on top of it
 
    Following parameters under `notifications` section are used inside the mail templates:
 
