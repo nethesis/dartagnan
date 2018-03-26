@@ -12,7 +12,7 @@ CREATE TABLE subscription_plans (
     price numeric,
     period numeric default null
 );
-INSERT INTO subscription_plans VALUES (1, 'trial', 'Trial', 'Trial of 30d', 0.00, 30);
+INSERT INTO subscription_plans VALUES (1, 'trial', 'Trial Pizza', '30 Day Trial', 0.00, 30);
 INSERT INTO subscription_plans VALUES (2, 'crostino', 'Crostino', 'Good Starter', 48.00, 360);
 INSERT INTO subscription_plans VALUES (3, 'lasagna', 'Lasagna', 'Homemade first plate', 250.00, 360);
 INSERT INTO subscription_plans VALUES (4, 'fiorentina', 'Fiorentina', 'The main course', 450.00, 360);
