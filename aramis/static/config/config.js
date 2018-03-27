@@ -5,6 +5,7 @@ const CONFIG = {
   AUTH0_AUDIENCE: '<AUTH0_AUDIENCE>',
   PAYPAL_SANDBOX: '<PAYPAL_SANDBOX_ID',
   PAYPAL_PRODUCTION: '<PAYPAL_PRODUCTION_ID',
+  HELP_URL: '<YOUR_HELP_LINK>',
   APP_NAME: 'Aramis',
   FRAME_URL: 'http://www.nethserver.org/plans'
 }

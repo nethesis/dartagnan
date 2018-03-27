@@ -31,6 +31,8 @@
                 <li>
                   <router-link to="/profile">{{ $t("menu.profile") }}</router-link>
                 </li>
+                <li><a :href="helpUrl" target="_blank">{{ $t("menu.get_support") }}</a></li>
+                <li role="separator" class="divider"></li>
                 <li>
                   <a v-on:click="doLogout()" href="#">Logout</a>
                 </li>
@@ -200,6 +202,7 @@
         user: user,
         isLogged: isLogged,
         action: action,
+	helpUrl: CONFIG.HELP_URL,
         appName: CONFIG.APP_NAME
       }
     },
