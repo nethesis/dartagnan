@@ -19,10 +19,30 @@
  *
  */
 
-package main
+package cmd
 
-import "github.com/nethesis/dartagnan/foil/cmd"
+import (
+	"fmt"
+	"os"
 
-func main() {
-	cmd.Execute()
+	"github.com/nethesis/dartagnan/athos/cache"
+	"github.com/spf13/cobra"
+)
+
+var syncCmd = &cobra.Command{
+	Use:   "synckeys",
+	Short: "synchronize keys",
+	Long:  "Synchronize activation keys from database to Redis master instance.",
+	Run:   sync,
+}
+
+func sync(*cobra.Command, []string) {
+	_, errors := cache.BulkSetValidSystems()
+	for _, err := range errors {
+		fmt.Fprintf(os.Stderr, err)
+	}
+}
+
+func init() {
+	rootCmd.AddCommand(syncCmd)
 }
