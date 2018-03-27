@@ -22,13 +22,15 @@
     mixins: [LoginService, StorageService, UtilService],
     data() {
       var sessionExpired = false
-      if (this.$parent.action == 'sessionExpired') {
+      var isSessionExpired = this.get('sessionExpired') || false
+      if (isSessionExpired) {
         sessionExpired = true
-        this.delete('query_params')
+        this.delete('sessionExpired')
       }
-      if (this.$parent.action == 'autoLogin') {
+      var isAutoLogin =  this.get('autoLogin') || false
+      if (isAutoLogin) {
         this.doLogin()
-        this.delete('query_params')
+        this.delete('autoLogin')
       }
       return {
         sessionExpired: sessionExpired,

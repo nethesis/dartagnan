@@ -174,14 +174,14 @@
       var user = this.get('logged_user') || { name: "", email : "", picture: ""}
 
       // save route query params
-      if (Object.keys(this.get('query_params') || {}).length == 0) {
-        if (Object.keys(this.$route.query).length > 0) {
-          this.set('query_params', this.$route.query)
-        }
+      if (Object.keys(this.$route.query).length > 0) {
+          for (var p in this.$route.query) {
+            this.set(this.$route.query[p], true)
+          }
       }
 
       // get action if exists
-      var action = this.get('query_params') && this.get('query_params').action || null
+      var action = this.get('newServer') ? 'newServer' : '';
 
       if (this.$route.path !== '/callback') {
         if (isLogged) {
@@ -201,7 +201,6 @@
       return {
         user: user,
         isLogged: isLogged,
-        action: action,
 	helpUrl: CONFIG.HELP_URL,
         appName: CONFIG.APP_NAME
       }

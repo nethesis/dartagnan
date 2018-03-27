@@ -272,10 +272,10 @@
       this.listServers()
 
       // handle action
-      if (this.$parent.action == 'newServer') {
+      var newServerAction = this.get('newServer') || false
+      if (newServerAction) {
         this.addServer()
-        this.delete('query_params')
-        this.$parent.action = ''
+        this.delete('newServer')
       }
 
       return {
