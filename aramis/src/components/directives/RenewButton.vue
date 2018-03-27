@@ -52,7 +52,7 @@
                     </span>
                   </div>
                   <div class="card-pf-item details-pay-item">
-                    <span v-if="!onUpgradePriceCalc">{{currentPlan.description}}</span>
+                    <div v-if="!onUpgradePriceCalc" class="details-markdown text-left" v-html="markdownDescription"></div>
                     <div v-if="onUpgradePriceCalc" class="spinner spinner-sm"></div>
                   </div>
                 </div>
@@ -123,6 +123,7 @@
   import {
     setTimeout
   } from 'timers';
+  import marked from 'marked';
 
   export default {
     name: 'RenewButton',
@@ -217,6 +218,7 @@
           state: false
         },
         plans: [],
+        markdownDescription: "",
         currentPlan: this.obj.subscription.subscription_plan,
         billingInfo: {},
         onUpgradePriceCalc: false,
@@ -244,6 +246,7 @@
           if (this.obj.subscription.subscription_plan.code == 'trial') {
             this.currentPlan.full_price = this.plans[1].price
           }
+          this.markdownDescription = marked(this.obj.subscription.subscription_plan.description, { sanitize: true})
           this.onUpgradePriceCalc = false
           this.onUpgrade = this.obj.subscription.subscription_plan.code != 'trial' ? false : true
           $('#paymentModalRenew-' + id).modal('toggle')
@@ -280,10 +283,12 @@
             context.currentPlan = plan
             context.currentPlan.price = data.price
             context.currentPlan.full_price = data.full_price
+            context.markdownDescription = marked(plan.description, { sanitize: true})
           })
         } else {
           this.onUpgrade = false
           this.currentPlan = plan
+          this.markdownDescription = marked(plan.description, { sanitize: true})
         }
       },
       calculateUpgradePrice(plan, callback) {

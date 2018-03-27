@@ -13,6 +13,7 @@
     "auth0-js": "^9.2.3",
     "eventemitter3": "^3.0.1",
     "lodash": "^4.17.5",
+    "marked": "^0.3.19",
     "patternfly": "^3.39.0",
     "paypal-checkout": "^4.0.178",
     "vue": "^2.5.2",

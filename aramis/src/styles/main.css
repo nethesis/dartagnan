@@ -529,3 +529,20 @@ textarea {
 .details-pay-item .dropdown-toggle, .details-pay-item > a {
   font-size: 110%;
 }
+
+.details-markdown ul {
+  list-style: none;
+  padding: 0;
+}
+
+.details-markdown li {
+  padding-left: 1.3em;
+}
+
+.details-markdown li:before {
+  content: "\f00c"; /* FontAwesome Unicode */
+  font-family: FontAwesome;
+  display: inline-block;
+  margin-left: -1.3em; /* same as padding-left set on li */
+  width: 1.3em; /* same as padding-left set on li */
+}
