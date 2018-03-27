@@ -31,7 +31,7 @@
       "type_person": "Personal"
     },
     "login": {
-      "login": "Login",
+      "login": "Login / Sign up",
       "welcome_title_pre": "Welcome to",
       "welcome_title_suf": "Monitoring Portal",
       "welcome_subtitle": "Click on Login button to authenticate",
