@@ -28,7 +28,7 @@ import (
 )
 
 // List of trials active in the last 24 hours
-func ListActiveTrials() []models.System {
+func ListActiveTrials(hours int) []models.System {
 	var systems []models.System
 	var ret []models.System
 
@@ -42,7 +42,7 @@ func ListActiveTrials() []models.System {
 			var h models.Heartbeat
 			db.Where("system_id = ?", system.ID).First(&h)
 			duration := time.Since(h.Timestamp)
-			if duration.Hours() < 24 {
+			if duration.Hours() < float64(hours) {
 				ret = append(ret, system)
 			}
 		}
