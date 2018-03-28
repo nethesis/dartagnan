@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Nethesis S.r.l.
+ * Copyright (C) 2018 Nethesis S.r.l.
  * http://www.nethesis.it - info@nethesis.it
  *
  * This file is part of Dartagnan project.
@@ -17,32 +17,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Dartagnan.  If not, see COPYING.
  *
- * author: Edoardo Spadoni <edoardo.spadoni@nethesis.it>
  */
 
-package methods
+package models
 
-import (
-	"net/http"
+import "time"
 
-	"github.com/gin-gonic/gin"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+type Payment struct {
+	ID        int       `db:"id" json:"id"`
+	CreatorID string    `db:"creator_id" json:"creator_id"`
+	Payment   string    `db:"payment" json:"payment"`
+	SystemID  int       `db:"system_id" json:"system_id"`
+	Created   time.Time `db:"created" json:"created"`
+}
 
-	"github.com/nethesis/dartagnan/athos/database"
-	"github.com/nethesis/dartagnan/athos/models"
-)
-
-func GetSubscriptionPlans(c *gin.Context) {
-	var subscriptionPlans []models.SubscriptionPlan
-
-	db := database.Database()
-	db.Find(&subscriptionPlans)
-	defer db.Close()
-
-	if len(subscriptionPlans) <= 0 {
-		c.JSON(http.StatusNotFound, gin.H{"message": "no subscription plans found!"})
-		return
-	}
-
-	c.JSON(http.StatusOK, subscriptionPlans)
+type PaypalPayment struct {
+	Total           float64 `json:"total"`
+	Subtotal        float64 `json:"subtotal"`
+	Tax             float64 `json:"tax"`
+	Currency        string  `json:"currency"`
+	ItemDescription string  `json:"item_description"`
 }

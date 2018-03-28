@@ -41,7 +41,16 @@ var rootCmd = &cobra.Command{
 
 Keys synchronization
 
-   foil synckeys`,
+   foil synckeys
+
+List active trial installations
+
+   foil list trials
+
+List payments of last 24 hours
+
+   foil list payments
+	 `,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 Nethesis S.r.l.
+ * Copyright (C) 2018 Nethesis S.r.l.
  * http://www.nethesis.it - info@nethesis.it
  *
  * This file is part of Dartagnan project.
@@ -17,32 +17,37 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with Dartagnan.  If not, see COPYING.
  *
- * author: Edoardo Spadoni <edoardo.spadoni@nethesis.it>
  */
-
-package methods
+package utils
 
 import (
-	"net/http"
-
-	"github.com/gin-gonic/gin"
-	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"time"
 
 	"github.com/nethesis/dartagnan/athos/database"
 	"github.com/nethesis/dartagnan/athos/models"
 )
 
-func GetSubscriptionPlans(c *gin.Context) {
-	var subscriptionPlans []models.SubscriptionPlan
+// List of trials active in the last 24 hours
+func ListActiveTrials() []models.System {
+	var systems []models.System
+	var ret []models.System
 
 	db := database.Database()
-	db.Find(&subscriptionPlans)
-	defer db.Close()
+	db.Set("gorm:auto_preload", true)
+	db.Preload("Subscription").Joins("JOIN heartbeats ON heartbeats.system_id = systems.id").Order("creator_id desc").Find(&systems)
+	db.Set("gorm:auto_preload", false)
 
-	if len(subscriptionPlans) <= 0 {
-		c.JSON(http.StatusNotFound, gin.H{"message": "no subscription plans found!"})
-		return
+	for _, system := range systems {
+		if system.Subscription.SubscriptionPlanID == 1 {
+			var h models.Heartbeat
+			db.Where("system_id = ?", system.ID).First(&h)
+			duration := time.Since(h.Timestamp)
+			if duration.Hours() < 24 {
+				ret = append(ret, system)
+			}
+		}
 	}
 
-	c.JSON(http.StatusOK, subscriptionPlans)
+	db.Close()
+	return ret
 }
