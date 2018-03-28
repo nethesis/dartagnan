@@ -14,7 +14,7 @@
     },
     "redis": {
          "host": "localhost",
-         "port": "63791"
+         "port": "16379"
     },
     "cors": {
         "origins": ["https://YOUR_DOMAIN"],
