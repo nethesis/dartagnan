@@ -18,6 +18,10 @@ On CentOS 7 - porthos, configure and apply SELinux context
     semanage fcontext -a -t httpd_sys_content_t '/srv/porthos(/.*)?'
     restorecon -vvRF /srv/porthos
 
+Allow SELinux access to redis Unix socket from php-fpm
+
+    setsebool -P daemons_enable_cluster_mode 1
+
 Run initial synchronization, then start daemons
 
     repo-bulk-hinit
