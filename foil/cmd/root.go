@@ -45,11 +45,11 @@ Keys synchronization
 
 List active trial installations
 
-   foil list trials
+   foil trials
 
 List payments of last 24 hours
 
-   foil list payments
+   foil payments
 	 `,
 }
 
