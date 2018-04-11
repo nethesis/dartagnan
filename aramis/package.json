@@ -17,6 +17,7 @@
     "patternfly": "^3.39.0",
     "paypal-checkout": "^4.0.178",
     "vue": "^2.5.2",
+    "vue-analytics": "^5.10.2",
     "vue-clipboards": "^1.2.1",
     "vue-good-table": "^1.20.2",
     "vue-i18n": "^7.4.2",

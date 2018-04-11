@@ -7,5 +7,6 @@ const CONFIG = {
   PAYPAL_PRODUCTION: '<PAYPAL_PRODUCTION_ID',
   HELP_URL: '<YOUR_HELP_LINK>',
   APP_NAME: 'Aramis',
-  FRAME_URL: 'http://www.nethserver.org/plans'
+  FRAME_URL: 'http://www.nethserver.org/plans',
+  UA_ANALYTICS: 'GOOGLE_ANALYTICS_ID'
 }

@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import VueAnalytics from 'vue-analytics'
 
 import Login from '@/components/Login'
 import Callback from '@/components/Callback'
@@ -13,7 +14,7 @@ import Profile from '@/components/Profile'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   mode: 'history',
   routes: [{
       path: '/login',
@@ -62,3 +63,10 @@ export default new Router({
     }
   ]
 })
+
+Vue.use(VueAnalytics, {
+  id: CONFIG.UA_ANALYTICS,
+  router
+})
+
+export default router
