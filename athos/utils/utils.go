@@ -283,3 +283,23 @@ func CanAccessAlerts(plan models.SubscriptionPlan) bool {
 	}
 	return false
 }
+
+func GetSystemFirstMailAddress(systemUuid string) string {
+	var system models.System
+	var address string
+	db := database.Database()
+	db.Where("uuid = ?", systemUuid).First(&system)
+	db.Close()
+
+	if system.ID == 0 {
+		return ""
+	}
+
+	switch x := system.Notification["emails"].(type) {
+	case []interface{}:
+		address = x[0].(string)
+	default:
+	}
+
+	return address
+}

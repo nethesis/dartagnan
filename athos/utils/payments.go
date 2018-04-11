@@ -62,6 +62,7 @@ func GetPaypalPayment(paymentId string) models.PaypalPayment {
 	t := payment.Transactions[0]
 	i := t.ItemList.Items[0]
 
+	ret.Item = i.SKU
 	ret.ItemDescription = fmt.Sprintf("%s %s", i.Description, i.SKU)
 	ret.Currency = t.Amount.Currency
 	ret.Tax = parseFloatOrNegative(t.Amount.Details.Tax)

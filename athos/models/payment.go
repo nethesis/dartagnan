@@ -36,5 +36,6 @@ type PaypalPayment struct {
 	Subtotal        float64 `json:"subtotal"`
 	Tax             float64 `json:"tax"`
 	Currency        string  `json:"currency"`
+	Item            string  `json:item`
 	ItemDescription string  `json:"item_description"`
 }
