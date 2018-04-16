@@ -38,7 +38,6 @@ func heartbeatExists(SystemID int) (bool, models.Heartbeat) {
 	var heartbeat models.Heartbeat
 	db := database.Database()
 	db.Where("system_id = ?", SystemID).First(&heartbeat)
-	db.Close()
 
 	if heartbeat.ID == 0 {
 		return false, models.Heartbeat{}
@@ -70,7 +69,6 @@ func SetHeartbeat(c *gin.Context) {
 			return
 		}
 
-		db.Close()
 	} else {
 		// create heartbeat
 		heartbeat := models.Heartbeat{
@@ -84,7 +82,6 @@ func SetHeartbeat(c *gin.Context) {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "heartbeat not saved", "error": err.Error()})
 			return
 		}
-		db.Close()
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
@@ -97,7 +94,6 @@ func GetHeartbeat(c *gin.Context) {
 
 	db := database.Database()
 	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id = ?", systemID).First(&heartbeat)
-	db.Close()
 
 	if heartbeat.ID == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"message": "no heartbeat found!"})

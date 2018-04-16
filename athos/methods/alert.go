@@ -42,7 +42,6 @@ func alertExists(SystemID int, AlertID string) (bool, models.Alert) {
 	var alert models.Alert
 	db := database.Database()
 	db.Where("alert_id = ? AND system_id = ?", AlertID, SystemID).First(&alert)
-	db.Close()
 
 	if alert.ID == 0 {
 		return false, models.Alert{}
@@ -55,7 +54,6 @@ func cleanupStaleAlerts(creatorID string, systemID string) {
 	var alerts []models.Alert
 	db := database.Database()
 	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id = ?", systemID).Find(&alerts)
-	db.Close()
 
 	for _, alert := range alerts {
 		// do not reset backup, raid and wan alerts
@@ -184,7 +182,6 @@ func SetAlert(c *gin.Context) {
 				return
 			}
 
-			db.Close()
 		}
 	} else {
 		if json.Status == "INIT" {
@@ -220,7 +217,6 @@ func SetAlert(c *gin.Context) {
 		alert.NameI18n = utils.GetAlertHumanName(alert.AlertID, "en-US")
 		notifications.AlertNotification(alert, true)
 
-		db.Close()
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
@@ -252,7 +248,6 @@ func UpdateAlertNote(c *gin.Context) {
 
 	alert.Note = json.Note
 	db.Save(&alert)
-	db.Close()
 
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }
@@ -269,7 +264,6 @@ func GetAlerts(c *gin.Context) {
 
 	db := database.Database()
 	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id = ?", systemID).Find(&alerts)
-	db.Close()
 
 	for _, alert := range alerts {
 		if utils.CanAccessAlerts(alert.System.Subscription.SubscriptionPlan) {
@@ -294,7 +288,6 @@ func getSystemsByCreator(creatorID string) []models.System {
 	db := database.Database()
 	db.Set("gorm:auto_preload", false)
 	db.Select("systems.id").Where("creator_id = ?", creatorID).Find(&systems)
-	db.Close()
 
 	return systems
 }
@@ -307,7 +300,6 @@ func getSystemHostname(systemID int) string {
 	var result Result
 	db := database.Database()
 	db.Raw("SELECT inventories.data->'networking'->>'fqdn' AS hostname FROM inventories WHERE system_id = ?", systemID).Scan(&result)
-	db.Close()
 
 	return result.Hostname
 }
@@ -330,7 +322,6 @@ func GetAllAlerts(c *gin.Context) {
 
 	db := database.Database()
 	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id IN (?)", systemIds).Find(&alerts)
-	db.Close()
 
 	for _, alert := range alerts {
 		if utils.CanAccessAlerts(alert.System.Subscription.SubscriptionPlan) {
@@ -362,7 +353,6 @@ func GetAlertHistories(c *gin.Context) {
 
 	db := database.Database()
 	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id = ?", systemID).Offset(offsets[0]).Limit(offsets[1]).Find(&alertHistories)
-	db.Close()
 
 	c.JSON(http.StatusOK, alertHistories)
 }
@@ -391,7 +381,6 @@ func DeleteAlert(c *gin.Context) {
 		return
 	}
 
-	db.Close()
 
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }

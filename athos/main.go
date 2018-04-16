@@ -30,15 +30,22 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/nethesis/dartagnan/athos/configuration"
+	"github.com/nethesis/dartagnan/athos/database"
 	"github.com/nethesis/dartagnan/athos/methods"
 	"github.com/nethesis/dartagnan/athos/middleware"
 )
+
+//var Db *gorm.DB
 
 func main() {
 	// read and init configuration
 	ConfigFilePtr := flag.String("c", "/opt/dartagnan/athos/conf.json", "Path to configuration file")
 	flag.Parse()
 	configuration.Init(ConfigFilePtr)
+
+	// Init database
+	db := database.Init()
+	defer db.Close()
 
 	// init routers
 	router := gin.Default()

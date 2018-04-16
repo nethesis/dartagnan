@@ -36,10 +36,8 @@ func GetTaxes(c *gin.Context) {
 
 	db := database.Database()
 	db.Find(&taxes)
-	defer db.Close()
 
 	if len(taxes) == 0 {
-		db.Close()
 		c.JSON(http.StatusNotFound, gin.H{"message": "no taxes found!"})
 		return
 	}

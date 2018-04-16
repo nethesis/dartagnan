@@ -145,7 +145,6 @@ func getValidSystems() []models.System {
 
 	db := database.Database()
 	db.Preload("Subscription.SubscriptionPlan").Joins("JOIN subscriptions ON systems.subscription_id = subscriptions.id").Where("valid_until > NOW()").Find(&systems)
-	db.Close()
 
 	return systems
 }

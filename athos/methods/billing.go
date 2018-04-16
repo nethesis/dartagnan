@@ -51,7 +51,6 @@ func GetVatPercentage(customerCountry string, customerVat string) int {
 
 	db := database.Database()
 	db.Where("country = ?", customerCountry).First(&tax)
-	defer db.Close()
 
 	// Customer is from non-UE countries, no VAT applied
 	if tax.Country == "Other" {
@@ -69,10 +68,8 @@ func GetBilling(c *gin.Context) {
 
 	db := database.Database()
 	db.Where("creator_id = ?", creatorID).First(&billing)
-	defer db.Close()
 
 	if billing.ID == 0 {
-		db.Close()
 		c.JSON(http.StatusNotFound, gin.H{"message": "no billing information found!"})
 		return
 	}
@@ -102,7 +99,6 @@ func CreateBilling(c *gin.Context) {
 	}
 
 	db := database.Database()
-	defer db.Close()
 	if err := db.Create(&billing).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "billing not saved", "error": err.Error()})
 		return
@@ -123,10 +119,8 @@ func UpdateBilling(c *gin.Context) {
 
 	db := database.Database()
 	db.Where("creator_id = ?", creatorID).First(&billing)
-	defer db.Close()
 
 	if billing.ID == 0 {
-		db.Close()
 		c.JSON(http.StatusNotFound, gin.H{"message": "no billing found!"})
 		return
 	}

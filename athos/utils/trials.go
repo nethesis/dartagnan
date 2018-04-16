@@ -48,6 +48,5 @@ func ListActiveTrials(hours int) []models.System {
 		}
 	}
 
-	db.Close()
 	return ret
 }

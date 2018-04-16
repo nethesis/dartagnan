@@ -138,5 +138,4 @@ func SavePaymentDetails(paymentID string, systemUUID string) {
 	db.Set("gorm:auto_preload", false).Where("uuid = ?", systemUUID).First(&system)
 	payment := models.Payment{CreatorID: system.CreatorID, Payment: paymentID, SystemID: system.ID, Created: time.Now().UTC()}
 	db.Create(&payment)
-	db.Close()
 }

@@ -86,7 +86,6 @@ func GetBillingInfo(user string) models.Billing {
 	var info models.Billing
 	db := database.Database()
 	db.Where("creator_id = ?", user).First(&info)
-	db.Close()
 
 	return info
 }
