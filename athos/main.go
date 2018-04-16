@@ -35,8 +35,6 @@ import (
 	"github.com/nethesis/dartagnan/athos/middleware"
 )
 
-//var Db *gorm.DB
-
 func main() {
 	// read and init configuration
 	ConfigFilePtr := flag.String("c", "/opt/dartagnan/athos/conf.json", "Path to configuration file")

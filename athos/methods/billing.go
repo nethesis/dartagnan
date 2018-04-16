@@ -49,7 +49,7 @@ func GetVatPercentage(customerCountry string, customerVat string) int {
 		return 0
 	}
 
-	db := database.Database()
+	db := database.Instance()
 	db.Where("country = ?", customerCountry).First(&tax)
 
 	// Customer is from non-UE countries, no VAT applied
@@ -66,7 +66,7 @@ func GetBilling(c *gin.Context) {
 	var billing models.Billing
 	creatorID := c.MustGet("authUser").(string)
 
-	db := database.Database()
+	db := database.Instance()
 	db.Where("creator_id = ?", creatorID).First(&billing)
 
 	if billing.ID == 0 {
@@ -98,7 +98,7 @@ func CreateBilling(c *gin.Context) {
 		Vat:          json.Vat,
 	}
 
-	db := database.Database()
+	db := database.Instance()
 	if err := db.Create(&billing).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "billing not saved", "error": err.Error()})
 		return
@@ -117,7 +117,7 @@ func UpdateBilling(c *gin.Context) {
 		return
 	}
 
-	db := database.Database()
+	db := database.Instance()
 	db.Where("creator_id = ?", creatorID).First(&billing)
 
 	if billing.ID == 0 {

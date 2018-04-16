@@ -40,7 +40,7 @@ import (
 
 func alertExists(SystemID int, AlertID string) (bool, models.Alert) {
 	var alert models.Alert
-	db := database.Database()
+	db := database.Instance()
 	db.Where("alert_id = ? AND system_id = ?", AlertID, SystemID).First(&alert)
 
 	if alert.ID == 0 {
@@ -52,7 +52,7 @@ func alertExists(SystemID int, AlertID string) (bool, models.Alert) {
 
 func cleanupStaleAlerts(creatorID string, systemID string) {
 	var alerts []models.Alert
-	db := database.Database()
+	db := database.Instance()
 	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id = ?", systemID).Find(&alerts)
 
 	for _, alert := range alerts {
@@ -81,7 +81,7 @@ func cleanupStaleAlerts(creatorID string, systemID string) {
 		notifications.AlertNotification(alert, false)
 
 		// save to history
-		db := database.Database()
+		db := database.Instance()
 		if err := db.Save(&alertHistory).Error; err != nil {
 			fmt.Printf("[ERROR] Alert not moved to history: %d\n", alert.AlertID)
 		}
@@ -141,7 +141,7 @@ func SetAlert(c *gin.Context) {
 			notifications.AlertNotification(toSend, false)
 
 			// save to history
-			db := database.Database()
+			db := database.Instance()
 			if err := db.Save(&alertHistory).Error; err != nil {
 				c.JSON(http.StatusBadRequest, gin.H{"message": "alert not moved to history", "error": err.Error()})
 				return
@@ -159,7 +159,7 @@ func SetAlert(c *gin.Context) {
 			alert.Status = json.Status
 
 			// save alert
-			db := database.Database()
+			db := database.Instance()
 			if err := db.Save(&alert).Error; err != nil {
 				c.JSON(http.StatusBadRequest, gin.H{"message": "alert not updated", "error": err.Error()})
 				return
@@ -207,7 +207,7 @@ func SetAlert(c *gin.Context) {
 		}
 
 		// save alert
-		db := database.Database()
+		db := database.Instance()
 		if err := db.Save(&alert).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "alert not saved", "error": err.Error()})
 			return
@@ -238,7 +238,7 @@ func UpdateAlertNote(c *gin.Context) {
 		return
 	}
 
-	db := database.Database()
+	db := database.Instance()
 	db.Where("id = ? AND system_id = ?", alertID, json.SystemID).First(&alert)
 
 	if alert.ID == 0 {
@@ -262,7 +262,7 @@ func GetAlerts(c *gin.Context) {
 	limit := c.Query("limit")
 	offsets := utils.OffsetCalc(page, limit)
 
-	db := database.Database()
+	db := database.Instance()
 	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id = ?", systemID).Find(&alerts)
 
 	for _, alert := range alerts {
@@ -285,7 +285,7 @@ func GetAlerts(c *gin.Context) {
 
 func getSystemsByCreator(creatorID string) []models.System {
 	var systems []models.System
-	db := database.Database()
+	db := database.Instance()
 	db.Set("gorm:auto_preload", false)
 	db.Select("systems.id").Where("creator_id = ?", creatorID).Find(&systems)
 
@@ -298,7 +298,7 @@ func getSystemHostname(systemID int) string {
 	}
 
 	var result Result
-	db := database.Database()
+	db := database.Instance()
 	db.Raw("SELECT inventories.data->'networking'->>'fqdn' AS hostname FROM inventories WHERE system_id = ?", systemID).Scan(&result)
 
 	return result.Hostname
@@ -320,7 +320,7 @@ func GetAllAlerts(c *gin.Context) {
 		systemIds = append(systemIds, system.ID)
 	}
 
-	db := database.Database()
+	db := database.Instance()
 	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id IN (?)", systemIds).Find(&alerts)
 
 	for _, alert := range alerts {
@@ -351,7 +351,7 @@ func GetAlertHistories(c *gin.Context) {
 	limit := c.Query("limit")
 	offsets := utils.OffsetCalc(page, limit)
 
-	db := database.Database()
+	db := database.Instance()
 	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id = ?", systemID).Offset(offsets[0]).Limit(offsets[1]).Find(&alertHistories)
 
 	c.JSON(http.StatusOK, alertHistories)
@@ -363,7 +363,7 @@ func DeleteAlert(c *gin.Context) {
 
 	alertID := c.Param("alert_id")
 
-	db := database.Database()
+	db := database.Instance()
 	db.Where("id = ?", alertID).First(&alert)
 
 	if alert.ID == 0 {

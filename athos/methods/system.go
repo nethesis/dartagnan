@@ -72,7 +72,7 @@ func CreateSystem(c *gin.Context) {
 	}
 
 	// save new system
-	db := database.Database()
+	db := database.Instance()
 	db.Create(&system)
 	if err := db.Save(&system).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "system not saved", "error": err.Error()})
@@ -103,7 +103,7 @@ func UpdateSystem(c *gin.Context) {
 		return
 	}
 
-	db := database.Database()
+	db := database.Instance()
 	db.Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
 
 	if system.ID == 0 {
@@ -125,7 +125,7 @@ func UpdateSystem(c *gin.Context) {
 
 func getStatus(id int) string {
 	var heartbeat models.Heartbeat
-	db := database.Database()
+	db := database.Instance()
 	db.Where("system_id = ?", id).First(&heartbeat)
 
 	if heartbeat.ID == 0 {
@@ -149,7 +149,7 @@ func getAlertsNumber(system models.System) int {
 	}
 
 	var result Result
-	db := database.Database()
+	db := database.Instance()
 	db.Raw("SELECT COUNT(*) as count FROM alerts WHERE system_id = ?", system.ID).Scan(&result)
 
 	return result.Count
@@ -163,7 +163,7 @@ func GetSystems(c *gin.Context) {
 	limit := c.Query("limit")
 	offsets := utils.OffsetCalc(page, limit)
 
-	db := database.Database()
+	db := database.Instance()
 	db.Select("systems.*, inventories.data->'networking'->>'fqdn' AS hostname").Preload("Subscription.SubscriptionPlan").Joins("LEFT JOIN inventories ON systems.id = inventories.system_id").Where("creator_id = ?", creatorID).Offset(offsets[0]).Limit(offsets[1]).Find(&systems)
 
 	if len(systems) <= 0 {
@@ -183,7 +183,7 @@ func GetSystemBySecret(c *gin.Context) {
 	var system models.System
 	sentSecret := middleware.GetSecret(c)
 
-	db := database.Database()
+	db := database.Instance()
 	db.Where("secret = ?", sentSecret).First(&system)
 
 	db.Preload("Subscription.SubscriptionPlan").Where("id = ? ", system.ID).First(&system)
@@ -200,7 +200,7 @@ func GetSystem(c *gin.Context) {
 
 	systemID := c.Param("system_id")
 
-	db := database.Database()
+	db := database.Instance()
 	db.Preload("Subscription.SubscriptionPlan").Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
 
 	if system.ID == 0 {
@@ -219,7 +219,7 @@ func DeleteSystem(c *gin.Context) {
 
 	systemID := c.Param("system_id")
 
-	db := database.Database()
+	db := database.Instance()
 	db.Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
 
 	if system.ID == 0 {
@@ -251,7 +251,7 @@ func RenewalPlan(c *gin.Context) {
 		return
 	}
 
-	db := database.Database()
+	db := database.Instance()
 	db.Preload("Subscription").Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
 
 	if system.ID == 0 {
@@ -293,7 +293,7 @@ func UpgradePlanPrice(c *gin.Context) {
 
 	newSubuscriptionPlan := utils.GetSubscriptionPlanByCode(plan)
 
-	db := database.Database()
+	db := database.Instance()
 	db.Preload("Subscription.SubscriptionPlan").Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
 
 	// calculate discount upgrade
@@ -316,7 +316,7 @@ func UpgradePlan(c *gin.Context) {
 		return
 	}
 
-	db := database.Database()
+	db := database.Instance()
 	db.Preload("Subscription").Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
 
 	if system.ID == 0 {

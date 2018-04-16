@@ -34,7 +34,7 @@ import (
 func GetTaxes(c *gin.Context) {
 	var taxes []models.Tax
 
-	db := database.Database()
+	db := database.Instance()
 	db.Find(&taxes)
 
 	if len(taxes) == 0 {

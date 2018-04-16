@@ -35,7 +35,7 @@ import (
 func GetSubscriptionPlans(c *gin.Context) {
 	var subscriptionPlans []models.SubscriptionPlan
 
-	db := database.Database()
+	db := database.Instance()
 	db.Find(&subscriptionPlans)
 
 	if len(subscriptionPlans) <= 0 {

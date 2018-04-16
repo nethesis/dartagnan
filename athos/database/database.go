@@ -32,7 +32,7 @@ import (
 var db *gorm.DB
 var err error
 
-func Database() *gorm.DB {
+func Instance() *gorm.DB {
 	if db == nil {
 		Init()
 	}
