@@ -21,7 +21,9 @@
 
 package main
 
-import "github.com/nethesis/dartagnan/foil/cmd"
+import (
+	"github.com/nethesis/dartagnan/foil/cmd"
+)
 
 func main() {
 	cmd.Execute()

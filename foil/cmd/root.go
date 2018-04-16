@@ -27,6 +27,7 @@ import (
 	"os"
 
 	"github.com/nethesis/dartagnan/athos/configuration"
+	"github.com/nethesis/dartagnan/athos/database"
 
 	"github.com/spf13/cobra"
 )
@@ -67,14 +68,11 @@ func init() {
 
 	// Read configuration fileHere
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "/opt/dartagnan/athos/conf.json", "config file (default is /opt/dartagnan/athos/conf.json)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	//rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-
 	configuration.Init(&cfgFile)
+        database.Init()
+	// database connection will be closed on program exit
 }
