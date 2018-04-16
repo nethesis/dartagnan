@@ -11,7 +11,7 @@ permalink: /docs/components/
 
 ## Athos
 
-The **server** REST APIs are documented [here](https://documenter.getpostman.com/view/3364668/dartagnan/RVfyBA1b#6014623b-7bf6-82ba-d328-8f4d18e76cb5).
+The **server** REST APIs are documented [here]({{site.api_url}}).
 
 Athos stores all data inside a [PostgreSQL](https://www.postgresql.org/) database.
 
