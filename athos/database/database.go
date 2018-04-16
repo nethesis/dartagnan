@@ -29,8 +29,18 @@ import (
 	"github.com/nethesis/dartagnan/athos/configuration"
 )
 
-func Database() *gorm.DB {
-	db, err := gorm.Open("postgres", "sslmode=disable dbname="+configuration.Config.Database.Name+" host="+configuration.Config.Database.Host+" port="+configuration.Config.Database.Port+" user="+configuration.Config.Database.User+" password="+configuration.Config.Database.Password)
+var db *gorm.DB
+var err error
+
+func Instance() *gorm.DB {
+	if db == nil {
+		Init()
+	}
+	return db
+}
+
+func Init() *gorm.DB {
+	db, err = gorm.Open("postgres", "sslmode=disable dbname="+configuration.Config.Database.Name+" host="+configuration.Config.Database.Host+" port="+configuration.Config.Database.Port+" user="+configuration.Config.Database.User+" password="+configuration.Config.Database.Password)
 	if configuration.Config.Log.Level == "debug" {
 		db.LogMode(true)
 	}

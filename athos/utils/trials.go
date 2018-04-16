@@ -32,7 +32,7 @@ func ListActiveTrials(hours int) []models.System {
 	var systems []models.System
 	var ret []models.System
 
-	db := database.Database()
+	db := database.Instance()
 	db.Set("gorm:auto_preload", true)
 	db.Preload("Subscription").Joins("JOIN heartbeats ON heartbeats.system_id = systems.id").Order("creator_id desc").Find(&systems)
 	db.Set("gorm:auto_preload", false)
@@ -48,6 +48,5 @@ func ListActiveTrials(hours int) []models.System {
 		}
 	}
 
-	db.Close()
 	return ret
 }

@@ -143,9 +143,8 @@ func BulkSetValidSystems() (bool, []string) {
 func getValidSystems() []models.System {
 	var systems []models.System
 
-	db := database.Database()
+	db := database.Instance()
 	db.Preload("Subscription.SubscriptionPlan").Joins("JOIN subscriptions ON systems.subscription_id = subscriptions.id").Where("valid_until > NOW()").Find(&systems)
-	db.Close()
 
 	return systems
 }

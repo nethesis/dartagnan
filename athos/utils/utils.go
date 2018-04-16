@@ -207,54 +207,48 @@ func GetAlertPriority(alertID string) string {
 
 func GetSubscriptionPlanByCode(code string) models.SubscriptionPlan {
 	var subscriptionPlan models.SubscriptionPlan
-	db := database.Database()
+	db := database.Instance()
 	db.Where("code = ?", code).First(&subscriptionPlan)
-	db.Close()
 
 	return subscriptionPlan
 }
 
 func GetSubscriptionPlanById(id int) models.SubscriptionPlan {
 	var subscriptionPlan models.SubscriptionPlan
-	db := database.Database()
+	db := database.Instance()
 	db.Where("id = ?", id).First(&subscriptionPlan)
-	db.Close()
 
 	return subscriptionPlan
 }
 
 func GetSubscription(id int) models.Subscription {
 	var subscription models.Subscription
-	db := database.Database()
+	db := database.Instance()
 	db.Where("id = ?", id).First(&subscription)
-	db.Close()
 
 	return subscription
 }
 
 func GetSystemFromUUID(uuid string) models.System {
 	var system models.System
-	db := database.Database()
+	db := database.Instance()
 	db.Where("uuid = ?", uuid).First(&system)
-	db.Close()
 
 	return system
 }
 
 func GetSystemFromSecret(secret string) models.System {
 	var system models.System
-	db := database.Database()
+	db := database.Instance()
 	db.Where("secret = ?", secret).First(&system)
-	db.Close()
 
 	return system
 }
 
 func CheckSystemOwnership(systemID string, creatorID string) bool {
 	var system models.System
-	db := database.Database()
+	db := database.Instance()
 	db.Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
-	db.Close()
 
 	if system.ID == 0 {
 		return false
@@ -265,9 +259,8 @@ func CheckSystemOwnership(systemID string, creatorID string) bool {
 
 func GetSystemById(systemID int) models.System {
 	var system models.System
-	db := database.Database()
+	db := database.Instance()
 	db.Preload("Subscription.SubscriptionPlan").Where("id = ?", systemID).First(&system)
-	db.Close()
 
 	return system
 }
@@ -287,9 +280,8 @@ func CanAccessAlerts(plan models.SubscriptionPlan) bool {
 func GetSystemFirstMailAddress(systemUuid string) string {
 	var system models.System
 	var address string
-	db := database.Database()
+	db := database.Instance()
 	db.Where("uuid = ?", systemUuid).First(&system)
-	db.Close()
 
 	if system.ID == 0 {
 		return ""

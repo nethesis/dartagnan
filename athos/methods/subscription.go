@@ -35,9 +35,8 @@ import (
 func GetSubscriptionPlans(c *gin.Context) {
 	var subscriptionPlans []models.SubscriptionPlan
 
-	db := database.Database()
+	db := database.Instance()
 	db.Find(&subscriptionPlans)
-	defer db.Close()
 
 	if len(subscriptionPlans) <= 0 {
 		c.JSON(http.StatusNotFound, gin.H{"message": "no subscription plans found!"})

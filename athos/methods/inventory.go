@@ -36,9 +36,8 @@ import (
 
 func inventoryExists(SystemID int) (bool, models.Inventory) {
 	var inventory models.Inventory
-	db := database.Database()
+	db := database.Instance()
 	db.Where("system_id = ?", SystemID).First(&inventory)
-	db.Close()
 
 	if inventory.ID == 0 {
 		return false, models.Inventory{}
@@ -58,11 +57,10 @@ func SetInventory(c *gin.Context) {
 	system := utils.GetSystemFromUUID(json.Data.SystemID)
 
 	// prepare the db for all queries
-	db := database.Database()
+	db := database.Instance()
 
 	if err := db.Model(&system).Where("uuid = ?", json.Data.SystemID).Update("PublicIP", c.ClientIP()).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "PublicIP not updated", "error": err.Error()})
-		db.Close()
 		return
 	}
 
@@ -89,7 +87,6 @@ func SetInventory(c *gin.Context) {
 		// save current inventory
 		if err := db.Save(&inventory).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "inventory not updated", "error": err.Error()})
-			db.Close()
 			return
 		}
 
@@ -104,12 +101,10 @@ func SetInventory(c *gin.Context) {
 		// save new inventory
 		if err := db.Save(&inventory).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "inventory not saved", "error": err.Error()})
-			db.Close()
 			return
 		}
 	}
 
-	db.Close()
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }
 
@@ -118,9 +113,8 @@ func GetInventory(c *gin.Context) {
 	creatorID := c.MustGet("authUser").(string)
 	systemID := c.Param("system_id")
 
-	db := database.Database()
+	db := database.Instance()
 	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id = ?", systemID).First(&inventory)
-	db.Close()
 
 	if inventory.ID == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"message": "no inventory found!"})
@@ -139,9 +133,8 @@ func GetInventoryHistories(c *gin.Context) {
 	limit := c.Query("limit")
 	offsets := utils.OffsetCalc(page, limit)
 
-	db := database.Database()
+	db := database.Instance()
 	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id = ?", systemID).Offset(offsets[0]).Limit(offsets[1]).Find(&inventoryHistories)
-	db.Close()
 
 	if len(inventoryHistories) <= 0 {
 		c.JSON(http.StatusNotFound, gin.H{"message": "no inventory histories found!"})

@@ -72,13 +72,12 @@ func CreateSystem(c *gin.Context) {
 	}
 
 	// save new system
-	db := database.Database()
+	db := database.Instance()
 	db.Create(&system)
 	if err := db.Save(&system).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "system not saved", "error": err.Error()})
 		return
 	}
-	db.Close()
 
 	if res := cache.SetValidSystem(system); !res {
 		// Soft fail, chache can be restored later
@@ -104,11 +103,10 @@ func UpdateSystem(c *gin.Context) {
 		return
 	}
 
-	db := database.Database()
+	db := database.Instance()
 	db.Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
 
 	if system.ID == 0 {
-		db.Close()
 		c.JSON(http.StatusNotFound, gin.H{"message": "no system found!"})
 		return
 	}
@@ -121,16 +119,14 @@ func UpdateSystem(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "system not updated", "error": err.Error()})
 		return
 	}
-	db.Close()
 
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }
 
 func getStatus(id int) string {
 	var heartbeat models.Heartbeat
-	db := database.Database()
+	db := database.Instance()
 	db.Where("system_id = ?", id).First(&heartbeat)
-	db.Close()
 
 	if heartbeat.ID == 0 {
 		return "no_comm"
@@ -153,9 +149,8 @@ func getAlertsNumber(system models.System) int {
 	}
 
 	var result Result
-	db := database.Database()
+	db := database.Instance()
 	db.Raw("SELECT COUNT(*) as count FROM alerts WHERE system_id = ?", system.ID).Scan(&result)
-	db.Close()
 
 	return result.Count
 }
@@ -168,9 +163,8 @@ func GetSystems(c *gin.Context) {
 	limit := c.Query("limit")
 	offsets := utils.OffsetCalc(page, limit)
 
-	db := database.Database()
+	db := database.Instance()
 	db.Select("systems.*, inventories.data->'networking'->>'fqdn' AS hostname").Preload("Subscription.SubscriptionPlan").Joins("LEFT JOIN inventories ON systems.id = inventories.system_id").Where("creator_id = ?", creatorID).Offset(offsets[0]).Limit(offsets[1]).Find(&systems)
-	db.Close()
 
 	if len(systems) <= 0 {
 		c.JSON(http.StatusNotFound, gin.H{"message": "no systems found!"})
@@ -189,11 +183,10 @@ func GetSystemBySecret(c *gin.Context) {
 	var system models.System
 	sentSecret := middleware.GetSecret(c)
 
-	db := database.Database()
+	db := database.Instance()
 	db.Where("secret = ?", sentSecret).First(&system)
 
 	db.Preload("Subscription.SubscriptionPlan").Where("id = ? ", system.ID).First(&system)
-	db.Close()
 
 	system.Status = getStatus(system.ID)
 	system.Alerts = getAlertsNumber(system)
@@ -207,9 +200,8 @@ func GetSystem(c *gin.Context) {
 
 	systemID := c.Param("system_id")
 
-	db := database.Database()
+	db := database.Instance()
 	db.Preload("Subscription.SubscriptionPlan").Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
-	db.Close()
 
 	if system.ID == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"message": "no system found!"})
@@ -227,11 +219,10 @@ func DeleteSystem(c *gin.Context) {
 
 	systemID := c.Param("system_id")
 
-	db := database.Database()
+	db := database.Instance()
 	db.Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
 
 	if system.ID == 0 {
-		db.Close()
 		c.JSON(http.StatusNotFound, gin.H{"message": "no system found!"})
 		return
 	}
@@ -240,7 +231,6 @@ func DeleteSystem(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "system not deleted", "error": err.Error()})
 		return
 	}
-	db.Close()
 	if res := cache.DeleteValidSystem(system); !res {
 		// Soft fail, chache can be restored later
 		fmt.Println("[ERROR]: can't delete %s from cache", system.UUID)
@@ -261,9 +251,8 @@ func RenewalPlan(c *gin.Context) {
 		return
 	}
 
-	db := database.Database()
+	db := database.Instance()
 	db.Preload("Subscription").Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
-	defer db.Close()
 
 	if system.ID == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"message": "no system found!"})
@@ -304,7 +293,7 @@ func UpgradePlanPrice(c *gin.Context) {
 
 	newSubuscriptionPlan := utils.GetSubscriptionPlanByCode(plan)
 
-	db := database.Database()
+	db := database.Instance()
 	db.Preload("Subscription.SubscriptionPlan").Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
 
 	// calculate discount upgrade
@@ -327,9 +316,8 @@ func UpgradePlan(c *gin.Context) {
 		return
 	}
 
-	db := database.Database()
+	db := database.Instance()
 	db.Preload("Subscription").Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
-	defer db.Close()
 
 	if system.ID == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"message": "no system found!"})

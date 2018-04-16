@@ -75,7 +75,7 @@ func GetPaypalPayment(paymentId string) models.PaypalPayment {
 func ListPayments(sinceHours int) []models.Payment {
 	var payments []models.Payment
 
-	db := database.Database()
+	db := database.Instance()
 	db.Set("gorm:auto_preload", true)
 	db.Where(fmt.Sprintf("(now() - created)::interval < '%d hour'::interval", sinceHours)).Find(&payments)
 
@@ -84,9 +84,8 @@ func ListPayments(sinceHours int) []models.Payment {
 
 func GetBillingInfo(user string) models.Billing {
 	var info models.Billing
-	db := database.Database()
+	db := database.Instance()
 	db.Where("creator_id = ?", user).First(&info)
-	db.Close()
 
 	return info
 }

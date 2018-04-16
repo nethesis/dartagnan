@@ -34,12 +34,10 @@ import (
 func GetTaxes(c *gin.Context) {
 	var taxes []models.Tax
 
-	db := database.Database()
+	db := database.Instance()
 	db.Find(&taxes)
-	defer db.Close()
 
 	if len(taxes) == 0 {
-		db.Close()
 		c.JSON(http.StatusNotFound, gin.H{"message": "no taxes found!"})
 		return
 	}

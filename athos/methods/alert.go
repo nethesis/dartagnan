@@ -40,9 +40,8 @@ import (
 
 func alertExists(SystemID int, AlertID string) (bool, models.Alert) {
 	var alert models.Alert
-	db := database.Database()
+	db := database.Instance()
 	db.Where("alert_id = ? AND system_id = ?", AlertID, SystemID).First(&alert)
-	db.Close()
 
 	if alert.ID == 0 {
 		return false, models.Alert{}
@@ -53,9 +52,8 @@ func alertExists(SystemID int, AlertID string) (bool, models.Alert) {
 
 func cleanupStaleAlerts(creatorID string, systemID string) {
 	var alerts []models.Alert
-	db := database.Database()
+	db := database.Instance()
 	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id = ?", systemID).Find(&alerts)
-	db.Close()
 
 	for _, alert := range alerts {
 		// do not reset backup, raid and wan alerts
@@ -83,7 +81,7 @@ func cleanupStaleAlerts(creatorID string, systemID string) {
 		notifications.AlertNotification(alert, false)
 
 		// save to history
-		db := database.Database()
+		db := database.Instance()
 		if err := db.Save(&alertHistory).Error; err != nil {
 			fmt.Printf("[ERROR] Alert not moved to history: %d\n", alert.AlertID)
 		}
@@ -143,7 +141,7 @@ func SetAlert(c *gin.Context) {
 			notifications.AlertNotification(toSend, false)
 
 			// save to history
-			db := database.Database()
+			db := database.Instance()
 			if err := db.Save(&alertHistory).Error; err != nil {
 				c.JSON(http.StatusBadRequest, gin.H{"message": "alert not moved to history", "error": err.Error()})
 				return
@@ -161,7 +159,7 @@ func SetAlert(c *gin.Context) {
 			alert.Status = json.Status
 
 			// save alert
-			db := database.Database()
+			db := database.Instance()
 			if err := db.Save(&alert).Error; err != nil {
 				c.JSON(http.StatusBadRequest, gin.H{"message": "alert not updated", "error": err.Error()})
 				return
@@ -184,7 +182,6 @@ func SetAlert(c *gin.Context) {
 				return
 			}
 
-			db.Close()
 		}
 	} else {
 		if json.Status == "INIT" {
@@ -210,7 +207,7 @@ func SetAlert(c *gin.Context) {
 		}
 
 		// save alert
-		db := database.Database()
+		db := database.Instance()
 		if err := db.Save(&alert).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "alert not saved", "error": err.Error()})
 			return
@@ -220,7 +217,6 @@ func SetAlert(c *gin.Context) {
 		alert.NameI18n = utils.GetAlertHumanName(alert.AlertID, "en-US")
 		notifications.AlertNotification(alert, true)
 
-		db.Close()
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
@@ -242,7 +238,7 @@ func UpdateAlertNote(c *gin.Context) {
 		return
 	}
 
-	db := database.Database()
+	db := database.Instance()
 	db.Where("id = ? AND system_id = ?", alertID, json.SystemID).First(&alert)
 
 	if alert.ID == 0 {
@@ -252,7 +248,6 @@ func UpdateAlertNote(c *gin.Context) {
 
 	alert.Note = json.Note
 	db.Save(&alert)
-	db.Close()
 
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }
@@ -267,9 +262,8 @@ func GetAlerts(c *gin.Context) {
 	limit := c.Query("limit")
 	offsets := utils.OffsetCalc(page, limit)
 
-	db := database.Database()
+	db := database.Instance()
 	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id = ?", systemID).Find(&alerts)
-	db.Close()
 
 	for _, alert := range alerts {
 		if utils.CanAccessAlerts(alert.System.Subscription.SubscriptionPlan) {
@@ -291,10 +285,9 @@ func GetAlerts(c *gin.Context) {
 
 func getSystemsByCreator(creatorID string) []models.System {
 	var systems []models.System
-	db := database.Database()
+	db := database.Instance()
 	db.Set("gorm:auto_preload", false)
 	db.Select("systems.id").Where("creator_id = ?", creatorID).Find(&systems)
-	db.Close()
 
 	return systems
 }
@@ -305,9 +298,8 @@ func getSystemHostname(systemID int) string {
 	}
 
 	var result Result
-	db := database.Database()
+	db := database.Instance()
 	db.Raw("SELECT inventories.data->'networking'->>'fqdn' AS hostname FROM inventories WHERE system_id = ?", systemID).Scan(&result)
-	db.Close()
 
 	return result.Hostname
 }
@@ -328,9 +320,8 @@ func GetAllAlerts(c *gin.Context) {
 		systemIds = append(systemIds, system.ID)
 	}
 
-	db := database.Database()
+	db := database.Instance()
 	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id IN (?)", systemIds).Find(&alerts)
-	db.Close()
 
 	for _, alert := range alerts {
 		if utils.CanAccessAlerts(alert.System.Subscription.SubscriptionPlan) {
@@ -360,9 +351,8 @@ func GetAlertHistories(c *gin.Context) {
 	limit := c.Query("limit")
 	offsets := utils.OffsetCalc(page, limit)
 
-	db := database.Database()
+	db := database.Instance()
 	db.Set("gorm:auto_preload", true).Preload("System", "creator_id = ?", creatorID).Where("system_id = ?", systemID).Offset(offsets[0]).Limit(offsets[1]).Find(&alertHistories)
-	db.Close()
 
 	c.JSON(http.StatusOK, alertHistories)
 }
@@ -373,7 +363,7 @@ func DeleteAlert(c *gin.Context) {
 
 	alertID := c.Param("alert_id")
 
-	db := database.Database()
+	db := database.Instance()
 	db.Where("id = ?", alertID).First(&alert)
 
 	if alert.ID == 0 {
@@ -391,7 +381,6 @@ func DeleteAlert(c *gin.Context) {
 		return
 	}
 
-	db.Close()
 
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }
