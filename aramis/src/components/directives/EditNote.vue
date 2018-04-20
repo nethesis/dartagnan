@@ -50,7 +50,7 @@
       },
       saveAlertNote() {
         var closeId = this.obj.id
-        this.$http.put('https://' + this.$root.$options.api_host + '/api/ui/alerts/' + this.obj.id, {
+        this.$http.put(this.$root.$options.api_scheme + this.$root.$options.api_host + '/api/ui/alerts/' + this.obj.id, {
           system_id: this.obj.system.id.toString(),
           note: this.obj.note
         }, {

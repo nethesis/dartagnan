@@ -45,7 +45,7 @@
       },
       deleteAlert() {
         var closeId = this.obj.id
-        this.$http.delete('https://' + this.$root.$options.api_host + '/api/ui/alerts/' + this.obj.id, {
+        this.$http.delete(this.$root.$options.api_scheme + this.$root.$options.api_host + '/api/ui/alerts/' + this.obj.id, {
           headers: {
             'Authorization': 'Bearer ' + this.get('access_token', false) || ''
           }

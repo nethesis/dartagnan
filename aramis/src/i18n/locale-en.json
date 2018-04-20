@@ -80,7 +80,7 @@
       "no_alerts_found": "No alerts found",
       "inventory_available": "Inventory available",
       "inventory_not_available": "Inventory not available",
-      "inventory_not_available_desc": "This system has not yes sent its inventory",
+      "inventory_not_available_desc": "This system has not yet sent its inventory",
       "public_ip": "Public IP",
       "ns_lookup": "Reverse DNS Lookup",
       "version": "Version",
@@ -117,7 +117,9 @@
       "email_not_configured": "Notification email not configured",
       "email_not_configured_desc": "You cannot receive system alerts by email",
       "system_id": "System ID",
-      "more_info": "More info"
+      "more_info": "More info",
+      "secret": "Secret",
+      "show_secret": "Show secret"
     },
     "payment": {
       "renew": "Renew plan",

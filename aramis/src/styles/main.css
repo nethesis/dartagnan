@@ -281,6 +281,11 @@ textarea {
 .details-info {
   font-size: 15px !important;
   margin-right: 5px;
+  margin-bottom: 4px;
+}
+
+.popover-content {
+  word-wrap: break-word !important;
 }
 
 .details-arrow {
@@ -526,7 +531,8 @@ textarea {
   padding: 4px;
 }
 
-.details-pay-item .dropdown-toggle, .details-pay-item > a {
+.details-pay-item .dropdown-toggle,
+.details-pay-item>a {
   font-size: 110%;
 }
 
@@ -540,9 +546,12 @@ textarea {
 }
 
 .details-markdown li:before {
-  content: "\f00c"; /* FontAwesome Unicode */
+  content: "\f00c";
+  /* FontAwesome Unicode */
   font-family: FontAwesome;
   display: inline-block;
-  margin-left: -1.3em; /* same as padding-left set on li */
-  width: 1.3em; /* same as padding-left set on li */
+  margin-left: -1.3em;
+  /* same as padding-left set on li */
+  width: 1.3em;
+  /* same as padding-left set on li */
 }

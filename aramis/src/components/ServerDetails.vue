@@ -78,6 +78,12 @@
                   </span>
                 </div>
                 <div class="details-info">
+                  <span>{{$t('servers.secret')}}</span>
+                  <a href="" class="btn btn-default right" data-placement="left" data-toggle="popover" data-html="true" :title="$t('servers.secret')" :data-content="server.info.secret">
+                    {{$t('servers.show_secret')}}
+                  </a>
+                </div>
+                <div class="details-info">
                   <span>{{$t('servers.plan_type')}}</span>
                   <span class="right">
                     <strong class="soft">{{server.info.subscription.subscription_plan && server.info.subscription.subscription_plan.name || '-'}}</strong>
@@ -491,289 +497,364 @@
 </template>
 
 <script>
-  import LoginService from './../services/login';
-  import StorageService from './../services/storage';
-  import UtilService from './../services/util';
-  import _ from 'lodash'
-  import c3 from 'patternfly/node_modules/c3'
+import LoginService from "./../services/login";
+import StorageService from "./../services/storage";
+import UtilService from "./../services/util";
+import _ from "lodash";
+import c3 from "patternfly/node_modules/c3";
 
-  import RenewButton from './directives/RenewButton.vue';
-  import DeleteServer from './directives/DeleteServer.vue';
-  import DeleteAlert from './directives/DeleteAlert.vue';
-  import EditNote from './directives/EditNote.vue';
-  import {
-    setTimeout
-  } from 'timers';
+import RenewButton from "./directives/RenewButton.vue";
+import DeleteServer from "./directives/DeleteServer.vue";
+import DeleteAlert from "./directives/DeleteAlert.vue";
+import EditNote from "./directives/EditNote.vue";
+import { setTimeout } from "timers";
 
-  export default {
-    name: 'server',
-    mixins: [LoginService, StorageService, UtilService],
-    components: {
-      renewButton: RenewButton,
-      deleteServer: DeleteServer,
-      editNote: EditNote,
-      deleteAlert: DeleteAlert
-    },
-    created() {
-      // get server info
-      this.getServerInfo()
+export default {
+  name: "server",
+  mixins: [LoginService, StorageService, UtilService],
+  components: {
+    renewButton: RenewButton,
+    deleteServer: DeleteServer,
+    editNote: EditNote,
+    deleteAlert: DeleteAlert
+  },
+  created() {
+    // get server info
+    this.getServerInfo();
 
-      // get server inventory
-      this.getServerInventory()
+    // get server inventory
+    this.getServerInventory();
 
-      // get server heartbeats
-      this.getServerHeartbeats()
+    // get server heartbeats
+    this.getServerHeartbeats();
 
-      // get server alerts
-      this.getServerAlerts()
-    },
-    data() {
-      setTimeout(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-      }, 500)
-      return {
-        server: {
-          hasAlerts: false,
-          info: {},
-          inventory: null,
-          heartbeat: {},
-          alerts: [],
-          ns_lookup: '',
-          isLoadingInfo: true,
-          isLoadingInventory: true,
-          isLoadingHeartbeat: true,
-          isLoadingAlerts: true,
+    // get server alerts
+    this.getServerAlerts();
+  },
+  data() {
+    setTimeout(function() {
+      $('[data-toggle="tooltip"]').tooltip();
+      $('[data-toggle=popover]').popovers()
+      .on('hidden.bs.popover', function (e) {
+        $(e.target).data('bs.popover').inState.click = false;
+      });
+    }, 250);
+    return {
+      server: {
+        hasAlerts: false,
+        info: {},
+        inventory: null,
+        heartbeat: {},
+        alerts: [],
+        ns_lookup: "",
+        isLoadingInfo: true,
+        isLoadingInventory: true,
+        isLoadingHeartbeat: true,
+        isLoadingAlerts: true
+      },
+      columns: [
+        {
+          label: this.$i18n.t("alerts.alert_id"),
+          field: "namei18n",
+          filterable: true
         },
-        columns: [{
-            label: this.$i18n.t('alerts.alert_id'),
-            field: 'namei18n',
-            filterable: true,
-          }, {
-            label: this.$i18n.t('alerts.timestamp'),
-            field: 'timestamp',
-            filterable: true,
-          },
+        {
+          label: this.$i18n.t("alerts.timestamp"),
+          field: "timestamp",
+          filterable: true
+        },
+        {
+          label: this.$i18n.t("alerts.status"),
+          field: "status",
+          filterable: true
+        },
+        {
+          label: this.$i18n.t("alerts.note"),
+          field: "note",
+          filterable: true,
+          sortable: false
+        },
+        {
+          label: this.$i18n.t("alerts.action"),
+          filterable: false,
+          sortable: false
+        }
+      ],
+      rows: [],
+      tableLangsTexts: this.tableLangs(),
+      currentAlert: {}
+    };
+  },
+  methods: {
+    isExpired(date) {
+      return new Date().toISOString() > date;
+    },
+    getServerInfo() {
+      this.isLoadingInfo = true;
+      this.$http
+        .get(
+          this.$root.$options.api_scheme +
+            this.$root.$options.api_host +
+            "/api/ui/systems/" +
+            this.$route.params.id,
           {
-            label: this.$i18n.t('alerts.status'),
-            field: 'status',
-            filterable: true,
-          },
-          {
-            label: this.$i18n.t('alerts.note'),
-            field: 'note',
-            filterable: true,
-            sortable: false
-          },
-          {
-            label: this.$i18n.t('alerts.action'),
-            filterable: false,
-            sortable: false
+            headers: {
+              Authorization: "Bearer " + this.get("access_token", false) || ""
+            }
           }
+        )
+        .then(
+          function(success) {
+            this.server.info = success.body;
+            this.server.hasAlerts = success.body.alerts >= 0;
+            this.isLoadingInfo = false;
+
+            // resolve lookup
+            this.$http
+              .get(
+                this.$root.$options.api_scheme +
+                  this.$root.$options.api_host +
+                  "/api/ui/utils/reverse_lookup/" +
+                  this.server.info.public_ip,
+                {
+                  headers: {
+                    Authorization:
+                      "Bearer " + this.get("access_token", false) || ""
+                  }
+                }
+              )
+              .then(
+                function(success) {
+                  this.server.ns_lookup = success.body
+                    .map(i => i.slice(0, -1))
+                    .join(", ");
+                },
+                function(error) {
+                  console.error(error);
+                }
+              );
+          },
+          function(error) {
+            console.error(error);
+            this.isLoadingInfo = false;
+            if (error.status == 404) {
+              this.$router.push({
+                path: "/notfound"
+              });
+            }
+          }
+        );
+    },
+    getServerInventory() {
+      this.isLoadingInventory = true;
+      this.$http
+        .get(
+          this.$root.$options.api_scheme +
+            this.$root.$options.api_host +
+            "/api/ui/inventories/" +
+            this.$route.params.id,
+          {
+            headers: {
+              Authorization: "Bearer " + this.get("access_token", false) || ""
+            }
+          }
+        )
+        .then(
+          function(success) {
+            this.server.inventory = success.body.data;
+            this.server.inventory.timestamp = success.body.timestamp;
+            this.isLoadingInventory = false;
+            // init tab
+            setTimeout(function() {
+              $("#system-tab-parent").click();
+            }, 500);
+          },
+          function(error) {
+            console.error(error);
+            this.isLoadingInventory = false;
+          }
+        );
+    },
+    getServerAlerts() {
+      this.isLoadingAlerts = true;
+      this.$http
+        .get(
+          this.$root.$options.api_scheme +
+            this.$root.$options.api_host +
+            "/api/ui/alerts/" +
+            this.$route.params.id,
+          {
+            headers: {
+              Authorization: "Bearer " + this.get("access_token", false) || ""
+            }
+          }
+        )
+        .then(
+          function(success) {
+            this.server.alerts = success.body;
+            this.isLoadingAlerts = false;
+          },
+          function(error) {
+            console.error(error);
+            this.server.alerts = [];
+            this.isLoadingAlerts = false;
+          }
+        );
+    },
+    getServerHeartbeats() {
+      this.isLoadingHeartbeat = true;
+      this.$http
+        .get(
+          this.$root.$options.api_scheme +
+            this.$root.$options.api_host +
+            "/api/ui/heartbeats/" +
+            this.$route.params.id,
+          {
+            headers: {
+              Authorization: "Bearer " + this.get("access_token", false) || ""
+            }
+          }
+        )
+        .then(
+          function(success) {
+            this.server.heartbeat = success.body.timestamp;
+            this.isLoadingHeartbeat = false;
+          },
+          function(error) {
+            this.isLoadingHeartbeat = false;
+            console.error(error);
+          }
+        );
+    },
+    initMemoryCharts() {
+      var c3ChartDefaults = $().c3ChartDefaults();
+      var ramConfig = c3ChartDefaults.getDefaultDonutConfig("A");
+      var swapConfig = c3ChartDefaults.getDefaultDonutConfig("A");
+      ramConfig.bindto = "#ram-chart";
+      swapConfig.bindto = "#swap-chart";
+      ramConfig.data = {
+        type: "donut",
+        columns: [
+          ["Used", this.server.inventory.memory.system.used_bytes],
+          ["Available", this.server.inventory.memory.system.available_bytes]
         ],
-        rows: [],
-        tableLangsTexts: this.tableLangs(),
-        currentAlert: {}
+        groups: [["used", "available"]],
+        order: null
+      };
+      swapConfig.data = {
+        type: "donut",
+        columns: [
+          ["Used", this.server.inventory.memory.swap.used_bytes],
+          ["Available", this.server.inventory.memory.swap.available_bytes]
+        ],
+        groups: [["used", "available"]],
+        order: null
+      };
+      ramConfig.size = {
+        width: 180,
+        height: 180
+      };
+      swapConfig.size = {
+        width: 180,
+        height: 180
+      };
+
+      ramConfig.tooltip = {
+        contents: $().pfGetUtilizationDonutTooltipContentsFn("GB")
+      };
+      swapConfig.tooltip = {
+        contents: $().pfGetUtilizationDonutTooltipContentsFn("GB")
+      };
+
+      c3.generate(ramConfig);
+      c3.generate(swapConfig);
+      $().pfSetDonutChartTitle(
+        "#ram-chart",
+        this.$options.filters.byteFormat(
+          this.server.inventory.memory.system.used_bytes
+        ),
+        " Used"
+      );
+      $().pfSetDonutChartTitle(
+        "#swap-chart",
+        this.$options.filters.byteFormat(
+          this.server.inventory.memory.swap.used_bytes
+        ),
+        " Used"
+      );
+    },
+    parseMount(value) {
+      return "m" + value.substring(1);
+    },
+    initStorageCharts() {
+      var c3ChartDefaults = $().c3ChartDefaults();
+      var mountConfig = c3ChartDefaults.getDefaultDonutConfig("A");
+
+      for (var m in this.server.inventory.mountpoints) {
+        var mount = this.server.inventory.mountpoints[m];
+
+        mountConfig.bindto = "#mount-chart-" + this.parseMount(m);
+        mountConfig.data = {
+          type: "donut",
+          columns: [
+            ["Used", mount.used_bytes],
+            ["Available", mount.available_bytes]
+          ],
+          groups: [["used", "available"]],
+          order: null
+        };
+
+        mountConfig.size = {
+          width: 180,
+          height: 180
+        };
+
+        mountConfig.tooltip = {
+          contents: $().pfGetUtilizationDonutTooltipContentsFn("GB")
+        };
+
+        c3.generate(mountConfig);
+        $().pfSetDonutChartTitle(
+          "#mount-chart-" + this.parseMount(m),
+          this.$options.filters.byteFormat(mount.used_bytes),
+          " Used"
+        );
       }
     },
-    methods: {
-      isExpired(date) {
-        return new Date().toISOString() > date
-      },
-      getServerInfo() {
-        this.isLoadingInfo = true
-        this.$http.get('https://' + this.$root.$options.api_host + '/api/ui/systems/' + this.$route.params.id, {
-          headers: {
-            'Authorization': 'Bearer ' + this.get('access_token', false) || ''
+    openAlertNoteModal(alert) {
+      this.currentAlert = alert;
+      $("#noteAlert").modal("toggle");
+    },
+    saveAlertNote() {
+      this.$http
+        .put(
+          this.$root.$options.api_scheme +
+            this.$root.$options.api_host +
+            "/api/ui/alerts/" +
+            this.currentAlert.id,
+          {
+            system_id: this.$route.params.id,
+            note: this.currentAlert.note
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + this.get("access_token", false) || ""
+            }
           }
-        }).then(function (success) {
-          this.server.info = success.body
-          this.server.hasAlerts = success.body.alerts >= 0
-          this.isLoadingInfo = false
-
-          // resolve lookup
-          this.$http.get('https://' + this.$root.$options.api_host + '/api/ui/utils/reverse_lookup/' + this.server.info
-            .public_ip, {
-              headers: {
-                'Authorization': 'Bearer ' + this.get('access_token', false) || ''
-              }
-            }).then(function (success) {
-            this.server.ns_lookup = success.body.map(i => i.slice(0, -1)).join(', ')
-          }, function (error) {
-            console.error(error)
-          });
-
-        }, function (error) {
-          console.error(error)
-          this.isLoadingInfo = false
-          if (error.status == 404) {
-            this.$router.push({
-              path: '/notfound'
-            })
+        )
+        .then(
+          function(success) {
+            $("#noteAlert").modal("hide");
+          },
+          function(error) {
+            console.error(error);
           }
-        });
-      },
-      getServerInventory() {
-        this.isLoadingInventory = true
-        this.$http.get('https://' + this.$root.$options.api_host + '/api/ui/inventories/' + this.$route.params.id, {
-          headers: {
-            'Authorization': 'Bearer ' + this.get('access_token', false) || ''
-          }
-        }).then(function (success) {
-          this.server.inventory = success.body.data
-          this.server.inventory.timestamp = success.body.timestamp
-          this.isLoadingInventory = false
-          // init tab
-          setTimeout(function () {
-            $('#system-tab-parent').click()
-          }, 500)
-        }, function (error) {
-          console.error(error)
-          this.isLoadingInventory = false
-        });
-      },
-      getServerAlerts() {
-        this.isLoadingAlerts = true
-        this.$http.get('https://' + this.$root.$options.api_host + '/api/ui/alerts/' + this.$route.params.id, {
-          headers: {
-            'Authorization': 'Bearer ' + this.get('access_token', false) || ''
-          }
-        }).then(function (success) {
-          this.server.alerts = success.body
-          this.isLoadingAlerts = false
-        }, function (error) {
-          console.error(error)
-          this.server.alerts = []
-          this.isLoadingAlerts = false
-        });
-      },
-      getServerHeartbeats() {
-        this.isLoadingHeartbeat = true
-        this.$http.get('https://' + this.$root.$options.api_host + '/api/ui/heartbeats/' + this.$route.params.id, {
-          headers: {
-            'Authorization': 'Bearer ' + this.get('access_token', false) || ''
-          }
-        }).then(function (success) {
-          this.server.heartbeat = success.body.timestamp
-          this.isLoadingHeartbeat = false
-        }, function (error) {
-          this.isLoadingHeartbeat = false
-          console.error(error)
-        });
-      },
-      initMemoryCharts() {
-        var c3ChartDefaults = $().c3ChartDefaults();
-        var ramConfig = c3ChartDefaults.getDefaultDonutConfig('A');
-        var swapConfig = c3ChartDefaults.getDefaultDonutConfig('A');
-        ramConfig.bindto = '#ram-chart';
-        swapConfig.bindto = '#swap-chart';
-        ramConfig.data = {
-          type: "donut",
-          columns: [
-            ["Used", this.server.inventory.memory.system.used_bytes],
-            ["Available", this.server.inventory.memory.system.available_bytes],
-          ],
-          groups: [
-            ["used", "available"]
-          ],
-          order: null
-        };
-        swapConfig.data = {
-          type: "donut",
-          columns: [
-            ["Used", this.server.inventory.memory.swap.used_bytes],
-            ["Available", this.server.inventory.memory.swap.available_bytes],
-          ],
-          groups: [
-            ["used", "available"]
-          ],
-          order: null
-        };
-        ramConfig.size = {
-          width: 180,
-          height: 180
-        };
-        swapConfig.size = {
-          width: 180,
-          height: 180
-        };
-
-        ramConfig.tooltip = {
-          contents: $().pfGetUtilizationDonutTooltipContentsFn('GB')
-        };
-        swapConfig.tooltip = {
-          contents: $().pfGetUtilizationDonutTooltipContentsFn('GB')
-        };
-
-        c3.generate(ramConfig);
-        c3.generate(swapConfig);
-        $().pfSetDonutChartTitle("#ram-chart", this.$options.filters.byteFormat(this.server.inventory.memory.system.used_bytes),
-          " Used");
-        $().pfSetDonutChartTitle("#swap-chart", this.$options.filters.byteFormat(this.server.inventory.memory.swap.used_bytes),
-          " Used");
-      },
-      parseMount(value) {
-        return 'm' + value.substring(1);
-      },
-      initStorageCharts() {
-        var c3ChartDefaults = $().c3ChartDefaults();
-        var mountConfig = c3ChartDefaults.getDefaultDonutConfig('A');
-
-        for (var m in this.server.inventory.mountpoints) {
-          var mount = this.server.inventory.mountpoints[m]
-
-          mountConfig.bindto = '#mount-chart-' + this.parseMount(m);
-          mountConfig.data = {
-            type: "donut",
-            columns: [
-              ["Used", mount.used_bytes],
-              ["Available", mount.available_bytes],
-            ],
-            groups: [
-              ["used", "available"]
-            ],
-            order: null
-          };
-
-          mountConfig.size = {
-            width: 180,
-            height: 180
-          };
-
-
-          mountConfig.tooltip = {
-            contents: $().pfGetUtilizationDonutTooltipContentsFn('GB')
-          };
-
-          c3.generate(mountConfig);
-          $().pfSetDonutChartTitle("#mount-chart-" + this.parseMount(m), this.$options.filters.byteFormat(mount
-              .used_bytes),
-            " Used");
-        }
-      },
-      openAlertNoteModal(alert) {
-        this.currentAlert = alert
-        $('#noteAlert').modal('toggle')
-      },
-      saveAlertNote() {
-        this.$http.put('https://' + this.$root.$options.api_host + '/api/ui/alerts/' + this.currentAlert.id, {
-          system_id: this.$route.params.id,
-          note: this.currentAlert.note
-        }, {
-          headers: {
-            'Authorization': 'Bearer ' + this.get('access_token', false) || ''
-          }
-        }).then(function (success) {
-          $('#noteAlert').modal('hide')
-        }, function (error) {
-          console.error(error)
-        });
-      }
+        );
     }
   }
-
+};
 </script>
 
 <style scoped>
-
 
 </style>

@@ -40,7 +40,7 @@ Vue.filter('dateFromNow', filters.dateFromNow)
 Vue.http.interceptors.push((request, next) => {
   next(function (response) {
     if (response.status == 401) {
-      this.set('sessionExpired', true) 
+      this.set('sessionExpired', true)
       this.set('expires_at', new Date().getTime())
       window.location.reload()
     }
@@ -54,5 +54,6 @@ new Vue({
   i18n,
   render: (h) => h(App),
   currentLocale: langConf.locale,
-  api_host: window.location.host
+  api_host: window.location.host,
+  api_scheme: window.location.protocol + '//'
 })

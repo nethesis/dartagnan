@@ -159,7 +159,7 @@
     methods: {
       getBillingInfo() {
         this.isBillingLoading = true
-        this.$http.get('https://' + this.$root.$options.api_host + '/api/ui/billings', {
+        this.$http.get(this.$root.$options.api_scheme + this.$root.$options.api_host + '/api/ui/billings', {
           headers: {
             'Authorization': 'Bearer ' + this.get('access_token', false) || ''
           }
@@ -180,7 +180,7 @@
         });
       },
       getCountryList() {
-        this.$http.get('https://' + this.$root.$options.api_host + '/api/ui/taxes', {
+        this.$http.get(this.$root.$options.api_scheme + this.$root.$options.api_host + '/api/ui/taxes', {
           headers: {
             'Authorization': 'Bearer ' + this.get('access_token', false) || ''
           }
@@ -195,7 +195,7 @@
         if (this.billingType == 'person') {
           this.billingInfo.vat = ""
         }
-        this.$http[this.billingEmpty ? 'post' : 'put']('https://' + this.$root.$options.api_host + '/api/ui/billings',
+        this.$http[this.billingEmpty ? 'post' : 'put'](this.$root.$options.api_scheme + this.$root.$options.api_host + '/api/ui/billings',
           this.billingInfo, {
             headers: {
               'Authorization': 'Bearer ' + this.get('access_token', false) || ''

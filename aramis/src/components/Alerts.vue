@@ -185,7 +185,7 @@
     methods: {
       listAlerts() {
         this.isLoading = true
-        this.$http.get('https://' + this.$root.$options.api_host + '/api/ui/alerts', {
+        this.$http.get(this.$root.$options.api_scheme + this.$root.$options.api_host + '/api/ui/alerts', {
           headers: {
             'Authorization': 'Bearer ' + this.get('access_token', false) || ''
           }
