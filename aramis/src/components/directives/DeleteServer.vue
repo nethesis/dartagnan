@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button @click="showDeleteModal()" type="button" class="btn btn-danger">
+    <button data-toggle="tooltip" data-placement="right" :title="canBeDeleted() ? '' : $t('servers.license_valid_not_delete')" @click="canBeDeleted() ? showDeleteModal() : ''" type="button" :class="['btn btn-danger', canBeDeleted() ? '' : 'disabled']">
       {{$t('servers.delete')}}
     </button>
     <div class="modal fade" :id="'deleteServerModal-'+obj.id" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -42,6 +42,9 @@ export default {
   methods: {
     showDeleteModal() {
       $("#deleteServerModal-" + this.obj.id).modal("toggle");
+    },
+    canBeDeleted() {
+      return this.obj.subscription.subscription_plan.code == 'trial' || (new Date().toISOString() > this.obj.subscription.valid_until)
     },
     deleteServer() {
       var closeId = this.obj.id;
