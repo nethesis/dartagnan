@@ -117,129 +117,144 @@
 </template>
 
 <script>
-  import LoginService from './../services/login';
-  import StorageService from './../services/storage';
-  import UtilService from './../services/util';
-  import {
-    setTimeout
-  } from 'timers';
+import LoginService from "./../services/login";
+import StorageService from "./../services/storage";
+import UtilService from "./../services/util";
+import { setTimeout } from "timers";
 
-  import EditNote from './directives/EditNote.vue';
-  import DeleteAlert from './directives/DeleteAlert.vue';
+import EditNote from "./directives/EditNote.vue";
+import DeleteAlert from "./directives/DeleteAlert.vue";
 
-  export default {
-    name: 'alerts',
-    mixins: [LoginService, StorageService, UtilService],
-    components: {
-      editNote: EditNote,
-      deleteAlert: DeleteAlert
-    },
-    updated: function () {
-      $('[data-toggle="tooltip"]').tooltip()
-    },
-    data() {
-      // get alerts list
-      this.listAlerts()
+export default {
+  name: "alerts",
+  mixins: [LoginService, StorageService, UtilService],
+  components: {
+    editNote: EditNote,
+    deleteAlert: DeleteAlert
+  },
+  updated: function() {
+    $('[data-toggle="tooltip"]').tooltip();
+  },
+  data() {
+    // get alerts list
+    this.listAlerts();
 
-      return {
-        isLoading: true,
-        filters: {
-          search: '',
-          currentPriority: this.get('alerts_filter_priority') || 'all',
-          priorities: ['all', 'high', 'average', 'warning'],
+    return {
+      isLoading: true,
+      filters: {
+        search: "",
+        currentPriority: this.get("alerts_filter_priority") || "all",
+        priorities: ["all", "high", "average", "warning"]
+      },
+      alerts: [],
+      columns: [
+        {
+          label: this.$i18n.t("alerts.alert_id"),
+          field: "namei18n",
+          filterable: false
         },
-        alerts: [],
-        columns: [{
-            label: this.$i18n.t('alerts.alert_id'),
-            field: 'namei18n',
-            filterable: false,
-          }, {
-            label: this.$i18n.t('alerts.server'),
-            field: 'namei18n',
-            filterable: false,
-          }, {
-            label: this.$i18n.t('alerts.timestamp'),
-            field: 'timestamp',
-            filterable: false,
-          },
+        {
+          label: this.$i18n.t("alerts.server"),
+          field: "namei18n",
+          filterable: false
+        },
+        {
+          label: this.$i18n.t("alerts.timestamp"),
+          field: "timestamp",
+          filterable: false
+        },
+        {
+          label: this.$i18n.t("alerts.status"),
+          field: "status",
+          filterable: false
+        },
+        {
+          label: this.$i18n.t("alerts.note"),
+          field: "note",
+          filterable: false,
+          sortable: false
+        },
+        {
+          label: this.$i18n.t("alerts.action"),
+          filterable: false,
+          sortable: false
+        }
+      ],
+      tableLangsTexts: this.tableLangs()
+    };
+  },
+  methods: {
+    listAlerts() {
+      this.isLoading = true;
+      this.$http
+        .get(
+          this.$root.$options.api_scheme +
+            this.$root.$options.api_host +
+            "/api/ui/alerts",
           {
-            label: this.$i18n.t('alerts.status'),
-            field: 'status',
-            filterable: false,
-          },
-          {
-            label: this.$i18n.t('alerts.note'),
-            field: 'note',
-            filterable: false,
-            sortable: false
-          },
-          {
-            label: this.$i18n.t('alerts.action'),
-            filterable: false,
-            sortable: false
+            headers: {
+              Authorization: "Bearer " + this.get("access_token", false) || ""
+            }
           }
-        ],
-        tableLangsTexts: this.tableLangs(),
+        )
+        .then(
+          function(success) {
+            this.alerts = success.body;
+            this.isLoading = false;
+          },
+          function(error) {
+            console.error(error);
+            this.alerts = [];
+            this.isLoading = false;
+          }
+        );
+    },
+    clearFilters(filter) {
+      if (filter == "all") {
+        this.filters.search = "";
+        this.filters.currentPriority = "all";
+        this.set("alerts_filter_priority", "all");
+      }
+
+      if (filter == "search") {
+        this.filters.search = "";
+      }
+
+      if (filter == "priority") {
+        this.filters.currentPriority = "all";
+        this.set("alerts_filter_priority", "all");
       }
     },
-    methods: {
-      listAlerts() {
-        this.isLoading = true
-        this.$http.get(this.$root.$options.api_scheme + this.$root.$options.api_host + '/api/ui/alerts', {
-          headers: {
-            'Authorization': 'Bearer ' + this.get('access_token', false) || ''
-          }
-        }).then(function (success) {
-          this.alerts = success.body
-          this.isLoading = false
-        }, function (error) {
-          console.error(error)
-          this.alerts = []
-          this.isLoading = false
-        });
-      },
-      clearFilters(filter) {
-        if (filter == 'all') {
-          this.filters.search = ''
-          this.filters.currentPriority = 'all'
-          this.set('alerts_filter_priority', 'all')
-        }
-
-        if (filter == 'search') {
-          this.filters.search = ''
-        }
-
-        if (filter == 'priority') {
-          this.filters.currentPriority = 'all'
-          this.set('alerts_filter_priority', 'all')
-        }
-      },
-      setFilterPriority(priority) {
-        this.filters.currentPriority = priority
-        this.set('alerts_filter_priority', priority)
-        this.filteredAlerts()
-      },
-      filteredAlerts() {
-        var filter = {}
-        if (this.filters.currentPriority != 'all') {
-          filter['priority'] = this.filters.currentPriority.toUpperCase()
-        }
-        var filtered = _.filter(this.alerts, filter);
-        if (this.filters.search.length > 0) {
-          var context = this
-          filtered = _.filter(filtered, function (item) {
-            return item.namei18n.toLowerCase().startsWith(context.filters.search.toLowerCase()) || item.alert_id.toLowerCase()
-              .startsWith(context.filters.search.toLowerCase())
-          })
-        }
-        return _.orderBy(filtered, ['priority'], 'asc')
+    setFilterPriority(priority) {
+      this.filters.currentPriority = priority;
+      this.set("alerts_filter_priority", priority);
+      this.filteredAlerts();
+    },
+    filteredAlerts() {
+      var filter = {};
+      if (this.filters.currentPriority != "all") {
+        filter["priority"] = this.filters.currentPriority.toUpperCase();
       }
+      var filtered = _.filter(this.alerts, filter);
+      if (this.filters.search.length > 0) {
+        var context = this;
+        filtered = _.filter(filtered, function(item) {
+          return (
+            item.namei18n
+              .toLowerCase()
+              .startsWith(context.filters.search.toLowerCase()) ||
+            item.alert_id
+              .toLowerCase()
+              .startsWith(context.filters.search.toLowerCase())
+          );
+        });
+      }
+      return _.orderBy(filtered, ["priority"], "asc");
     }
   }
-
+};
 </script>
 
 <style scoped>
-
 
 </style>

@@ -1,72 +1,73 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import VueAnalytics from 'vue-analytics'
+import Vue from "vue";
+import Router from "vue-router";
+import VueAnalytics from "vue-analytics";
 
-import Login from '@/components/Login'
-import Callback from '@/components/Callback'
-import NotFound from '@/components/NotFound'
+import Login from "@/components/Login";
+import Callback from "@/components/Callback";
+import NotFound from "@/components/NotFound";
 
-import Dashboard from '@/components/Dashboard'
-import Alerts from '@/components/Alerts'
-import Servers from '@/components/Servers'
-import ServerDetail from '@/components/ServerDetails'
-import Profile from '@/components/Profile'
+import Dashboard from "@/components/Dashboard";
+import Alerts from "@/components/Alerts";
+import Servers from "@/components/Servers";
+import ServerDetail from "@/components/ServerDetails";
+import Profile from "@/components/Profile";
 
-Vue.use(Router)
+Vue.use(Router);
 
 const router = new Router({
-  mode: 'history',
-  routes: [{
-      path: '/login',
-      name: 'Login',
+  mode: "history",
+  routes: [
+    {
+      path: "/login",
+      name: "Login",
       component: Login
     },
     {
-      path: '/callback',
-      name: 'Callback',
+      path: "/callback",
+      name: "Callback",
       component: Callback
     },
     {
-      path: '/dashboard',
-      name: 'Dashboard',
+      path: "/dashboard",
+      name: "Dashboard",
       component: Dashboard
     },
     {
-      path: '/alerts',
-      name: 'Alerts',
+      path: "/alerts",
+      name: "Alerts",
       component: Alerts
     },
     {
-      path: '/servers',
-      name: 'Servers',
+      path: "/servers",
+      name: "Servers",
       component: Servers
     },
     {
-      path: '/servers/:id',
-      name: 'ServerDetail',
+      path: "/servers/:id",
+      name: "ServerDetail",
       component: ServerDetail
     },
     {
-      path: '/profile',
-      name: 'Profile',
+      path: "/profile",
+      name: "Profile",
       component: Profile
     },
     {
-      path: '/notfound',
-      name: 'NotFound',
+      path: "/notfound",
+      name: "NotFound",
       component: NotFound
     },
     {
-      path: '*',
-      name: 'NotFound',
+      path: "*",
+      name: "NotFound",
       component: NotFound
     }
   ]
-})
+});
 
 Vue.use(VueAnalytics, {
   id: CONFIG.UA_ANALYTICS,
   router
-})
+});
 
-export default router
+export default router;

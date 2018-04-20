@@ -152,107 +152,103 @@
 </template>
 
 <script>
-  import LoginService from './services/login';
-  import StorageService from './services/storage';
-  import UtilService from './services/util';
-  import {
-    setTimeout
-  } from 'timers';
-  import {
-    error
-  } from 'util';
+import LoginService from "./services/login";
+import StorageService from "./services/storage";
+import UtilService from "./services/util";
+import { setTimeout } from "timers";
+import { error } from "util";
 
-  export default {
-    name: 'app',
-    mixins: [LoginService, StorageService, UtilService],
-    created() {
-      document.title = CONFIG.APP_NAME
-    },
-    data() {
-      // is logged
-      var isLogged = this.auth0CheckAuth()
-      var user = this.get('logged_user') || { name: "", email : "", picture: ""}
+export default {
+  name: "app",
+  mixins: [LoginService, StorageService, UtilService],
+  created() {
+    document.title = CONFIG.APP_NAME;
+  },
+  data() {
+    // is logged
+    var isLogged = this.auth0CheckAuth();
+    var user = this.get("logged_user") || { name: "", email: "", picture: "" };
 
-      // save route query params
-      if (Object.keys(this.$route.query).length > 0) {
-          for (var p in this.$route.query) {
-            this.set(this.$route.query[p], true)
-          }
-      }
-
-      // get action if exists
-      var action = this.get('newServer') ? 'newServer' : '';
-
-      if (this.$route.path !== '/callback') {
-        if (isLogged) {
-          this.initGraphics()
-          // handle action
-          this.$router.push({
-            path: this.handleAction(action)
-          })
-        } else {
-          this.showBody()
-          this.$router.push({
-            path: '/login'
-          })
-        }
-      }
-
-      return {
-        user: user,
-        isLogged: isLogged,
-	helpUrl: CONFIG.HELP_URL,
-        appName: CONFIG.APP_NAME
-      }
-    },
-    methods: {
-      handleAction(action, path) {
-        switch (action) {
-          case 'newServer':
-            this.isLogged = this.auth0CheckAuth()
-            this.user = this.get('logged_user')
-            this.initGraphics()
-            return 'servers'
-
-          default:
-            return this.$route.path == '/' ? 'dashboard' : path || this.$route.path
-        }
-      },
-      getCurrentPath(route) {
-        return this.$route.path.split('/')[1] === route
-      },
-      doLogout() {
-        this.$router.push('/login')
-        this.auth0Logout()
-        this.isLogged = false
-        this.resetGraphics()
-      },
-      initGraphics() {
-        $('body').addClass('logged')
-        $('body').removeClass('not-logged')
-        this.showBody()
-        setTimeout(function () {
-          $().setupVerticalNavigation(true);
-        }, 0);
-      },
-      resetGraphics() {
-        $('body').addClass('not-logged')
-        $('body').removeClass('logged')
-        window.location.reload(true)
-      },
-      showBody() {
-        $('body').show()
-        $('body').addClass('not-logged')
-      },
-      routeTo(route) {
-        this.$router.push('/' + route)
+    // save route query params
+    if (Object.keys(this.$route.query).length > 0) {
+      for (var p in this.$route.query) {
+        this.set(this.$route.query[p], true);
       }
     }
-  }
 
+    // get action if exists
+    var action = this.get("newServer") ? "newServer" : "";
+
+    if (this.$route.path !== "/callback") {
+      if (isLogged) {
+        this.initGraphics();
+        // handle action
+        this.$router.push({
+          path: this.handleAction(action)
+        });
+      } else {
+        this.showBody();
+        this.$router.push({
+          path: "/login"
+        });
+      }
+    }
+
+    return {
+      user: user,
+      isLogged: isLogged,
+      helpUrl: CONFIG.HELP_URL,
+      appName: CONFIG.APP_NAME
+    };
+  },
+  methods: {
+    handleAction(action, path) {
+      switch (action) {
+        case "newServer":
+          this.isLogged = this.auth0CheckAuth();
+          this.user = this.get("logged_user");
+          this.initGraphics();
+          return "servers";
+
+        default:
+          return this.$route.path == "/"
+            ? "dashboard"
+            : path || this.$route.path;
+      }
+    },
+    getCurrentPath(route) {
+      return this.$route.path.split("/")[1] === route;
+    },
+    doLogout() {
+      this.$router.push("/login");
+      this.auth0Logout();
+      this.isLogged = false;
+      this.resetGraphics();
+    },
+    initGraphics() {
+      $("body").addClass("logged");
+      $("body").removeClass("not-logged");
+      this.showBody();
+      setTimeout(function() {
+        $().setupVerticalNavigation(true);
+      }, 0);
+    },
+    resetGraphics() {
+      $("body").addClass("not-logged");
+      $("body").removeClass("logged");
+      window.location.reload(true);
+    },
+    showBody() {
+      $("body").show();
+      $("body").addClass("not-logged");
+    },
+    routeTo(route) {
+      this.$router.push("/" + route);
+    }
+  }
+};
 </script>
 
 <style src="./styles/main.css">
-
 
 </style>

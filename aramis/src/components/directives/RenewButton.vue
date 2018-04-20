@@ -117,27 +117,26 @@
   </span>
 </template>
 <script>
-  import StorageService from './../../services/storage';
+import StorageService from "./../../services/storage";
 
-  import paypal from 'paypal-checkout'
-  import {
-    setTimeout
-  } from 'timers';
-  import marked from 'marked';
+import paypal from "paypal-checkout";
+import { setTimeout } from "timers";
+import marked from "marked";
 
-  export default {
-    name: 'RenewButton',
-    props: ['obj', 'update'],
-    mixins: [StorageService],
-    mounted() {
-      var context = this
-      paypal.Button.render({
-        env: CONFIG.PAYPAL_PRODUCTION ? 'production' : 'sandbox',
+export default {
+  name: "RenewButton",
+  props: ["obj", "update"],
+  mixins: [StorageService],
+  mounted() {
+    var context = this;
+    paypal.Button.render(
+      {
+        env: CONFIG.PAYPAL_PRODUCTION ? "production" : "sandbox",
         style: {
-          layout: 'vertical', // horizontal | vertical
-          size: 'medium', // medium | large | responsive
-          shape: 'rect', // pill | rect
-          color: 'gold' // gold | blue | silver | black
+          layout: "vertical", // horizontal | vertical
+          size: "medium", // medium | large | responsive
+          shape: "rect", // pill | rect
+          color: "gold" // gold | blue | silver | black
         },
         funding: {
           allowed: [paypal.FUNDING.CARD],
@@ -147,31 +146,47 @@
           sandbox: CONFIG.PAYPAL_SANDBOX,
           production: CONFIG.PAYPAL_PRODUCTION
         },
-        payment: function (data, actions) {
+        payment: function(data, actions) {
           return actions.payment.create({
             payment: {
-              transactions: [{
-                amount: {
-                  total: Math.round((context.currentPlan.price + (context.currentPlan.price * context.billingInfo
-                    .tax / 100)) * 100) / 100,
-                  currency: 'EUR',
-                  details: {
-                    subtotal: Math.round(context.currentPlan.price * 100) / 100,
-                    tax: Math.round((context.currentPlan.price * context.billingInfo.tax / 100) * 100) /
-                      100
+              transactions: [
+                {
+                  amount: {
+                    total:
+                      Math.round(
+                        (context.currentPlan.price +
+                          context.currentPlan.price *
+                            context.billingInfo.tax /
+                            100) *
+                          100
+                      ) / 100,
+                    currency: "EUR",
+                    details: {
+                      subtotal:
+                        Math.round(context.currentPlan.price * 100) / 100,
+                      tax:
+                        Math.round(
+                          context.currentPlan.price *
+                            context.billingInfo.tax /
+                            100 *
+                            100
+                        ) / 100
+                    }
+                  },
+                  item_list: {
+                    items: [
+                      {
+                        name: context.currentPlan.code,
+                        description: context.currentPlan.name,
+                        sku: context.obj.uuid,
+                        price: context.currentPlan.price,
+                        currency: "EUR",
+                        quantity: "1"
+                      }
+                    ]
                   }
-                },
-                "item_list": {
-                  "items": [{
-                    "name": context.currentPlan.code,
-                    "description": context.currentPlan.name,
-                    "sku": context.obj.uuid,
-                    "price": context.currentPlan.price,
-                    "currency": "EUR",
-                    "quantity": "1",
-                  }, ],
-                },
-              }]
+                }
+              ]
             },
             experience: {
               input_fields: {
@@ -181,181 +196,251 @@
           });
         },
 
-        onAuthorize: function (data, actions) {
-          return actions.payment.execute().then(function () {
-            context.payment.onProgress = true
+        onAuthorize: function(data, actions) {
+          return actions.payment.execute().then(function() {
+            context.payment.onProgress = true;
             if (context.onUpgrade) {
-              context.upgradeCheck(data)
+              context.upgradeCheck(data);
             } else {
-              context.renewCheck(data)
+              context.renewCheck(data);
             }
           });
         }
+      },
+      "#paypal-button-container-" + this.obj.id
+    );
+  },
+  data() {
+    // get plans
+    this.plansList();
 
-      }, '#paypal-button-container-' + this.obj.id);
+    // read upgrade ref and show modal
+    if (this.get("upgrade_ref", false)) {
+      var context = this;
+      setTimeout(function() {
+        context.showRenewModal(context.get("upgrade_ref", false));
+        context.delete("upgrade_ref");
+      }, 0);
+    }
+
+    return {
+      payment: {
+        done: false,
+        details: {},
+        onProgress: false
+      },
+      errors: {
+        message: "",
+        state: false
+      },
+      plans: [],
+      markdownDescription: "",
+      currentPlan: this.obj.subscription.subscription_plan,
+      billingInfo: {},
+      onUpgradePriceCalc: false,
+      onUpgrade: false
+    };
+  },
+  methods: {
+    isExpired(date) {
+      return new Date().toISOString() > date;
     },
-    data() {
-      // get plans
-      this.plansList()
-
-      // read upgrade ref and show modal
-      if (this.get('upgrade_ref', false)) {
-        var context = this
-        setTimeout(function () {
-          context.showRenewModal(context.get('upgrade_ref', false))
-          context.delete('upgrade_ref')
-        }, 0)
-      }
-
-      return {
-        payment: {
-          done: false,
-          details: {},
-          onProgress: false
-        },
-        errors: {
-          message: '',
-          state: false
-        },
-        plans: [],
-        markdownDescription: "",
-        currentPlan: this.obj.subscription.subscription_plan,
-        billingInfo: {},
-        onUpgradePriceCalc: false,
-        onUpgrade: false
-      }
-    },
-    methods: {
-      isExpired(date) {
-        return new Date().toISOString() > date
-      },
-      showRenewModal(id) {
-        this.$http.get(this.$root.$options.api_scheme + this.$root.$options.api_host + '/api/ui/billings', {
-          headers: {
-            'Authorization': 'Bearer ' + this.get('access_token', false) || ''
-          }
-        }).then(function (success) {
-          this.billingInfo = success.body
-          this.payment.done = false
-          this.payment.onProgress = false
-          this.payment.details = {}
-          this.errors.message = ''
-          this.errors.state = false
-          this.currentPlan = this.obj.subscription.subscription_plan.code != 'trial' ? this.obj.subscription.subscription_plan :
-            this.plans[1]
-          if (this.obj.subscription.subscription_plan.code == 'trial') {
-            this.currentPlan.full_price = this.plans[1].price
-          }
-          this.markdownDescription = marked(this.obj.subscription.subscription_plan.description, { sanitize: true})
-          this.onUpgradePriceCalc = false
-          this.onUpgrade = this.obj.subscription.subscription_plan.code != 'trial' ? false : true
-          $('#paymentModalRenew-' + id).modal('toggle')
-        }, function (error) {
-          this.$parent.$parent.action = 'updateBilling'
-          this.set('upgrade_ref', id)
-          this.$router.push({
-            path: '/profile'
-          })
-          console.error(error)
-        });
-      },
-      hideRenewModal() {
-        this.update()
-        $('#paymentModalRenew-' + this.obj.id).modal('hide')
-      },
-      plansList() {
-        this.$http.get(this.$root.$options.api_scheme + this.$root.$options.api_host + '/api/ui/plans', {
-          headers: {
-            'Authorization': 'Bearer ' + this.get('access_token', false) || ''
-          }
-        }).then(function (success) {
-          this.plans = _.orderBy(success.body, 'price', 'asc')
-        }, function (error) {
-          console.error(error)
-        });
-      },
-      changePlan(plan) {
-        if (plan.code !== this.obj.subscription.subscription_plan.code) {
-          // handle upgrade
-          var context = this
-          this.calculateUpgradePrice(plan.code, function (data) {
-            context.onUpgrade = true
-            context.currentPlan = plan
-            context.currentPlan.price = data.price
-            context.currentPlan.full_price = data.full_price
-            context.markdownDescription = marked(plan.description, { sanitize: true})
-          })
-        } else {
-          this.onUpgrade = false
-          this.currentPlan = plan
-          this.markdownDescription = marked(plan.description, { sanitize: true})
-        }
-      },
-      calculateUpgradePrice(plan, callback) {
-        this.onUpgradePriceCalc = true
-        this.$http.get(this.$root.$options.api_scheme + this.$root.$options.api_host + '/api/ui/systems/' + this.obj.id +
-          '/upgrade_price?plan=' + plan, {
+    showRenewModal(id) {
+      this.$http
+        .get(
+          this.$root.$options.api_scheme +
+            this.$root.$options.api_host +
+            "/api/ui/billings",
+          {
             headers: {
-              'Authorization': 'Bearer ' + this.get('access_token', false) || ''
+              Authorization: "Bearer " + this.get("access_token", false) || ""
             }
-          }).then(function (success) {
-          this.onUpgradePriceCalc = false
-          callback(success.body)
-        }, function (error) {
-          console.error(error)
-          this.onUpgradePriceCalc = false
-        });
-      },
-      calculateSubscription(date, subscription) {
-        var moment = require("patternfly/node_modules/moment/moment.js")
-        return moment(date, "YYYY-MM-DDTHH:mm:ss").add(subscription.period, 'days');
-      },
-      renewCheck(payment) {
-        this.$http.post(this.$root.$options.api_scheme + this.$root.$options.api_host + '/api/ui/systems/' + this.obj.id + '/renewal', {
-          payment_id: payment.paymentID
-        }, {
-          headers: {
-            'Authorization': 'Bearer ' + this.get('access_token', false) || ''
           }
-        }).then(function (success) {
-          this.payment.onProgress = false
-          this.payment.details = payment
-          this.payment.done = true
-        }, function (error) {
-          console.error(error)
-          this.payment.onProgress = false
-          this.payment.details = payment
-          this.payment.done = true
-          this.errors.state = true
-          this.errors.message = error.body.message
-        });
-      },
-      upgradeCheck(payment) {
-        this.$http.post(this.$root.$options.api_scheme + this.$root.$options.api_host + '/api/ui/systems/' + this.obj.id + '/upgrade', {
-          payment_id: payment.paymentID,
-          subscription_plan_id: this.currentPlan.id,
-        }, {
-          headers: {
-            'Authorization': 'Bearer ' + this.get('access_token', false) || ''
+        )
+        .then(
+          function(success) {
+            this.billingInfo = success.body;
+            this.payment.done = false;
+            this.payment.onProgress = false;
+            this.payment.details = {};
+            this.errors.message = "";
+            this.errors.state = false;
+            this.currentPlan =
+              this.obj.subscription.subscription_plan.code != "trial"
+                ? this.obj.subscription.subscription_plan
+                : this.plans[1];
+            if (this.obj.subscription.subscription_plan.code == "trial") {
+              this.currentPlan.full_price = this.plans[1].price;
+            }
+            this.markdownDescription = marked(
+              this.obj.subscription.subscription_plan.description,
+              { sanitize: true }
+            );
+            this.onUpgradePriceCalc = false;
+            this.onUpgrade =
+              this.obj.subscription.subscription_plan.code != "trial"
+                ? false
+                : true;
+            $("#paymentModalRenew-" + id).modal("toggle");
+          },
+          function(error) {
+            this.$parent.$parent.action = "updateBilling";
+            this.set("upgrade_ref", id);
+            this.$router.push({
+              path: "/profile"
+            });
+            console.error(error);
           }
-        }).then(function (success) {
-          this.payment.onProgress = false
-          this.payment.details = payment
-          this.payment.done = true
-        }, function (error) {
-          console.error(error)
-          this.payment.onProgress = false
-          this.payment.details = payment
-          this.payment.done = true
-          this.errors.state = true
-          this.errors.message = error.body.message
+        );
+    },
+    hideRenewModal() {
+      this.update();
+      $("#paymentModalRenew-" + this.obj.id).modal("hide");
+    },
+    plansList() {
+      this.$http
+        .get(
+          this.$root.$options.api_scheme +
+            this.$root.$options.api_host +
+            "/api/ui/plans",
+          {
+            headers: {
+              Authorization: "Bearer " + this.get("access_token", false) || ""
+            }
+          }
+        )
+        .then(
+          function(success) {
+            this.plans = _.orderBy(success.body, "price", "asc");
+          },
+          function(error) {
+            console.error(error);
+          }
+        );
+    },
+    changePlan(plan) {
+      if (plan.code !== this.obj.subscription.subscription_plan.code) {
+        // handle upgrade
+        var context = this;
+        this.calculateUpgradePrice(plan.code, function(data) {
+          context.onUpgrade = true;
+          context.currentPlan = plan;
+          context.currentPlan.price = data.price;
+          context.currentPlan.full_price = data.full_price;
+          context.markdownDescription = marked(plan.description, {
+            sanitize: true
+          });
         });
-      },
+      } else {
+        this.onUpgrade = false;
+        this.currentPlan = plan;
+        this.markdownDescription = marked(plan.description, { sanitize: true });
+      }
+    },
+    calculateUpgradePrice(plan, callback) {
+      this.onUpgradePriceCalc = true;
+      this.$http
+        .get(
+          this.$root.$options.api_scheme +
+            this.$root.$options.api_host +
+            "/api/ui/systems/" +
+            this.obj.id +
+            "/upgrade_price?plan=" +
+            plan,
+          {
+            headers: {
+              Authorization: "Bearer " + this.get("access_token", false) || ""
+            }
+          }
+        )
+        .then(
+          function(success) {
+            this.onUpgradePriceCalc = false;
+            callback(success.body);
+          },
+          function(error) {
+            console.error(error);
+            this.onUpgradePriceCalc = false;
+          }
+        );
+    },
+    calculateSubscription(date, subscription) {
+      var moment = require("patternfly/node_modules/moment/moment.js");
+      return moment(date, "YYYY-MM-DDTHH:mm:ss").add(
+        subscription.period,
+        "days"
+      );
+    },
+    renewCheck(payment) {
+      this.$http
+        .post(
+          this.$root.$options.api_scheme +
+            this.$root.$options.api_host +
+            "/api/ui/systems/" +
+            this.obj.id +
+            "/renewal",
+          {
+            payment_id: payment.paymentID
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + this.get("access_token", false) || ""
+            }
+          }
+        )
+        .then(
+          function(success) {
+            this.payment.onProgress = false;
+            this.payment.details = payment;
+            this.payment.done = true;
+          },
+          function(error) {
+            console.error(error);
+            this.payment.onProgress = false;
+            this.payment.details = payment;
+            this.payment.done = true;
+            this.errors.state = true;
+            this.errors.message = error.body.message;
+          }
+        );
+    },
+    upgradeCheck(payment) {
+      this.$http
+        .post(
+          this.$root.$options.api_scheme +
+            this.$root.$options.api_host +
+            "/api/ui/systems/" +
+            this.obj.id +
+            "/upgrade",
+          {
+            payment_id: payment.paymentID,
+            subscription_plan_id: this.currentPlan.id
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + this.get("access_token", false) || ""
+            }
+          }
+        )
+        .then(
+          function(success) {
+            this.payment.onProgress = false;
+            this.payment.details = payment;
+            this.payment.done = true;
+          },
+          function(error) {
+            console.error(error);
+            this.payment.onProgress = false;
+            this.payment.details = payment;
+            this.payment.done = true;
+            this.errors.state = true;
+            this.errors.message = error.body.message;
+          }
+        );
     }
   }
-
+};
 </script>
 <style>
-
 
 </style>

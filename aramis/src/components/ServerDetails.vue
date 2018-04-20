@@ -534,10 +534,11 @@ export default {
   data() {
     setTimeout(function() {
       $('[data-toggle="tooltip"]').tooltip();
-      $('[data-toggle=popover]').popovers()
-      .on('hidden.bs.popover', function (e) {
-        $(e.target).data('bs.popover').inState.click = false;
-      });
+      $("[data-toggle=popover]")
+        .popovers()
+        .on("hidden.bs.popover", function(e) {
+          $(e.target).data("bs.popover").inState.click = false;
+        });
     }, 250);
     return {
       server: {

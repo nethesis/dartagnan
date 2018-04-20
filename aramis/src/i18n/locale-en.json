@@ -17,7 +17,8 @@
       "last_login": "Last login",
       "email_is": "Email is",
       "billing_not_configured": "Billing information missing",
-      "billing_not_configured_desc": "Insert your billing information in the fileds below",
+      "billing_not_configured_desc":
+        "Insert your billing information in the fileds below",
       "info": "Information",
       "billing": "Billing",
       "name": "Name",
@@ -41,7 +42,8 @@
     },
     "servers": {
       "no_servers_title": "No servers found",
-      "no_servers_subtitle": "You don't have any servers. Click on the button below to create one",
+      "no_servers_subtitle":
+        "You don't have any servers. Click on the button below to create one",
       "create_server": "Create server",
       "new_server": "New server",
       "server_created": "Server created successfully",
@@ -80,7 +82,8 @@
       "no_alerts_found": "No alerts found",
       "inventory_available": "Inventory available",
       "inventory_not_available": "Inventory not available",
-      "inventory_not_available_desc": "This system has not yet sent its inventory",
+      "inventory_not_available_desc":
+        "This system has not yet sent its inventory",
       "public_ip": "Public IP",
       "ns_lookup": "Reverse DNS Lookup",
       "version": "Version",

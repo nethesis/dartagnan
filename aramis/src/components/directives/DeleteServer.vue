@@ -30,44 +30,52 @@
   </div>
 </template>
 <script>
-  import StorageService from './../../services/storage';
+import StorageService from "./../../services/storage";
 
-  export default {
-    name: 'DeleteServer',
-    props: ['obj', 'update', 'redir'],
-    mixins: [StorageService],
-    data() {
-      return {
-      }
+export default {
+  name: "DeleteServer",
+  props: ["obj", "update", "redir"],
+  mixins: [StorageService],
+  data() {
+    return {};
+  },
+  methods: {
+    showDeleteModal() {
+      $("#deleteServerModal-" + this.obj.id).modal("toggle");
     },
-    methods: {
-      showDeleteModal() {
-        $('#deleteServerModal-' + this.obj.id).modal('toggle')
-      },
-      deleteServer() {
-        var closeId = this.obj.id
-        this.$http.delete(this.$root.$options.api_scheme + this.$root.$options.api_host + '/api/ui/systems/' + this.obj.id, {
-          headers: {
-            'Authorization': 'Bearer ' + this.get('access_token', false) || ''
+    deleteServer() {
+      var closeId = this.obj.id;
+      this.$http
+        .delete(
+          this.$root.$options.api_scheme +
+            this.$root.$options.api_host +
+            "/api/ui/systems/" +
+            this.obj.id,
+          {
+            headers: {
+              Authorization: "Bearer " + this.get("access_token", false) || ""
+            }
           }
-        }).then(function (success) {
-          $('#deleteServerModal-' + closeId).modal('hide')
-          if (this.redir) {
-            this.$router.push({
-              path: '/' + this.redir
-            })
-          } else {
-            this.update()
+        )
+        .then(
+          function(success) {
+            $("#deleteServerModal-" + closeId).modal("hide");
+            if (this.redir) {
+              this.$router.push({
+                path: "/" + this.redir
+              });
+            } else {
+              this.update();
+            }
+          },
+          function(error) {
+            console.error(error);
           }
-        }, function (error) {
-          console.error(error)
-        });
-      },
+        );
     }
   }
-
+};
 </script>
 <style>
-
 
 </style>

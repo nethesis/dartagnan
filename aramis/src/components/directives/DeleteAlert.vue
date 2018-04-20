@@ -30,37 +30,46 @@
   </div>
 </template>
 <script>
-  import StorageService from './../../services/storage';
+import StorageService from "./../../services/storage";
 
-  export default {
-    name: 'DeleteAlert',
-    props: ['obj', 'update'],
-    mixins: [StorageService],
-    data() {
-      return {}
+export default {
+  name: "DeleteAlert",
+  props: ["obj", "update"],
+  mixins: [StorageService],
+  data() {
+    return {};
+  },
+  methods: {
+    showDeleteModal() {
+      $("#deleteAlertModal-" + this.obj.id).modal("toggle");
     },
-    methods: {
-      showDeleteModal() {
-        $('#deleteAlertModal-' + this.obj.id).modal('toggle')
-      },
-      deleteAlert() {
-        var closeId = this.obj.id
-        this.$http.delete(this.$root.$options.api_scheme + this.$root.$options.api_host + '/api/ui/alerts/' + this.obj.id, {
-          headers: {
-            'Authorization': 'Bearer ' + this.get('access_token', false) || ''
+    deleteAlert() {
+      var closeId = this.obj.id;
+      this.$http
+        .delete(
+          this.$root.$options.api_scheme +
+            this.$root.$options.api_host +
+            "/api/ui/alerts/" +
+            this.obj.id,
+          {
+            headers: {
+              Authorization: "Bearer " + this.get("access_token", false) || ""
+            }
           }
-        }).then(function (success) {
-          $('#deleteAlertModal-' + closeId).modal('hide')
-          this.update()
-        }, function (error) {
-          console.error(error)
-        });
-      },
+        )
+        .then(
+          function(success) {
+            $("#deleteAlertModal-" + closeId).modal("hide");
+            this.update();
+          },
+          function(error) {
+            console.error(error);
+          }
+        );
     }
   }
-
+};
 </script>
 <style>
-
 
 </style>

@@ -243,210 +243,243 @@
 </template>
 
 <script>
-  import LoginService from './../services/login';
-  import StorageService from './../services/storage';
-  import UtilService from './../services/util';
-  import {
-    setTimeout
-  } from 'timers';
-  import _ from 'lodash'
+import LoginService from "./../services/login";
+import StorageService from "./../services/storage";
+import UtilService from "./../services/util";
+import { setTimeout } from "timers";
+import _ from "lodash";
 
-  import RenewButton from './directives/RenewButton.vue';
-  import DeleteServer from './directives/DeleteServer.vue';
+import RenewButton from "./directives/RenewButton.vue";
+import DeleteServer from "./directives/DeleteServer.vue";
 
-  export default {
-    name: 'servers',
-    mixins: [LoginService, StorageService, UtilService],
-    components: {
-      renewButton: RenewButton,
-      deleteServer: DeleteServer
-    },
-    updated: function () {
-      $('[data-toggle="tooltip"]').tooltip()
-    },
-    data() {
-      // get plans list
-      this.planList()
+export default {
+  name: "servers",
+  mixins: [LoginService, StorageService, UtilService],
+  components: {
+    renewButton: RenewButton,
+    deleteServer: DeleteServer
+  },
+  updated: function() {
+    $('[data-toggle="tooltip"]').tooltip();
+  },
+  data() {
+    // get plans list
+    this.planList();
 
-      //get servers list
-      this.listServers()
+    //get servers list
+    this.listServers();
 
-      // handle action
-      var newServerAction = this.get('newServer') || false
-      if (newServerAction) {
-        this.addServer()
-        this.delete('newServer')
-      }
+    // handle action
+    var newServerAction = this.get("newServer") || false;
+    if (newServerAction) {
+      this.addServer();
+      this.delete("newServer");
+    }
 
-      return {
-        copySucceeded: false,
-        isLoading: true,
-        filters: {
-          search: '',
-          currentStatus: this.get('servers_filter_status') || 'all',
-          currentPlan: {
-            name: 'All',
-            code: 'all'
-          },
-          plans: [{
-            name: 'All',
-            code: 'all'
-          }],
-          statuses: ['all', 'active', 'no_active', 'no_comm'],
+    return {
+      copySucceeded: false,
+      isLoading: true,
+      filters: {
+        search: "",
+        currentStatus: this.get("servers_filter_status") || "all",
+        currentPlan: {
+          name: "All",
+          code: "all"
         },
-        newServer: {},
-        toDelete: {},
-        servers: []
+        plans: [
+          {
+            name: "All",
+            code: "all"
+          }
+        ],
+        statuses: ["all", "active", "no_active", "no_comm"]
+      },
+      newServer: {},
+      toDelete: {},
+      servers: []
+    };
+  },
+  methods: {
+    getImage(s) {
+      if (s.subscription.subscription_plan.code == "fiorentina") {
+        return require("./../assets/fiorentina.svg");
       }
+      if (s.subscription.subscription_plan.code == "pizza") {
+        return require("./../assets/pizza.svg");
+      }
+      if (s.subscription.subscription_plan.code == "crostino") {
+        return require("./../assets/crostino.svg");
+      }
+      if (s.subscription.subscription_plan.code == "lasagna") {
+        return require("./../assets/lasagna.svg");
+      }
+      return require("./../assets/trial.svg");
     },
-    methods: {
-      getImage(s) {
-        if (s.subscription.subscription_plan.code == 'fiorentina') {
-          return require('./../assets/fiorentina.svg')
-        }
-        if (s.subscription.subscription_plan.code == 'pizza') {
-          return require('./../assets/pizza.svg')
-        }
-        if (s.subscription.subscription_plan.code == 'crostino') {
-          return require('./../assets/crostino.svg')
-        }
-        if (s.subscription.subscription_plan.code == 'lasagna') {
-          return require('./../assets/lasagna.svg')
-        }
-        return require('./../assets/trial.svg')
-      },
-      handleCopy(status) {
-        this.copySucceeded = status
-      },
-      isExpired(date) {
-        return new Date().toISOString() > date
-      },
-      addServer() {
-        this.$http.post(this.$root.$options.api_scheme + this.$root.$options.api_host + '/api/ui/systems', {
-          notification: {
-            emails: [
-              this.get('logged_user').email || ''
-            ]
-          }
-        }, {
-          headers: {
-            'Authorization': 'Bearer ' + this.get('access_token', false) || ''
-          }
-        }).then(function (success) {
-          this.newServer = success.body
-          setTimeout(function () {
-            $('#newServerModal').modal('toggle')
-          }, 0)
-          this.listServers()
-        }, function (error) {
-          console.error(error)
-        });
-      },
-      planList() {
-        this.$http.get(this.$root.$options.api_scheme + this.$root.$options.api_host + '/api/ui/plans', {
-          headers: {
-            'Authorization': 'Bearer ' + this.get('access_token', false) || ''
-          }
-        }).then(function (success) {
-          this.filters.plans = this.filters.plans.concat(success.body)
-          this.filters.currentPlan = this.get('servers_filter_plan') || this.filters.plans[0]
-        }, function (error) {
-          console.error(error)
-        });
-      },
-      listServers() {
-        this.isLoading = true
-        this.$http.get(this.$root.$options.api_scheme + this.$root.$options.api_host + '/api/ui/systems', {
-          headers: {
-            'Authorization': 'Bearer ' + this.get('access_token', false) || ''
-          }
-        }).then(function (success) {
-          this.servers = success.body
-          this.isLoading = false
-        }, function (error) {
-          console.error(error)
-          this.servers = []
-          this.isLoading = false
-        });
-      },
-      clearFilters(filter) {
-        if (filter == 'all') {
-          this.filters.search = ''
-          this.filters.currentStatus = 'all'
-          this.set('servers_filter_status', 'all')
-          this.filters.currentPlan = {
-            name: 'All',
-            code: 'all'
-          }
-          this.set('servers_filter_plan', {
-            name: 'All',
-            code: 'all'
-          })
-        }
-
-        if (filter == 'search') {
-          this.filters.search = ''
-        }
-
-        if (filter == 'status') {
-          this.filters.currentStatus = 'all'
-          this.set('servers_filter_status', 'all')
-        }
-
-        if (filter == 'plan') {
-          this.filters.currentPlan = {
-            name: 'All',
-            code: 'all'
-          }
-          this.set('servers_filter_plan', {
-            name: 'All',
-            code: 'all'
-          })
-        }
-
-      },
-      setFilterStatus(status) {
-        this.filters.currentStatus = status
-        this.set('servers_filter_status', status)
-        this.filteredServers()
-      },
-      setFilterPlan(plan) {
-        this.filters.currentPlan = plan
-        this.set('servers_filter_plan', plan)
-        this.filteredServers()
-      },
-      filteredServers() {
-        var filter = {}
-        if (this.filters.currentStatus != 'all') {
-          filter['status'] = this.filters.currentStatus
-        }
-        if (this.filters.currentPlan.code != 'all') {
-          filter['subscription'] = {
-            subscription_plan: {
-              code: this.filters.currentPlan.code
+    handleCopy(status) {
+      this.copySucceeded = status;
+    },
+    isExpired(date) {
+      return new Date().toISOString() > date;
+    },
+    addServer() {
+      this.$http
+        .post(
+          this.$root.$options.api_scheme +
+            this.$root.$options.api_host +
+            "/api/ui/systems",
+          {
+            notification: {
+              emails: [this.get("logged_user").email || ""]
+            }
+          },
+          {
+            headers: {
+              Authorization: "Bearer " + this.get("access_token", false) || ""
             }
           }
-        }
-        var filtered = _.filter(this.servers, filter);
-        if (this.filters.search.length > 0) {
-          var context = this
-          filtered = _.filter(filtered, function (item) {
-            return item.hostname.toLowerCase().search(context.filters.search.toLowerCase()) >= 0 || item.public_ip.toLowerCase()
-              .search(context.filters.search.toLowerCase()) >= 0
-          })
-        }
-        return _.orderBy(filtered, ['hostname'], 'asc')
+        )
+        .then(
+          function(success) {
+            this.newServer = success.body;
+            setTimeout(function() {
+              $("#newServerModal").modal("toggle");
+            }, 0);
+            this.listServers();
+          },
+          function(error) {
+            console.error(error);
+          }
+        );
+    },
+    planList() {
+      this.$http
+        .get(
+          this.$root.$options.api_scheme +
+            this.$root.$options.api_host +
+            "/api/ui/plans",
+          {
+            headers: {
+              Authorization: "Bearer " + this.get("access_token", false) || ""
+            }
+          }
+        )
+        .then(
+          function(success) {
+            this.filters.plans = this.filters.plans.concat(success.body);
+            this.filters.currentPlan =
+              this.get("servers_filter_plan") || this.filters.plans[0];
+          },
+          function(error) {
+            console.error(error);
+          }
+        );
+    },
+    listServers() {
+      this.isLoading = true;
+      this.$http
+        .get(
+          this.$root.$options.api_scheme +
+            this.$root.$options.api_host +
+            "/api/ui/systems",
+          {
+            headers: {
+              Authorization: "Bearer " + this.get("access_token", false) || ""
+            }
+          }
+        )
+        .then(
+          function(success) {
+            this.servers = success.body;
+            this.isLoading = false;
+          },
+          function(error) {
+            console.error(error);
+            this.servers = [];
+            this.isLoading = false;
+          }
+        );
+    },
+    clearFilters(filter) {
+      if (filter == "all") {
+        this.filters.search = "";
+        this.filters.currentStatus = "all";
+        this.set("servers_filter_status", "all");
+        this.filters.currentPlan = {
+          name: "All",
+          code: "all"
+        };
+        this.set("servers_filter_plan", {
+          name: "All",
+          code: "all"
+        });
       }
+
+      if (filter == "search") {
+        this.filters.search = "";
+      }
+
+      if (filter == "status") {
+        this.filters.currentStatus = "all";
+        this.set("servers_filter_status", "all");
+      }
+
+      if (filter == "plan") {
+        this.filters.currentPlan = {
+          name: "All",
+          code: "all"
+        };
+        this.set("servers_filter_plan", {
+          name: "All",
+          code: "all"
+        });
+      }
+    },
+    setFilterStatus(status) {
+      this.filters.currentStatus = status;
+      this.set("servers_filter_status", status);
+      this.filteredServers();
+    },
+    setFilterPlan(plan) {
+      this.filters.currentPlan = plan;
+      this.set("servers_filter_plan", plan);
+      this.filteredServers();
+    },
+    filteredServers() {
+      var filter = {};
+      if (this.filters.currentStatus != "all") {
+        filter["status"] = this.filters.currentStatus;
+      }
+      if (this.filters.currentPlan.code != "all") {
+        filter["subscription"] = {
+          subscription_plan: {
+            code: this.filters.currentPlan.code
+          }
+        };
+      }
+      var filtered = _.filter(this.servers, filter);
+      if (this.filters.search.length > 0) {
+        var context = this;
+        filtered = _.filter(filtered, function(item) {
+          return (
+            item.hostname
+              .toLowerCase()
+              .search(context.filters.search.toLowerCase()) >= 0 ||
+            item.public_ip
+              .toLowerCase()
+              .search(context.filters.search.toLowerCase()) >= 0
+          );
+        });
+      }
+      return _.orderBy(filtered, ["hostname"], "asc");
     }
   }
-
+};
 </script>
 
 <style scoped>
-  .create-server {
-    float: right;
-    margin-top: -52px;
-    margin-right: 35px;
-  }
-
+.create-server {
+  float: right;
+  margin-top: -52px;
+  margin-right: 35px;
+}
 </style>

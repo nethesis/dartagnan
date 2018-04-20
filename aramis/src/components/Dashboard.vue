@@ -5,62 +5,58 @@
 </template>
 
 <script>
-  import LoginService from './../services/login';
-  import StorageService from './../services/storage';
-  import UtilService from './../services/util';
-  import {
-    setTimeout
-  } from 'timers';
+import LoginService from "./../services/login";
+import StorageService from "./../services/storage";
+import UtilService from "./../services/util";
+import { setTimeout } from "timers";
 
-  export default {
-    name: 'app',
-    mixins: [LoginService, StorageService, UtilService],
-    data() {
-      // is logged
-      this.$parent.isLogged = this.auth0CheckAuth()
-      this.$parent.user = this.get('logged_user') || null
+export default {
+  name: "app",
+  mixins: [LoginService, StorageService, UtilService],
+  data() {
+    // is logged
+    this.$parent.isLogged = this.auth0CheckAuth();
+    this.$parent.user = this.get("logged_user") || null;
 
-      this.initGraphics()
+    this.initGraphics();
 
-      // handle default route
-      this.$router.push({
-        path: '/servers'
-      })
+    // handle default route
+    this.$router.push({
+      path: "/servers"
+    });
 
-      return {
-        user: this.$parent.user,
-      }
+    return {
+      user: this.$parent.user
+    };
+  },
+  methods: {
+    getCurrentPath(route) {
+      return this.$route.path.split("/")[1] === route;
     },
-    methods: {
-      getCurrentPath(route) {
-        return this.$route.path.split('/')[1] === route
-      },
-      doLogin() {
-        this.auth0Login()
-      },
-      initGraphics() {
-        $('body').addClass('logged')
-        $('body').removeClass('not-logged')
-        setTimeout(function () {
-          $().setupVerticalNavigation(true);
-        }, 1000);
-        this.showBody()
-      },
-      resetGraphics() {
-        $('body').addClass('not-logged')
-        $('body').removeClass('logged')
-        window.location.reload()
-      },
-      showBody() {
-        $('body').show()
-        $('body').addClass('not-logged')
-      }
+    doLogin() {
+      this.auth0Login();
+    },
+    initGraphics() {
+      $("body").addClass("logged");
+      $("body").removeClass("not-logged");
+      setTimeout(function() {
+        $().setupVerticalNavigation(true);
+      }, 1000);
+      this.showBody();
+    },
+    resetGraphics() {
+      $("body").addClass("not-logged");
+      $("body").removeClass("logged");
+      window.location.reload();
+    },
+    showBody() {
+      $("body").show();
+      $("body").addClass("not-logged");
     }
   }
-
+};
 </script>
 
 <style scoped>
-
 
 </style>

@@ -31,12 +31,12 @@
                 :class="['fa', profile.email_verified ? 'fa-check' : 'fa-remove red']"></span>
             </div>
           </div>
-          <p class="card-pf-info text-center">
+          <div class="card-pf-info text-center">
             <strong>{{$t('profile.last_login')}}</strong> {{profile.updated_at | formatDate}}
             <div class="text-center">ID:
               <strong class="soft">{{profile.sub}}</strong>
             </div>
-          </p>
+          </div>
         </div>
       </div>
     </div>
@@ -118,111 +118,135 @@
 </template>
 
 <script>
-  import LoginService from './../services/login';
-  import StorageService from './../services/storage';
-  import UtilService from './../services/util';
-  import {
-    setTimeout
-  } from 'timers';
+import LoginService from "./../services/login";
+import StorageService from "./../services/storage";
+import UtilService from "./../services/util";
+import { setTimeout } from "timers";
 
-  export default {
-    name: 'alerts',
-    mixins: [LoginService, StorageService, UtilService],
-    data() {
-      setTimeout(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-      }, 500)
+export default {
+  name: "alerts",
+  mixins: [LoginService, StorageService, UtilService],
+  data() {
+    setTimeout(function() {
+      $('[data-toggle="tooltip"]').tooltip();
+    }, 500);
 
-      var updateBilling = false
-      if (this.$parent.action == 'updateBilling') {
-        updateBilling = true
-        this.delete('query_params')
-      }
+    var updateBilling = false;
+    if (this.$parent.action == "updateBilling") {
+      updateBilling = true;
+      this.delete("query_params");
+    }
 
-      // get country list
-      this.getCountryList()
+    // get country list
+    this.getCountryList();
 
-      // get billing info
-      this.getBillingInfo()
+    // get billing info
+    this.getBillingInfo();
 
-      return {
-        profile: this.get('logged_user'),
-        updateBilling: updateBilling,
-        billingInfo: {},
-        billingType: 'person',
-        billingEmpty: true,
-        countries: [],
-        isSaving: false,
-        isBillingLoading: true
-      }
-    },
-    methods: {
-      getBillingInfo() {
-        this.isBillingLoading = true
-        this.$http.get(this.$root.$options.api_scheme + this.$root.$options.api_host + '/api/ui/billings', {
-          headers: {
-            'Authorization': 'Bearer ' + this.get('access_token', false) || ''
-          }
-        }).then(function (success) {
-          this.isBillingLoading = false
-          this.billingEmpty = false
-          this.billingInfo = success.body
-          if (success.body.vat && success.body.vat.length > 0) {
-            this.billingType = 'business'
-          } else {
-            this.billingType = 'person'
-          }
-        }, function (error) {
-          this.billingEmpty = true
-          this.billingType = 'person'
-          this.isBillingLoading = false
-          console.error(error)
-        });
-      },
-      getCountryList() {
-        this.$http.get(this.$root.$options.api_scheme + this.$root.$options.api_host + '/api/ui/taxes', {
-          headers: {
-            'Authorization': 'Bearer ' + this.get('access_token', false) || ''
-          }
-        }).then(function (success) {
-          this.countries = success.body
-        }, function (error) {
-          console.error(error)
-        });
-      },
-      updateBillingInfo() {
-        this.isSaving = true
-        if (this.billingType == 'person') {
-          this.billingInfo.vat = ""
-        }
-        this.$http[this.billingEmpty ? 'post' : 'put'](this.$root.$options.api_scheme + this.$root.$options.api_host + '/api/ui/billings',
-          this.billingInfo, {
+    return {
+      profile: this.get("logged_user"),
+      updateBilling: updateBilling,
+      billingInfo: {},
+      billingType: "person",
+      billingEmpty: true,
+      countries: [],
+      isSaving: false,
+      isBillingLoading: true
+    };
+  },
+  methods: {
+    getBillingInfo() {
+      this.isBillingLoading = true;
+      this.$http
+        .get(
+          this.$root.$options.api_scheme +
+            this.$root.$options.api_host +
+            "/api/ui/billings",
+          {
             headers: {
-              'Authorization': 'Bearer ' + this.get('access_token', false) || ''
+              Authorization: "Bearer " + this.get("access_token", false) || ""
             }
-          }).then(function (success) {
-          this.isSaving = false
-          this.updateBilling = false
-          if (this.get('upgrade_ref', false)) {
-            this.$router.push({
-              path: '/servers'
-            })
           }
-        }, function (error) {
-          this.isSaving = false
-          console.error(error)
-        });
+        )
+        .then(
+          function(success) {
+            this.isBillingLoading = false;
+            this.billingEmpty = false;
+            this.billingInfo = success.body;
+            if (success.body.vat && success.body.vat.length > 0) {
+              this.billingType = "business";
+            } else {
+              this.billingType = "person";
+            }
+          },
+          function(error) {
+            this.billingEmpty = true;
+            this.billingType = "person";
+            this.isBillingLoading = false;
+            console.error(error);
+          }
+        );
+    },
+    getCountryList() {
+      this.$http
+        .get(
+          this.$root.$options.api_scheme +
+            this.$root.$options.api_host +
+            "/api/ui/taxes",
+          {
+            headers: {
+              Authorization: "Bearer " + this.get("access_token", false) || ""
+            }
+          }
+        )
+        .then(
+          function(success) {
+            this.countries = success.body;
+          },
+          function(error) {
+            console.error(error);
+          }
+        );
+    },
+    updateBillingInfo() {
+      this.isSaving = true;
+      if (this.billingType == "person") {
+        this.billingInfo.vat = "";
       }
+      this.$http[this.billingEmpty ? "post" : "put"](
+        this.$root.$options.api_scheme +
+          this.$root.$options.api_host +
+          "/api/ui/billings",
+        this.billingInfo,
+        {
+          headers: {
+            Authorization: "Bearer " + this.get("access_token", false) || ""
+          }
+        }
+      ).then(
+        function(success) {
+          this.isSaving = false;
+          this.updateBilling = false;
+          if (this.get("upgrade_ref", false)) {
+            this.$router.push({
+              path: "/servers"
+            });
+          }
+        },
+        function(error) {
+          this.isSaving = false;
+          console.error(error);
+        }
+      );
     }
   }
-
+};
 </script>
 
 <style scoped>
-  .left-spinner {
-    right: 110px;
-    position: absolute;
-    bottom: 62px;
-  }
-
+.left-spinner {
+  right: 110px;
+  position: absolute;
+  bottom: 62px;
+}
 </style>
