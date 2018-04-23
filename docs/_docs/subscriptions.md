@@ -19,23 +19,31 @@ client, see [nethserver-subscription](https://github.com/NethServer/nethserver-s
 
 ## Stable updates repositories
 
-Stable updates repositories are clones of NethServer and upstream YUM repositories.
-All updates are delayed for a week after they have been released from upstream,
-then gradually released to all subscribed machines using `tiers`.
+Stable updates repositories are clones of NethServer and upstream YUM
+repositories. Any RPM update is delayed for a week at least after it has been
+released by upstream, then it is gradually released to all the subscribed machines
+using `tiers`.
 
-A `tier` is a snapshot of a repository in a given time and updates flow from the `tier0` to `tier4`.
+A `tier` is a snapshot of a repository in a given time and updates flow from the
+tier 0 (`t0`) to tier 3 (`t3`).
 
 General rules:
 
-* Each machine is automatically associated to a `tier`.
+* Each machine is automatically associated to a tier.
 * Tiers are considered only by overnight/automated updates
 * Day-time/manual updates from system console or Software Center page always 
   point to the base tier
 
 #### When a specific RPM will be available on stable updates repositories?
 
-If the RPM follows the automated schedule, and is released during *week 1* in upstream repositories,
-then it is available during *week 2* in stable repositories. This is the automated overnight updates schedule:
+If the RPM follows the automated schedule, and is released during *week 0* by
+upstream repositories, then it is available during *week 2* from stable
+repositories.
+
+In other words, the **minimum age** of an RPM from stable repositories is **one
+week**.
+
+This is the automated overnight updates schedule:
 
 | tier | day |
 |---|---|

@@ -1,5 +1,11 @@
 # Porthos
 
+Porthos provides YUM repositories authentication, authorization and progressive 
+release of updates to individual clients.
+
+The basic rule of Porthos releases is that the **minimum age** of an RPM from
+stable repositories is **one week**.
+
 ## Installation
 
 On CentOS 7 - porthos,
