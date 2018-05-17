@@ -23,7 +23,7 @@
 . /etc/porthos/repos.conf
 
 for repo in ${!repos[@]}; do
-    /usr/local/bin/repo-head-init $repo &
+    /usr/local/bin/repo-head-init $* $repo &
 done
 
 wait

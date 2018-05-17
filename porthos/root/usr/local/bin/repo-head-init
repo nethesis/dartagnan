@@ -23,16 +23,35 @@
 set -e
 shopt -s nullglob extglob
 
+function exit_help ()
+{
+    echo -e "Usage:\n  $(basename $0) [-f] REPO_ID" 1>&2
+    exit 1
+}
+
+
+while getopts ":f" opt; do
+  case $opt in
+    f)
+      force=1
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit_help
+      ;;
+  esac
+done
+
 . /etc/porthos/repos.conf
 repo_id=$1
 if [[ -z ${repo_id} || -z "${repos[$repo_id]}" ]]; then
-    echo -e "Usage:\n  $(basename $0) REPO_ID" 1>&2
-    exit 1
+    echo "REPO_ID must be one of: " ${!repos[@]} >&2
+    exit_help
 fi
 
 head_dir=${dest_dir}/head/${repo_id}
 
-if [[ -d ${head_dir} ]]; then
+if [[ -n ${force} && -d ${head_dir} ]]; then
     echo "[ERROR] directory exists, did you mean repo-tier-pull? (${head_dir})"
     exit 1
 fi
