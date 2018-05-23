@@ -128,3 +128,4 @@ When upstream releases a new minor version,
 
 - fix the `repos.conf` configuration file with new release number / mirror location
 - run the initial synchronization `repo-bulk-hinit`
+- add the new release to `mirrorlist.php`
