@@ -121,8 +121,19 @@ func GetAlertHumanName(alertId string, locale string) string {
 	case "system":
 		if parts[1] == "heartbeat" && parts[2] == "link" {
 			return T("Link failed")
-		} else if parts[1] == "backup" && parts[2] == "failure" {
-			return T("Backup failed")
+		} else if strings.HasPrefix(parts[1], "backup") && parts[2] == "failure" {
+			backupNames := strings.Split(parts[1], "-")
+			backupName := strings.Join(backupNames[1:], "-")
+
+			if backupName == "" {
+				backupName = "backup-data"
+			}
+
+			if backupName == "backup-data" {
+				return T("Backup failed")
+			} else {
+				return T("Backup failed") + ": " + backupName
+			}
 		}
 	/*
 		load:load
