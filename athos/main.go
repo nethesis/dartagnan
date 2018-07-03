@@ -116,11 +116,14 @@ func main() {
 
 			systems.GET("/:system_id/upgrade_price", methods.UpgradePlanPrice)
 			systems.POST("/:system_id/upgrade", methods.UpgradePlan)
+
 		}
 
 		plans := ui.Group("/plans")
 		{
 			plans.GET("", methods.GetSubscriptionPlans)
+			plans.GET("/volume_discount", methods.VolumeDiscountPrice)
+
 		}
 
 		billings := ui.Group("/billings")

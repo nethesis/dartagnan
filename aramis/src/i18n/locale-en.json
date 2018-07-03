@@ -142,7 +142,12 @@
       "payment_error": "Error",
       "payment_error_details": "Something went wrong...",
       "full_price": "Full price",
-      "taxes": "Taxes"
+      "final_price": "Final price",
+      "more_than": "More than",
+      "active_licenses": "Active licenses",
+      "taxes": "Taxes",
+      "volume_discount": "Volume discount",
+      "annual_discount": "Annual discount"
     },
     "alerts": {
       "all": "All",

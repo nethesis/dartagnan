@@ -280,7 +280,6 @@ func RenewalPlan(c *gin.Context) {
 		return
 	}
 
-
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }
 
@@ -299,9 +298,10 @@ func UpgradePlanPrice(c *gin.Context) {
 	// calculate discount upgrade
 	daysDiff := system.Subscription.ValidUntil.Sub(time.Now().UTC())
 	discount := (daysDiff.Hours() / 24) * system.Subscription.SubscriptionPlan.Price / float64(system.Subscription.SubscriptionPlan.Period)
+	dicscountPerc := discount * 100 / newSubuscriptionPlan.Price
 	finalPrice := newSubuscriptionPlan.Price - discount
 
-	c.JSON(http.StatusOK, gin.H{"full_price": newSubuscriptionPlan.Price, "price": utils.Round(finalPrice, 0.5, 2), "name": newSubuscriptionPlan.Code})
+	c.JSON(http.StatusOK, gin.H{"discount": dicscountPerc, "full_price": newSubuscriptionPlan.Price, "price": utils.Round(finalPrice, 0.5, 2), "name": newSubuscriptionPlan.Code})
 }
 
 func UpgradePlan(c *gin.Context) {
@@ -353,7 +353,6 @@ func UpgradePlan(c *gin.Context) {
 		c.JSON(http.StatusConflict, gin.H{"message": "this plan is already associated with this server"})
 		return
 	}
-
 
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }

@@ -64,13 +64,41 @@
                   </div>
                   <div class="card-pf-item details-pay-item">
                     <span v-if="!onUpgradePriceCalc" class="card-pf-item-text">
-                      <strong>{{currentPlan.price > 0 ? currentPlan.price : 0}}€</strong>
-                      <span v-if="onUpgrade && currentPlan.price != currentPlan.full_price">({{$t('payment.full_price')}}: {{currentPlan.full_price > 0 ? currentPlan.full_price : 0}}€)</span>
-                      <span>+ {{$t('payment.taxes')}}</span>
+                      <strong>{{currentPlan.full_price > 0 ? currentPlan.full_price : 0}}€</strong>
                     </span>
                     <div v-if="onUpgradePriceCalc" class="spinner spinner-sm"></div>
                   </div>
                 </div>
+
+                <div v-if="onUpgrade && currentPlan.price != currentPlan.full_price" class="card-pf-items text-center">
+                  <div class="card-pf-item details-pay-item">
+                    <span class="card-pf-item-text">
+                      <strong>{{$t('payment.annual_discount')}}</strong>
+                    </span>
+                  </div>
+                  <div class="card-pf-item details-pay-item">
+                    <span v-if="!onUpgradePriceCalc" class="card-pf-item-text">
+                      <strong>{{discounts.annualDiscount}}%</strong>
+                    </span>
+                    <div v-if="onUpgradePriceCalc" class="spinner spinner-sm"></div>
+                  </div>
+                </div>
+
+                <div v-if="discounts.volumeDiscount != 0" class="card-pf-items text-center">
+                  <div class="card-pf-item details-pay-item">
+                    <span class="card-pf-item-text">
+                      <strong>{{$t('payment.volume_discount')}}</strong>
+                    </span>
+                  </div>
+                  <div class="card-pf-item details-pay-item">
+                    <span v-if="!onUpgradePriceCalc" class="card-pf-item-text">
+                      <strong>{{discounts.volumeDiscount}}%</strong>
+                      <span> (<strong>{{discounts.count}}</strong> {{$t('payment.active_licenses')}})</span>
+                    </span>
+                    <div v-if="onUpgradePriceCalc" class="spinner spinner-sm"></div>
+                  </div>
+                </div>
+
                 <div class="card-pf-items text-center">
                   <div class="card-pf-item details-pay-item">
                     <span class="card-pf-item-text">
@@ -82,6 +110,21 @@
                       obj.subscription.subscription_plan) | formatDate(false)}}</span>
                     <span v-if="onUpgrade && !onUpgradePriceCalc" class="card-pf-item-text">{{new Date().toISOString() | formatDate(false)}} - {{calculateSubscription(new Date().toISOString(),
                       currentPlan) | formatDate(false)}}</span>
+                    <div v-if="onUpgradePriceCalc" class="spinner spinner-sm"></div>
+                  </div>
+                </div>
+
+                <div class="card-pf-items text-center">
+                  <div class="card-pf-item details-pay-item">
+                    <span class="card-pf-item-text">
+                      <strong>{{$t('payment.final_price')}}</strong>
+                    </span>
+                  </div>
+                  <div class="card-pf-item details-pay-item">
+                    <span v-if="!onUpgradePriceCalc" class="card-pf-item-text">
+                      <strong>{{currentPlan.price}}€</strong>
+                      <span>+ {{$t('payment.taxes')}}</span>
+                    </span>
                     <div v-if="onUpgradePriceCalc" class="spinner spinner-sm"></div>
                   </div>
                 </div>
@@ -237,6 +280,11 @@ export default {
       markdownDescription: "",
       currentPlan: this.obj.subscription.subscription_plan,
       billingInfo: {},
+      discounts: {
+        volumeDiscount: 0,
+        count: 0,
+        annualDiscount: 0
+      },
       onUpgradePriceCalc: false,
       onUpgrade: false
     };
@@ -271,6 +319,8 @@ export default {
                 : this.plans[1];
             if (this.obj.subscription.subscription_plan.code == "trial") {
               this.currentPlan.full_price = this.plans[1].price;
+            } else {
+              this.currentPlan.full_price = this.currentPlan.price
             }
             this.markdownDescription = marked(
               this.obj.subscription.subscription_plan.description,
@@ -281,7 +331,33 @@ export default {
               this.obj.subscription.subscription_plan.code != "trial"
                 ? false
                 : true;
-            $("#paymentModalRenew-" + id).modal("toggle");
+
+            // check volume discounts
+            this.$http
+              .get(
+                this.$root.$options.api_scheme +
+                  this.$root.$options.api_host +
+                  "/api/ui/plans/volume_discount",
+                {
+                  headers: {
+                    Authorization:
+                      "Bearer " + this.get("access_token", false) || ""
+                  }
+                }
+              )
+              .then(
+                function(success) {
+                  this.currentPlan.price =
+                    this.currentPlan.price -
+                    this.currentPlan.full_price * success.body.discount / 100;
+                  this.discounts.volumeDiscount = success.body.discount;
+                  this.discounts.count = success.body.count;
+                  $("#paymentModalRenew-" + id).modal("toggle");
+                },
+                function(error) {
+                  console.error(error);
+                }
+              );
           },
           function(error) {
             this.$parent.$parent.action = "updateBilling";
@@ -327,14 +403,68 @@ export default {
           context.currentPlan = plan;
           context.currentPlan.price = data.price;
           context.currentPlan.full_price = data.full_price;
+          context.discounts.annualDiscount = Math.round(data.discount * 100) / 100;
           context.markdownDescription = marked(plan.description, {
             sanitize: true
           });
+
+          // check volume discounts
+          context.$http
+            .get(
+              context.$root.$options.api_scheme +
+                context.$root.$options.api_host +
+                "/api/ui/plans/volume_discount",
+              {
+                headers: {
+                  Authorization:
+                    "Bearer " + context.get("access_token", false) || ""
+                }
+              }
+            )
+            .then(
+              function(success) {
+                context.currentPlan.price =
+                  context.currentPlan.price -
+                  context.currentPlan.full_price * success.body.discount / 100;
+                context.discounts.volumeDiscount = success.body.discount;
+                context.discounts.count = success.body.count;
+              },
+              function(error) {
+                console.error(error);
+              }
+            );
         });
       } else {
         this.onUpgrade = false;
         this.currentPlan = plan;
+        this.currentPlan.full_price = plan.price;
         this.markdownDescription = marked(plan.description, { sanitize: true });
+
+        // check volume discounts
+          this.$http
+            .get(
+              this.$root.$options.api_scheme +
+                this.$root.$options.api_host +
+                "/api/ui/plans/volume_discount",
+              {
+                headers: {
+                  Authorization:
+                    "Bearer " + this.get("access_token", false) || ""
+                }
+              }
+            )
+            .then(
+              function(success) {
+                this.currentPlan.price =
+                  this.currentPlan.price -
+                  this.currentPlan.full_price * success.body.discount / 100;
+                this.discounts.volumeDiscount = success.body.discount;
+                this.discounts.count = success.body.count;
+              },
+              function(error) {
+                console.error(error);
+              }
+            );
       }
     },
     calculateUpgradePrice(plan, callback) {
@@ -442,5 +572,4 @@ export default {
 };
 </script>
 <style>
-
 </style>

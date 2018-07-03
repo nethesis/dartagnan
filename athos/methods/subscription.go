@@ -24,6 +24,7 @@ package methods
 
 import (
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -44,4 +45,37 @@ func GetSubscriptionPlans(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, subscriptionPlans)
+}
+
+func VolumeDiscountPrice(c *gin.Context) {
+	var systems []models.System
+	count := 0
+	discount := 0
+
+	creatorID := c.MustGet("authUser").(string)
+
+	db := database.Instance()
+
+	// count servers with payed subscriptions
+	db.Preload("Subscription.SubscriptionPlan").Where("creator_id = ?", creatorID).Find(&systems)
+	for _, system := range systems {
+		if system.Subscription.SubscriptionPlanID > 1 && system.Subscription.ValidUntil.After(time.Now().UTC()) {
+			count++
+		}
+	}
+
+	// calculate volume discount
+	if count > 5 && count <= 10 {
+		discount = 15
+	}
+
+	if count > 10 && count <= 20 {
+		discount = 20
+	}
+
+	if count > 20 {
+		discount = 25
+	}
+
+	c.JSON(http.StatusOK, gin.H{"discount": discount, "count": count})
 }
