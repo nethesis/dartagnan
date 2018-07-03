@@ -70,15 +70,15 @@
                   </div>
                 </div>
 
-                <div v-if="onUpgrade && currentPlan.price != currentPlan.full_price" class="card-pf-items text-center">
+                <div v-if="onUpgrade && currentPlan.price != currentPlan.full_price && discounts.annualDiscount > 0" class="card-pf-items text-center">
                   <div class="card-pf-item details-pay-item">
                     <span class="card-pf-item-text">
-                      <strong>{{$t('payment.annual_discount')}}</strong>
+                      <strong>{{$t('payment.previous_license_discount')}}</strong>
                     </span>
                   </div>
                   <div class="card-pf-item details-pay-item">
                     <span v-if="!onUpgradePriceCalc" class="card-pf-item-text">
-                      <strong>{{discounts.annualDiscount}}%</strong>
+                      <strong>{{discounts.annualDiscount}}€</strong>
                     </span>
                     <div v-if="onUpgradePriceCalc" class="spinner spinner-sm"></div>
                   </div>

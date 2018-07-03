@@ -14,17 +14,17 @@ CREATE TABLE subscription_plans (
 );
 
 INSERT INTO subscription_plans VALUES (1, 'trial', 'Trial Pizza', '30 Day Trial', 0, 30);
-INSERT INTO subscription_plans VALUES (2, 'crostino', 'Crostino', '- Stable Updates repository 
+INSERT INTO subscription_plans VALUES (2, 'crostino', 'Crostino', '- Stable Updates repository
 - Community Support
 - Support tickets not included / 100 € each', 48.00, 365);
-INSERT INTO subscription_plans VALUES (3, 'lasagna', 'Lasagna', '- Stable Updates repository 
+INSERT INTO subscription_plans VALUES (3, 'lasagna', 'Lasagna', '- Stable Updates repository
 - Professional support via Email + SSH
 - 3 support tickets/year included', 250.0, 365);
-INSERT INTO subscription_plans VALUES (4, 'fiorentina', 'Fiorentina', '- Stable Updates repository 
+INSERT INTO subscription_plans VALUES (4, 'fiorentina', 'Fiorentina', '- Stable Updates repository
 - Professional support via Email + SSH
 - 6 support tickets/year included
 - Monitoring Portal', 450.0, 365);
-INSERT INTO subscription_plans VALUES (5, 'pizza', 'Pizza', '- Stable Updates repository 
+INSERT INTO subscription_plans VALUES (5, 'pizza', 'Pizza', '- Stable Updates repository
 - Professional support via Email + SSH + Phone
 - 12 support tickets/year included
 - Monitoring Portal', 800.0, 365);
@@ -153,3 +153,14 @@ INSERT INTO taxes VALUES ('Slovakia',20);
 INSERT INTO taxes VALUES ('Finland',24);
 INSERT INTO taxes VALUES ('Sweden',25);
 INSERT INTO taxes VALUES ('United Kingdom',20);
+
+CREATE TABLE volume_discounts (
+  id serial not null primary key,
+  discount numeric,
+  min_volume numeric,
+  max_volume numeric
+);
+
+INSERT INTO volume_discounts VALUES (1, 15, 6, 10);
+INSERT INTO volume_discounts VALUES (2, 20, 11, 20);
+INSERT INTO volume_discounts VALUES (3, 25, 21, 50);

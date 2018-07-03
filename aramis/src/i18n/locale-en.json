@@ -147,7 +147,7 @@
       "active_licenses": "Active licenses",
       "taxes": "Taxes",
       "volume_discount": "Volume discount",
-      "annual_discount": "Annual discount"
+      "previous_license_discount": "Previous license discount"
     },
     "alerts": {
       "all": "All",

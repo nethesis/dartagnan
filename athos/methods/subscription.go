@@ -49,6 +49,7 @@ func GetSubscriptionPlans(c *gin.Context) {
 
 func VolumeDiscountPrice(c *gin.Context) {
 	var systems []models.System
+	var volumeDiscounts []models.VolumeDiscount
 	count := 0
 	discount := 0
 
@@ -65,16 +66,11 @@ func VolumeDiscountPrice(c *gin.Context) {
 	}
 
 	// calculate volume discount
-	if count > 5 && count <= 10 {
-		discount = 15
-	}
-
-	if count > 10 && count <= 20 {
-		discount = 20
-	}
-
-	if count > 20 {
-		discount = 25
+	db.Find(&volumeDiscounts)
+	for _, volumeDiscount := range volumeDiscounts {
+		if count >= volumeDiscount.MinVolume && count <= volumeDiscount.MaxVolume {
+			discount = volumeDiscount.Discount
+		}
 	}
 
 	c.JSON(http.StatusOK, gin.H{"discount": discount, "count": count})
