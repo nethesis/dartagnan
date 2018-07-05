@@ -120,7 +120,7 @@ func GetAlertHumanName(alertId string, locale string) string {
 	*/
 	case "system":
 		if parts[1] == "heartbeat" && parts[2] == "link" {
-			return T("Link failed")
+			return T("alert_link")
 		} else if strings.HasPrefix(parts[1], "backup") && parts[2] == "failure" {
 			backupNames := strings.Split(parts[1], "-")
 			backupName := strings.Join(backupNames[1:], "-")
@@ -130,62 +130,61 @@ func GetAlertHumanName(alertId string, locale string) string {
 			}
 
 			if backupName == "backup-data" {
-				return T("Backup failed")
+				return fmt.Sprintf("%s %s", T("alert_backup"), T("failed"))
 			} else {
-				return T("Backup failed") + ": " + backupName
+				return fmt.Sprintf("%s %s %s", T("alert_backup"), backupName, T("failed"))
 			}
 		}
 	/*
 		load:load
 	*/
 	case "load":
-		return T("System load")
+		return T("alert_load")
 	/*
 		service:([a-z0-9-@]+):stopped
 	*/
 	case "service":
-		return fmt.Sprintf("%s %s", strings.ToUpper(parts[1]), T(parts[2]))
+		return fmt.Sprintf("%s %s %s", T("alert_service"), strings.ToUpper(parts[1]), T(parts[2]))
 	/*
 		df:boot:percent_bytes:free
 		df:root:percent_bytes:free
 	*/
 	case "df":
 		if parts[1] == "boot" {
-			return T("Boot partition")
+			return T("alert_df_boot")
 		} else if parts[1] == "root" {
-			return T("Root partition")
+			return T("alert_df_root")
 		}
 	/*
 		swap:percent:free
 	*/
 	case "swap":
-		return T("SWAP partition")
+		return T("alert_swap")
 	/*
 		md:([a-z0-9-]+):md_disks:([a-z]+)
 	*/
 	case "md":
-		return fmt.Sprintf("%s %s %s", T("RAID"), parts[1], T("failed"))
+		return fmt.Sprintf("%s %s %s", T("alert_md"), parts[1], T("failed"))
 	/*
 		wan:([a-z0-9-]+):down
 	*/
 	case "wan":
-		return fmt.Sprintf("%s %s %s", T("WAN"), parts[1], T("down"))
+		return fmt.Sprintf("%s %s %s", T("alert_wan"), parts[1], T("down"))
 	/*
 		ping:ping:([a-z0-9-.]+)
 		ping:ping_([a-z]+):([a-z0-9-.]+)
 	*/
 	case "ping":
 		if strings.Index(parts[1], "_") > 0 {
-			n := strings.Split(parts[1], "_")
-			return fmt.Sprintf("%s %s (%s)", T("PING"), n[1], parts[2])
+			return fmt.Sprintf("%s %s %s", T("alert_droprate"), parts[2], T("high"))
 		} else {
-			return fmt.Sprintf("%s %s", T("PING"), parts[2])
+			return fmt.Sprintf("%s %s %s", T("alert_ping"), parts[2], T("high"))
 		}
 	/*
 		nut:ups:voltage:input
 	*/
 	case "nut":
-		return T("UPS on battery")
+		return T("alert_nut")
 	}
 	return alertId
 }

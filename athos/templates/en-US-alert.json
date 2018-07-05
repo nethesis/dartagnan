@@ -29,5 +29,69 @@
   {
     "id": "This is an automatic mail, please do not reply",
     "translation": "This is an automatic mail, please do not reply"
+  },
+  {
+    "id": "alert_link",
+    "translation": "Server communication failed"
+  },
+  {
+    "id": "alert_backup",
+    "translation": "Backup"
+  },
+  {
+    "id": "failed",
+    "translation": "failed"
+  },
+  {
+    "id": "stopped",
+    "translation": "stopped"
+  },
+  {
+    "id": "down",
+    "translation": "down"
+  },
+  {
+    "id": "high",
+    "translation": "high"
+  },
+  {
+    "id": "alert_load",
+    "translation": "High system load"
+  },
+  {
+    "id": "alert_service",
+    "translation": "Service"
+  },
+  {
+    "id": "alert_df_boot",
+    "translation": "Boot partion full"
+  },
+  {
+    "id": "alert_df_root",
+    "translation": "Root partion full"
+  },
+  {
+    "id": "alert_swap",
+    "translation": "Swap partion full"
+  },
+  {
+    "id": "alert_md",
+    "translation": "RAID"
+  },
+  {
+    "id": "alert_wan",
+    "translation": "WAN"
+  },
+  {
+    "id": "alert_ping",
+    "translation": "Ping latency"
+  },
+  {
+    "id": "alert_droprate",
+    "translation": "Ping droprate"
+  },
+  {
+    "id": "alert_nut",
+    "translation": "UPS on battery"
   }
 ]

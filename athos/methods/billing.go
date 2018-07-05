@@ -32,20 +32,21 @@ import (
 	"github.com/nethesis/dartagnan/athos/models"
 )
 
-
 /*
   Alghoritm for VAT, this applies to EU companies selling services
 
   - customer is a UE company: no VAT
-  - customer is a non-UE company: no VAT
-  - customer is a non-UE physical person: no VAT
-  - customer is UE pyhsical person: VAT from country of selling company
+  - customer is a UE private: VAT from country of selling company
+
+  - customer is a non-UE (Others countries) company or private: no VAT
+
+  - customer is private or company from selling company country: VAT from country of selling company
 */
 func GetVatPercentage(customerCountry string, customerVat string) int {
 	var tax models.Tax
 
-	// Customer is a company, no VAT applied
-	if customerVat != "" {
+	// Customer is a company not is the same country of billing, no VAT applied
+	if customerVat != "" && !(configuration.Config.Billing.Country == customerCountry) {
 		return 0
 	}
 
@@ -58,7 +59,7 @@ func GetVatPercentage(customerCountry string, customerVat string) int {
 	}
 
 	// Customer is a UE pyhsical person: VAT from company which deployed the application
-	db.Where("country = ?",configuration.Config.Billing.Country).First(&tax)
+	db.Where("country = ?", configuration.Config.Billing.Country).First(&tax)
 	return tax.Percentage
 }
 
@@ -89,13 +90,13 @@ func CreateBilling(c *gin.Context) {
 	}
 
 	billing := models.Billing{
-		CreatorID:    creatorID,
-		Name:         json.Name,
-		Address:      json.Address,
-		Country:      json.Country,
-		City:         json.City,
-		PostalCode:   json.PostalCode,
-		Vat:          json.Vat,
+		CreatorID:  creatorID,
+		Name:       json.Name,
+		Address:    json.Address,
+		Country:    json.Country,
+		City:       json.City,
+		PostalCode: json.PostalCode,
+		Vat:        json.Vat,
 	}
 
 	db := database.Instance()
@@ -140,4 +141,3 @@ func UpdateBilling(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
 }
-
