@@ -51,7 +51,7 @@ fi
 
 head_dir=${dest_dir}/head/${repo_id}
 
-if [[ -n ${force} && -d ${head_dir} ]]; then
+if [[ -z ${force} && -d ${head_dir} ]]; then
     echo "[ERROR] directory exists, did you mean repo-tier-pull? (${head_dir})"
     exit 1
 fi
