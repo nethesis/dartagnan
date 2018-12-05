@@ -25,7 +25,7 @@ $arch = $_GET['arch'];
 $repo = $_GET['repo'];
 $use_tier = isset($_GET['usetier']) && ! in_array($_GET['usetier'], array('$YUM0', 'no', '0', ''));
 
-$valid_version = in_array($version, array('7.4.1708', '7.5.1804'));
+$valid_version = in_array($version, array('7.4.1708', '7.5.1804', '7.6.1810'));
 $valid_arch = in_array($arch, array('x86_64'));
 $valid_repo = in_array($repo, array(
     'base',
