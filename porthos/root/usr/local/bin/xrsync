@@ -26,7 +26,7 @@ src=$1 ; shift
 dest=$1 ; shift
     
 for ((I=1; I < attempts; I++)); do
-    rsync -aqSHP --no-super --no-g --no-o "${@}" "${src}" "${dest}"
+    rsync -aqSH --no-super --no-g --no-o "${@}" "${src}" "${dest}"
     if [[ $? == 0 ]]; then
         exit 0
     fi
