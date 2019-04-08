@@ -252,7 +252,7 @@ func RenewalPlan(c *gin.Context) {
 	}
 
 	db := database.Instance()
-	db.Preload("Subscription").Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
+	db.Preload("Subscription.SubscriptionPlan").Where("id = ? AND creator_id = ?", systemID, creatorID).First(&system)
 
 	if system.ID == 0 {
 		c.JSON(http.StatusNotFound, gin.H{"message": "no system found!"})
