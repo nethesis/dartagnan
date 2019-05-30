@@ -24,6 +24,8 @@
 
 date_dir=d$(date +%Y%m%d)
 
+trap 'kill $(jobs -p)' INT HUP TERM
+
 for repo in ${!repos[@]}; do
     /usr/local/bin/repo-tier-pull ${repo} ${date_dir} &
 done
