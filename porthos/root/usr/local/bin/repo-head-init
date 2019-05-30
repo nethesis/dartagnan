@@ -57,4 +57,5 @@ if [[ -z ${force} && -d ${head_dir} ]]; then
 fi
 
 mkdir -p ${head_dir}
-exec /usr/local/bin/xrsync ${repos[$repo_id]}/ ${head_dir} --delete-after
+set -f
+exec /usr/local/bin/xrsync ${repos[$repo_id]}/ ${head_dir} --delete-after ${options[${repo_id}]}

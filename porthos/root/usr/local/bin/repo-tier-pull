@@ -48,4 +48,5 @@ fi
 
 mkdir -p ${backup_dir}
 touch ${dest_dir}/head
+set -f
 exec /usr/local/bin/xrsync ${repos[$repo_id]}/ ${head_dir} --delete-after --backup --backup-dir=${backup_dir} ${options[$repo_id]}
