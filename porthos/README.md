@@ -85,17 +85,33 @@ HTTP repository metadata query (HTTP Basic authentication required):
 * 502 - php-fpm connection failed, see `/var/log/nginx/error.log`
 * 500 - generic PHP error, see `/var/log/nginx/porthos-php-error.log`
 
-## Redis DB format
+## Porthos repository access control
 
-The `repomd.php` script expects the following storage format in redis DB:
+Access permissions to Porthos repositories are checked by `auth.php`.
+
+A special `subscription.json` API endpoint used by the Software center clients
+is implemented by `subscription.php`.
+
+All HTTP requests to access YUM repositories must be authenticated with HTTP
+Basic Auth. If the special `$config['legacy_auth']` is enabled, the HTTP
+username is considered a valid access token, and can be set as password value too.
+
+The `auth.php` and `subscription.php` scripts expects the following record
+format in redis DB:
 
     key: <system_id>
-    value: hash{ tier_id => <integer>, secret => <string> }
+    value: hash{ tier_id => <integer>, secret => <string>, icat => <string> }
 
-If `tier_id` is not set, the access is denied (403 - forbidden). For instance to create a key on athos
+If `tier_id` is not a number, the access is denied (403 - forbidden). For instance to create a key on athos
 
     redis-cli -p PORT
-    redis-cli PORT> HMSET 0ILD29RH-D78A-C444-1F82-EE92-3211-FC47-43AD-DQFD tier_id 2 secret S3Cr3t
+    redis-cli PORT> HMSET 0ILD29RH-D78A-C444-1F82-EE92-3211-FC47-43AD-DQFD tier_id 2 secret S3Cr3t icat cat1,cat2,cat3
+
+The `icat` field is a string of a comma separated list of YUM category
+identifiers (see the repository comps/groups for valid names). Its purpose is to
+show the products entitlement on the Software center page. It is used by
+`subscription.php` to return the included/excluded YUM categories list to the
+client. See also the `$config['categories']` parameter to configure it.
 
 ## Repository management commands
 
