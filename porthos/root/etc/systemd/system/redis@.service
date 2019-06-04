@@ -6,12 +6,14 @@ ConditionPathExists=/etc/redis-%i.conf
 
 [Service]
 Type=notify
-ExecStart=/usr/bin/redis-server /etc/redis-%i.conf --daemonize no
-ExecStop=/usr/bin/redis-cli -s /var/run/redis/%i.sock shutdown
+Environment="UNIXSOCK=%t/redis-%i/server.sock"
+ExecStartPre=/usr/bin/chcon -L -u system_u -t redis_var_run_t %t/redis-%i
+ExecStart=/usr/bin/redis-server /etc/redis-%i.conf --unixsocket $UNIXSOCK --loglevel debug --daemonize no
+ExecStop=/usr/bin/redis-cli -s $UNIXSOCK shutdown
 User=redis
 Group=nginx
-RuntimeDirectory=redis
-RuntimeDirectoryMode=0755
+RuntimeDirectory=redis-%i
+RuntimeDirectoryMode=0750
 LimitNOFILE=10240
 
 [Install]

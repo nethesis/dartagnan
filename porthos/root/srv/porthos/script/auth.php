@@ -1,6 +1,27 @@
 <?php
 
-include("lib.php");
+/*
+ * Copyright (C) 2019 Nethesis S.r.l.
+ * http://www.nethesis.it - nethserver@nethesis.it
+ *
+ * This script is part of Dartagnan.
+ *
+ * Dartagnan is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License,
+ * or any later version.
+ *
+ * Dartagnan is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with Dartagnan.  If not, see COPYING.
+ */
+
+require_once("lib.php");
+require_once("config-" . $_SERVER['PORTHOS_SITE'] . ".php");
 
 if ( ! isset($_SERVER['PHP_AUTH_USER'])) {
     header('WWW-Authenticate: Basic realm="subscription"');
@@ -12,16 +33,22 @@ if ( ! isset($_SERVER['PHP_AUTH_USER'])) {
 // Disable the Content-Type header in PHP, so that nginx x-accel can add its own
 ini_set('default_mimetype', FALSE);
 
-$access = get_access_descriptor($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
-
-if($access['tier_id'] === FALSE) {
-    exit_http(403);
-} elseif ($access['tier_id'] === '' || $access['secret'] != $_SERVER['PHP_AUTH_PW']) {
-    exit_http(403);
-} else {
-    if(basename($_SERVER['DOCUMENT_URI']) == 'repomd.xml') {
-        header('Cache-Control: private');
-    }
-    return_file('/t' . $access['tier_id'] . $_SERVER['DOCUMENT_URI']);
+// Mask any repo that does not belong to the site:
+if(! in_array(get_uri_part($_SERVER['DOCUMENT_URI'], 'repo'), $config['repositories'])) {
+    exit_http(404);
 }
 
+$access = get_access_descriptor($_SERVER['PHP_AUTH_USER']);
+$valid_credentials = $_SERVER['PHP_AUTH_PW'] === $access['secret'];
+if($config['legacy_auth']) {
+    $valid_credentials = $valid_credentials || $_SERVER['PHP_AUTH_USER'] ===  $_SERVER['PHP_AUTH_PW'];
+}
+if (! is_numeric($access['tier_id']) || ! $valid_credentials) {
+    exit_http(403);
+}
+
+if(basename($_SERVER['DOCUMENT_URI']) == 'repomd.xml') {
+    header('Cache-Control: private');
+}
+
+return_file('/t' . $access['tier_id'] . $_SERVER['DOCUMENT_URI']);
