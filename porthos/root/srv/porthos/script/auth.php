@@ -51,4 +51,25 @@ if(basename($_SERVER['DOCUMENT_URI']) == 'repomd.xml') {
     header('Cache-Control: private');
 }
 
-return_file('/t' . $access['tier_id'] . $_SERVER['DOCUMENT_URI']);
+
+if($access['tier_id'] < 0) {
+    $hash = 0;
+    foreach(str_split($_SERVER['PHP_AUTH_USER']) as $c) {
+        $hash += ord($c);
+    }
+    $hash = $hash % 256;
+    if($hash < 12) { // 5%
+        $tier_id = 0;
+    } elseif($hash < 38) { // 15%
+        $tier_id = 1;
+    } elseif($hash < 76) { // 30%
+        $tier_id = 2;
+    } else { // 50%
+        $tier_id = 3;
+    }
+    error_log(sprintf('[DEBUG] %s auto tier set to %s', $_SERVER['PHP_AUTH_USER'], $tier_id));
+} else {
+    $tier_id = intval($access['tier_id']);
+}
+
+return_file('/t' . $tier_id . $_SERVER['DOCUMENT_URI']);
