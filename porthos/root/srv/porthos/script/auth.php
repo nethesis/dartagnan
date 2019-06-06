@@ -34,7 +34,8 @@ if ( ! isset($_SERVER['PHP_AUTH_USER'])) {
 ini_set('default_mimetype', FALSE);
 
 // Mask any repo that does not belong to the site:
-if(! in_array(get_uri_part($_SERVER['DOCUMENT_URI'], 'repo'), $config['repositories'])) {
+$repo = get_uri_part($_SERVER['DOCUMENT_URI'], 'repo');
+if(! in_array($repo, $config['repositories'])) {
     exit_http(404);
 }
 
@@ -46,11 +47,6 @@ if($config['legacy_auth']) {
 if (! is_numeric($access['tier_id']) || ! $valid_credentials) {
     exit_http(403);
 }
-
-if(basename($_SERVER['DOCUMENT_URI']) == 'repomd.xml') {
-    header('Cache-Control: private');
-}
-
 
 if($access['tier_id'] < 0) {
     $hash = 0;
@@ -67,9 +63,18 @@ if($access['tier_id'] < 0) {
     } else { // 50%
         $tier_id = 3;
     }
-    error_log(sprintf('[DEBUG] %s auto tier set to %s', $_SERVER['PHP_AUTH_USER'], $tier_id));
 } else {
     $tier_id = intval($access['tier_id']);
+}
+
+if(basename($_SERVER['DOCUMENT_URI']) == 'repomd.xml') {
+    header('Cache-Control: private');
+    error_log(sprintf('[NOTICE] %s: %s using tier %s%s on repo %s',
+        $_SERVER['PORTHOS_SITE'],
+        $_SERVER['PHP_AUTH_USER'],
+        $tier_id,
+        isset($hash) ? ' (automatic)' : '', $repo)
+    );
 }
 
 return_file('/t' . $tier_id . $_SERVER['DOCUMENT_URI']);
