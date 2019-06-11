@@ -25,6 +25,13 @@ function return_file($file_path) {
     exit(0);
 }
 
+function exit_basic_auth_required() {
+    header('WWW-Authenticate: Basic realm="subscription"');
+    header('HTTP/1.1 401 Unauthorized');
+    echo "Provide system subscription credentials\n";
+    exit(0);
+}
+
 function exit_http($code) {
     header('X-Accel-Redirect: /error/' . $code);
     exit(1);
@@ -41,10 +48,8 @@ function get_access_descriptor($system_id) {
     return $descriptor;
 }
 
-function get_uri_part($uri, $part_name) {
-    $parts = array_combine(
-        array('version', 'repo', 'arch'),
-        array_slice(explode('/', $uri), 1, 3)
-    );
-    return isset($parts[$part_name]) ? $parts[$part_name] : FALSE;
+function parse_uri($uri) {
+    $parts = array('uri' => $uri);
+    preg_match('#^(?:/(?P<system_id>[\w-]{36,48}))?(?P<full_path>/(?P<version>[\d\.]+)/(?P<repo>[\w-]+)/(?P<arch>\w+)/(?P<rest>.*))$#', $uri, $parts);
+    return $parts;
 }

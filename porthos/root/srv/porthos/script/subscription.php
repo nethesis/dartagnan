@@ -23,22 +23,31 @@
 require_once("lib.php");
 require_once("config-" . $_SERVER['PORTHOS_SITE'] . ".php");
 
-if ( ! isset($_SERVER['PHP_AUTH_USER'])) {
-    header('WWW-Authenticate: Basic realm="subscription"');
-    header('HTTP/1.1 401 Unauthorized');
-    echo "Provide system subscription credentials\n";
-    exit;
+$uri = parse_uri($_SERVER['DOCUMENT_URI']);
+
+if ( isset($_SERVER['HTTPS']) && ! $uri['system_id'] && ! isset($_SERVER['PHP_AUTH_USER'])) {
+    exit_basic_auth_required();
+} else {
+    if($uri['system_id']) {
+        // override PHP authentication with system_id token:
+        $_SERVER['PHP_AUTH_USER'] = $uri['system_id'];
+        $_SERVER['PHP_AUTH_PW'] = $uri['system_id'];
+    }
 }
 
 // Disable the Content-Type header in PHP, so that nginx x-accel can add its own
 ini_set('default_mimetype', FALSE);
+
+if(! isset($_SERVER['PHP_AUTH_USER']) || ! isset($_SERVER['PHP_AUTH_PW'])) {
+    exit_http(403);
+}
 
 $access = get_access_descriptor($_SERVER['PHP_AUTH_USER']);
 $valid_credentials = $_SERVER['PHP_AUTH_PW'] === $access['secret'];
 if($config['legacy_auth']) {
     $valid_credentials = $valid_credentials || $_SERVER['PHP_AUTH_USER'] ===  $_SERVER['PHP_AUTH_PW'];
 }
-if( ! $access['icat'] || ! $valid_credentials) {
+if ($access['icat'] === FALSE || ! $valid_credentials) {
     exit_http(403);
 }
 

@@ -23,20 +23,28 @@
 require_once("lib.php");
 require_once("config-" . $_SERVER['PORTHOS_SITE'] . ".php");
 
-if ( ! isset($_SERVER['PHP_AUTH_USER'])) {
-    header('WWW-Authenticate: Basic realm="subscription"');
-    header('HTTP/1.1 401 Unauthorized');
-    echo "Provide system subscription credentials\n";
-    exit;
+$uri = parse_uri($_SERVER['DOCUMENT_URI']);
+
+if ( isset($_SERVER['HTTPS']) && ! $uri['system_id'] && ! isset($_SERVER['PHP_AUTH_USER'])) {
+    exit_basic_auth_required();
+} else {
+    if($uri['system_id']) {
+        // override PHP authentication with system_id token:
+        $_SERVER['PHP_AUTH_USER'] = $uri['system_id'];
+        $_SERVER['PHP_AUTH_PW'] = $uri['system_id'];
+    }
 }
 
 // Disable the Content-Type header in PHP, so that nginx x-accel can add its own
 ini_set('default_mimetype', FALSE);
 
 // Mask any repo that does not belong to the site:
-$repo = get_uri_part($_SERVER['DOCUMENT_URI'], 'repo');
-if(! in_array($repo, $config['repositories'])) {
+if(! in_array($uri['repo'], $config['repositories'])) {
     exit_http(404);
+}
+
+if(! isset($_SERVER['PHP_AUTH_USER']) || ! isset($_SERVER['PHP_AUTH_PW'])) {
+    exit_http(403);
 }
 
 $access = get_access_descriptor($_SERVER['PHP_AUTH_USER']);
@@ -67,14 +75,17 @@ if($access['tier_id'] < 0) {
     $tier_id = intval($access['tier_id']);
 }
 
-if(basename($_SERVER['DOCUMENT_URI']) == 'repomd.xml') {
+if(basename($uri['rest']) == 'repomd.xml') {
     header('Cache-Control: private');
-    error_log(sprintf('[NOTICE] %s: %s using tier %s%s on repo %s',
+    $flags = isset($_SERVER['HTTPS']) ? '+tls' : '-tls';
+    $flags .= isset($hash) ? '+auto_tier' : '';
+    error_log(sprintf('[NOTICE] %s: %s using tier %s on repo %s (%s)',
         $_SERVER['PORTHOS_SITE'],
         $_SERVER['PHP_AUTH_USER'],
         $tier_id,
-        isset($hash) ? ' (automatic)' : '', $repo)
+        $uri['repo'],
+        $flags)
     );
 }
 
-return_file('/t' . $tier_id . $_SERVER['DOCUMENT_URI']);
+return_file('/t' . $tier_id . $uri['full_path']);

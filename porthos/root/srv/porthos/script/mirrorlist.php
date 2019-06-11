@@ -25,15 +25,17 @@ require_once("config-" . $_SERVER['PORTHOS_SITE'] . ".php");
 $version = $_GET['nsversion'];
 $arch = $_GET['arch'];
 $repo = $_GET['repo'];
+$system_id = $_GET['systemid'];
 $use_tier = isset($_GET['usetier']) && ! in_array($_GET['usetier'], array('$YUM0', 'no', '0', ''));
 
 $valid_version = in_array($version, $config['versions']);
 $valid_arch = in_array($arch, $config['arches']);
 $valid_repo = in_array($repo, $config['repositories']);
+$valid_system_id = ! $system_id || preg_match('/^[\w-]+$/', $system_id);
 
 header('Content-type: text/plain; charset=UTF-8');
 
-if( ! $valid_arch || ! $valid_repo || ! $valid_version ) {
+if( ! $valid_arch || ! $valid_repo || ! $valid_version || ! $valid_system_id ) {
     header("HTTP/1.0 400 Bad request");
     error_log("[ERROR] invalid request: " . $_SERVER['REQUEST_URI']);
     echo "Invalid request\n";
@@ -44,6 +46,10 @@ if($use_tier) {
     $path = "autoupdate/";
 } else {
     $path = "stable/";
+}
+
+if($system_id) {
+    $path .= $system_id . '/';
 }
 
 foreach($config['base_urls'] as $baseurl) {
