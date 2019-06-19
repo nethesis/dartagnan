@@ -49,7 +49,17 @@ function get_access_descriptor($system_id) {
 }
 
 function parse_uri($uri) {
-    $parts = array('uri' => $uri);
-    preg_match('#^(?:/(?P<system_id>[\w-]{36,48}))?(?P<full_path>/(?P<version>[\d\.]+)/(?P<repo>[\w-]+)/(?P<arch>\w+)/(?P<rest>.*))$#', $uri, $parts);
+    $matches = array();
+    $parts = array(
+        'uri' => $uri,
+        'system_id' => NULL,
+        'full_path' => $uri,
+        'version' => NULL,
+        'repo' => NULL,
+        'arch' => NULL,
+        'rest' => NULL,
+    );
+    preg_match('#^(?:/(?P<system_id>[\w-]{36,48}))?(?P<full_path>/(?P<version>[\d\.]+)/(?P<repo>[\w-]+)/(?P<arch>\w+)/(?P<rest>.*))$#', $uri, $matches);
+    $parts = array_merge($parts, $matches);
     return $parts;
 }
