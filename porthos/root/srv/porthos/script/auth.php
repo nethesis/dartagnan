@@ -90,4 +90,8 @@ if(basename($uri['rest']) == 'repomd.xml') {
     );
 }
 
-return_file('/T' . $tier_id . $uri['full_path']);
+if($uri['prefix'] == 'autoupdate') {
+    return_file('/T' . $tier_id . $uri['full_path']);
+} else {
+    return_file('/head' . $uri['full_path']);
+}
