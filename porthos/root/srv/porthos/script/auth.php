@@ -90,4 +90,4 @@ if(basename($uri['rest']) == 'repomd.xml') {
     );
 }
 
-return_file('/t' . $tier_id . $uri['full_path']);
+return_file('/T' . $tier_id . $uri['full_path']);
