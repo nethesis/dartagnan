@@ -46,3 +46,9 @@ $config['arches'] = array('x86_64');
 //     if TRUE, authenticate by user name only. The password must be equal to the user name.
 //     if FALSE, check the user name and the password separately
 $config['legacy_auth'] = FALSE;
+
+// tier_id_base (int)
+//     this is the base/minimum tier_id value, when automatic tier_id (-1) is set.
+//     - be sure that (tier_id_base + 3) < "number of tiers"
+//     - run repo-bulk-shift N (with N = "number of tiers") to add more tier links
+$config['tier_id_base'] = 0;

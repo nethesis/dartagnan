@@ -72,6 +72,7 @@ if($access['tier_id'] < 0) {
     } else { // 50%
         $tier_id = 3;
     }
+    $tier_id += $config['tier_id_base'];
 } else {
     $tier_id = intval($access['tier_id']);
 }
