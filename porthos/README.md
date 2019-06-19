@@ -149,10 +149,10 @@ from `/etc/porthos.conf`. Upstream YUM rsync URLs are defined there.
 
 - `repo-bulk-hinit` runs initial synchronization from upstream repositories (-f disables the check for already existing directories)
 - `repo-bulk-pull` creates a snapshot date-dir (e.g. `d20180301`) under
-  `dest_dir` with differences from upstream repositories. Set `t0` to point at
+  `dest_dir` with differences from upstream repositories. It sets `t0` to point at
   it.
 - `repo-bulk-shift [N]` updates `t1` ... `tN` links by shifting tiers of one position
-  the optional `N`
+  the optional `N` parameter creates missing links up to N - 1.
 - `repo-bulk-cleanup` erases stale tier snapshots
 
 The following commands should not be invoked directly. They are intended to be
