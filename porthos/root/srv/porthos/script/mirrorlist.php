@@ -25,7 +25,7 @@ require_once("config-" . $_SERVER['PORTHOS_SITE'] . ".php");
 $version = $_GET['nsversion'];
 $arch = $_GET['arch'];
 $repo = $_GET['repo'];
-$system_id = $_GET['systemid'];
+$system_id = isset($_GET['systemid']) ? $_GET['systemid'] : '';
 $use_tier = isset($_GET['usetier']) && ! in_array($_GET['usetier'], array('$YUM0', 'no', '0', ''));
 
 $valid_version = in_array($version, $config['versions']);
