@@ -79,15 +79,17 @@ if($access['tier_id'] < 0) {
 
 if(basename($uri['rest']) == 'repomd.xml') {
     header('Cache-Control: private');
-    $flags = isset($_SERVER['HTTPS']) ? '+tls' : '-tls';
-    $flags .= isset($hash) ? '+auto_tier' : '';
-    error_log(sprintf('[NOTICE] %s: %s using tier %s on repo %s (%s)',
-        $_SERVER['PORTHOS_SITE'],
-        $_SERVER['PHP_AUTH_USER'],
-        $tier_id,
-        $uri['repo'],
-        $flags)
-    );
+    application_log(json_encode(array(
+        'application' => 'porthos-' . $_SERVER['PORTHOS_SITE'],
+        'connection' => $_SERVER['CONNECTION'] ?: '',
+        'msg_type' => 'repomdxml-auth',
+        'msg_severity' => 'notice',
+        'server_id' => $_SERVER['PHP_AUTH_USER'],
+        'repo' => $uri['repo'],
+        'tier_id' => $uri['prefix'] == 'autoupdate' ? NULL : $tier_id,
+        'tier_auto' => isset($hash),
+        'tls' => isset($_SERVER['HTTPS']),
+    )));
 }
 
 if($uri['prefix'] == 'autoupdate') {

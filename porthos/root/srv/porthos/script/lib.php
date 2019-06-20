@@ -20,6 +20,13 @@
  * along with Dartagnan.  If not, see COPYING.
  */
 
+function application_log($message, $priority = LOG_INFO) {
+    error_log($message);
+    openlog('porthos-' . $_SERVER['PORTHOS_SITE'], LOG_CONS | LOG_NDELAY, LOG_LOCAL3);
+    syslog($priority, $message);
+    closelog();
+}
+
 function return_file($file_path) {
     header('X-Accel-Redirect: ' . $file_path);
     exit(0);
@@ -40,7 +47,12 @@ function exit_http($code) {
 function get_access_descriptor($system_id) {
     $redis = new Redis();
     if( ! $redis->connect($_SERVER['PORTHOS_REDIS'])) {
-        error_log(sprintf('[ERROR] redis connect(%s) failed!', $_SERVER['PORTHOS_REDIS']));
+        application_log(json_encode(array(
+            'application' => 'porthos-' . $_SERVER['PORTHOS_SITE'],
+            'connection' => $_SERVER['CONNECTION'] ?: '',
+            'msg_type' => 'redis-connect',
+            'msg_severity' => 'alert',
+        )), LOG_ALERT);
         exit_http(503);
     };
     $descriptor = $redis->hMGet($system_id, array('tier_id', 'secret', 'icat'));

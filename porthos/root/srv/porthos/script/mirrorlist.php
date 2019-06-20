@@ -36,8 +36,7 @@ $valid_system_id = ! $system_id || preg_match('/^[\w-]+$/', $system_id);
 header('Content-type: text/plain; charset=UTF-8');
 
 if( ! $valid_arch || ! $valid_repo || ! $valid_version || ! $valid_system_id ) {
-    header("HTTP/1.0 400 Bad request");
-    error_log("[ERROR] invalid request: " . $_SERVER['REQUEST_URI']);
+    header("HTTP/1.0 400 Invalid request");
     echo "Invalid request\n";
     exit(1);
 }
