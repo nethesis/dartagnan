@@ -24,16 +24,35 @@ set -e
 
 . /etc/porthos/repos.conf
 
+function exit_help ()
+{
+    echo -e "Usage:\n  $(basename $0) [-f] REPO_ID DATE_DIR" 1>&2
+    exit 1
+}
+
+while getopts ":f" opt; do
+  case $opt in
+    f)
+      force=1
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit_help
+      ;;
+  esac
+done
+
+shift "$((OPTIND-1))"
+
 repo_id=$1
 date_dir=$2
+
 if [[ -z ${repo_id} || -z "${repos[$repo_id]}" || -z ${date_dir} ]]; then
-    echo -e "Usage:\n  $(basename $0) REPO_ID DATE_DIR" 1>&2
-    exit 1
+    exit_help
 fi
 
-
 head_dir=${dest_dir}/head/${repo_id}
-backup_dir=${dest_dir}/${date_dir}/$repo_id
+backup_dir=${dest_dir}/${date_dir}/${repo_id}
 
 repomd_file=${head_dir}/repodata/repomd.xml
 if [[ ! -f "${repomd_file}" ]]; then
@@ -42,10 +61,16 @@ if [[ ! -f "${repomd_file}" ]]; then
 fi
 
 if [[ -d ${backup_dir} ]]; then
-    echo "[WARNING] the repository backup directory already exists. Quit now ${backup_dir}"
-    exit 0
+    if [[ -n ${force} ]]; then
+        echo "[WARNING] the already existing repository backup directory ${date_dir}/${repo_id} has been removed"
+        rm -rf ${backup_dir}
+    else
+        echo "[WARNING] the repository backup directory already exists. Quit now ${backup_dir}"
+        exit 0
+    fi
 fi
 
 mkdir -p ${backup_dir}
 touch ${dest_dir}/head
+set -f
 exec /usr/local/bin/xrsync ${repos[$repo_id]}/ ${head_dir} --delete-after --backup --backup-dir=${backup_dir} ${options[$repo_id]}

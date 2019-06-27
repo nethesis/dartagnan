@@ -68,10 +68,16 @@ repository mirrors for the given parameters.
   `true`
 - `arch` system architecture, like `x86_64`
 
-HTTP repository metadata query (HTTP Basic authentication required):
+HTTP repository metadata query (SSL + HTTP Basic authentication required):
 
     https://m1.nethserver.com/autoupdate/<repo_version>/<repo_name>/<repo_arch>/repodata/repomd.xml
     https://m1.nethserver.com/stable/<repo_version>/<repo_name>/<repo_arch>/repodata/repomd.xml
+
+HTTP repository metadata query (username as path token, SSL not required):
+
+    http://m1.nethserver.com/autoupdate/<username>/<repo_version>/<repo_name>/<repo_arch>/repodata/repomd.xml
+    http://m1.nethserver.com/stable/<username>/<repo_version>/<repo_name>/<repo_arch>/repodata/repomd.xml
+
 
 * `autoupdate` returns data from the tier associated to the credentials provided
 * `stable` always returns data from `t0`
@@ -80,22 +86,61 @@ HTTP repository metadata query (HTTP Basic authentication required):
 
 * 401 - authorization required
 * 404 - resource not found
-* 403 - bad credentials or `tier_id` is false (disabled)
+* 403 - bad credentials or access denied conditions
 * 503 - redis connection failed, see `/var/log/nginx/porthos-php-error.log`
 * 502 - php-fpm connection failed, see `/var/log/nginx/error.log`
 * 500 - generic PHP error, see `/var/log/nginx/porthos-php-error.log`
 
-## Redis DB format
+## Porthos repository access control
 
-The `repomd.php` script expects the following storage format in redis DB:
+Access permissions to Porthos repositories are checked by `auth.php`.
+
+A special `subscription.json` API endpoint used by the Software center clients
+is implemented by `subscription.php`.
+
+All HTTP requests to access YUM repositories must be authenticated with HTTP
+Basic Auth. If the special `$config['legacy_auth']` is enabled, the HTTP
+username is considered a valid access token, and can be set as password value too.
+
+The access token can be passed also as an URL path component, like:
+
+    http://m1.nethserver.com/stable/<username>/<repo_version>/<repo_name>/<repo_arch>/repodata/repomd.xml
+
+The `auth.php` and `subscription.php` scripts expects the following record
+format in redis DB:
 
     key: <system_id>
-    value: hash{ tier_id => <integer>, secret => <string> }
+    value: hash{ tier_id => <value>, secret => <value>, icat => <value> }
 
-If `tier_id` is not set, the access is denied (403 - forbidden). For instance to create a key on athos
+For instance to create a key on athos
 
     redis-cli -p PORT
-    redis-cli PORT> HMSET 0ILD29RH-D78A-C444-1F82-EE92-3211-FC47-43AD-DQFD tier_id 2 secret S3Cr3t
+    redis-cli PORT> HMSET 0ILD29RH-D78A-C444-1F82-EE92-3211-FC47-43AD-DQFD tier_id 2 secret S3Cr3t icat cat1,cat2,cat3
+
+### `tier_id` field
+
+The `tier_id` value should be a number. If the value is negative, the tier
+number is calculated by an hash function, based on the system identifier. 
+
+If `tier_id` is not a number, both `auth.php` and `subscription.php` reply with
+403 - forbidden.
+
+### `icat` field
+
+The `icat` field is a string of a comma separated list of YUM category
+identifiers (refer to the repository comps/groups for valid names). Its purpose
+is to show the products entitlement on the Software center page. It is used by
+`subscription.php` to return the included/excluded YUM categories list to the
+client. See also the `$config['categories']` parameter to configure it. This
+field is ignored by `auth.php`.
+
+If `icat` field is not set, the `subscription.php` replies with 403 - forbidden.
+
+### `secret` field
+
+If `secret` field is not set, both `auth.php` and `subscription.php` reply with
+403 - forbidden, unless `$config['legacy_auth']` is enabled.
+
 
 ## Repository management commands
 
@@ -104,10 +149,10 @@ from `/etc/porthos.conf`. Upstream YUM rsync URLs are defined there.
 
 - `repo-bulk-hinit` runs initial synchronization from upstream repositories (-f disables the check for already existing directories)
 - `repo-bulk-pull` creates a snapshot date-dir (e.g. `d20180301`) under
-  `dest_dir` with differences from upstream repositories. Set `t0` to point at
+  `dest_dir` with differences from upstream repositories. It sets `t0` to point at
   it.
 - `repo-bulk-shift [N]` updates `t1` ... `tN` links by shifting tiers of one position
-  the optional `N`
+  the optional `N` parameter creates missing links up to N - 1.
 - `repo-bulk-cleanup` erases stale tier snapshots
 
 The following commands should not be invoked directly. They are intended to be

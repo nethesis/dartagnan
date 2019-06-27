@@ -24,13 +24,20 @@
 attempts=3
 src=$1 ; shift
 dest=$1 ; shift
-    
+
 for ((I=1; I < attempts; I++)); do
     rsync -aqSH --no-super --no-g --no-o "${@}" "${src}" "${dest}"
-    if [[ $? == 0 ]]; then
+    ret_rsync=$?
+    if [[ $ret_rsync == 0 ]]; then
         exit 0
+    elif [[ $ret_rsync == 1 ]]; then
+        echo "[ERROR] rsync bad syntax"
+        exit 1
+    elif [[ $ret_rsync == 20 ]]; then
+        echo "[ERROR] rsync signal caught"
+        exit 2
     fi
-    echo "[WARNING] rsync from $src failed; attempt $I of ${attempts}..." 1>&2
+    echo "[WARNING] rsync from $src failed with code $ret_rsync; attempt $I of ${attempts}..." 1>&2
     ((I < attempts)) && sleep $(($RANDOM % 30))
 done
 

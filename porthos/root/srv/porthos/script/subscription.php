@@ -38,13 +38,6 @@ if ( isset($_SERVER['HTTPS']) && ! $uri['system_id'] && ! isset($_SERVER['PHP_AU
 // Disable the Content-Type header in PHP, so that nginx x-accel can add its own
 ini_set('default_mimetype', FALSE);
 
-// Mask any repo/version/arch that does not belong to the site:
-if(! in_array($uri['repo'], $config['repositories'])
-    || ! in_array($uri['version'], $config['versions'])
-    || ! in_array($uri['arch'], $config['arches'])) {
-    exit_http(404);
-}
-
 if(! isset($_SERVER['PHP_AUTH_USER']) || ! isset($_SERVER['PHP_AUTH_PW'])) {
     exit_http(403);
 }
@@ -54,50 +47,17 @@ $valid_credentials = $_SERVER['PHP_AUTH_PW'] === $access['secret'];
 if($config['legacy_auth']) {
     $valid_credentials = $valid_credentials || $_SERVER['PHP_AUTH_USER'] ===  $_SERVER['PHP_AUTH_PW'];
 }
-$has_access_disabled = ! is_numeric($access['tier_id']);
+$has_access_disabled = ! is_numeric($access['tier_id']) || $access['icat'] === FALSE;
 if ($has_access_disabled || ! $valid_credentials) {
     exit_http(403);
 }
 
-if($access['tier_id'] < 0) {
-    $hash = 0;
-    foreach(str_split($_SERVER['PHP_AUTH_USER']) as $c) {
-        $hash += ord($c);
-    }
-    $hash = $hash % 256;
-    if($hash < 12) { // 5%
-        $tier_id = 0;
-    } elseif($hash < 38) { // 15%
-        $tier_id = 1;
-    } elseif($hash < 76) { // 30%
-        $tier_id = 2;
-    } else { // 50%
-        $tier_id = 3;
-    }
-    $tier_id += $config['tier_id_base'];
-} else {
-    $tier_id = intval($access['tier_id']);
-}
+$include_categories = array_filter(explode(',', $access['icat']));
+$exclude_categories = array_values(array_diff($config['categories'], $include_categories));
 
-if(basename($uri['rest']) == 'repomd.xml') {
-    header('Cache-Control: private');
-    application_log(json_encode(array(
-        'application' => 'porthos-' . $_SERVER['PORTHOS_SITE'],
-        'connection' => $_SERVER['CONNECTION'] ?: '',
-        'msg_type' => 'repomdxml-auth',
-        'msg_severity' => 'notice',
-        'server_id' => $_SERVER['PHP_AUTH_USER'],
-        'repo' => $uri['repo'],
-        'version' => $uri['version'],
-        'arch' => $uri['arch'],
-        'tier_id' => $uri['prefix'] == 'autoupdate' ? NULL : $tier_id,
-        'tier_auto' => isset($hash),
-        'tls' => isset($_SERVER['HTTPS']),
-    )));
-}
-
-if($uri['prefix'] == 'autoupdate') {
-    return_file('/T' . $tier_id . $uri['full_path']);
-} else {
-    return_file('/head' . $uri['full_path']);
-}
+header('Content-type: application/json; charset=UTF-8');
+echo json_encode(array(
+    'fmt_version' => 1,
+    'include_categories' => $include_categories,
+    'exclude_categories' => $exclude_categories,
+));
