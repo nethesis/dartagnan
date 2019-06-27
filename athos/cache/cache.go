@@ -23,7 +23,6 @@ package cache
 
 import (
 	"fmt"
-	"hash/fnv"
 	"time"
 
 	"github.com/mediocregopher/radix.v2/redis"
@@ -43,9 +42,6 @@ func Cache() *redis.Client {
 }
 
 func setRedisRecord(system models.System, client *redis.Client) (bool, string) {
-	// Use 4 tiers
-	tiers := uint32(4)
-
 	now := time.Now()
 	difference := system.Subscription.ValidUntil.Sub(now).Seconds()
 	err := client.Cmd("HMSET", system.UUID, "tier_id", "-1", "secret", system.Secret, "EX", int(difference)).Err
