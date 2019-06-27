@@ -48,7 +48,7 @@ func setRedisRecord(system models.System, client *redis.Client) (bool, string) {
 
 	now := time.Now()
 	difference := system.Subscription.ValidUntil.Sub(now).Seconds()
-	err := client.Cmd("HMSET", system.UUID, "tier_id", CalculateTier(system.UUID, tiers), "secret", system.Secret, "EX", int(difference)).Err
+	err := client.Cmd("HMSET", system.UUID, "tier_id", "-1", "secret", system.Secret, "EX", int(difference)).Err
 	if err != nil {
 		return false, fmt.Sprintf("Can't save '%s' system inside Redis: %s", system.UUID, err)
 	}
@@ -66,14 +66,6 @@ func deleteRedisRecord(uuid string, client *redis.Client) (bool, string) {
 		return false, fmt.Sprintf("Can't delete '%s' system inside Redis: %s", uuid, err)
 	}
 	return true, ""
-}
-
-func CalculateTier(uuid string, tiers uint32) uint32 {
-	h := fnv.New32a()
-	h.Write([]byte(uuid))
-	tier := h.Sum32() % tiers
-
-	return tier
 }
 
 func SetValidSystem(system models.System) bool {
