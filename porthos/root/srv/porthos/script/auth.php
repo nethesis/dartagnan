@@ -38,8 +38,10 @@ if ( isset($_SERVER['HTTPS']) && ! $uri['system_id'] && ! isset($_SERVER['PHP_AU
 // Disable the Content-Type header in PHP, so that nginx x-accel can add its own
 ini_set('default_mimetype', FALSE);
 
-// Mask any repo that does not belong to the site:
-if(! in_array($uri['repo'], $config['repositories'])) {
+// Mask any repo/version/arch that does not belong to the site:
+if(! in_array($uri['repo'], $config['repositories'])
+    || ! in_array($uri['version'], $config['versions'])
+    || ! in_array($uri['arch'], $config['arches'])) {
     exit_http(404);
 }
 
@@ -86,6 +88,8 @@ if(basename($uri['rest']) == 'repomd.xml') {
         'msg_severity' => 'notice',
         'server_id' => $_SERVER['PHP_AUTH_USER'],
         'repo' => $uri['repo'],
+        'version' => $uri['version'],
+        'arch' => $uri['arch'],
         'tier_id' => $uri['prefix'] == 'autoupdate' ? NULL : $tier_id,
         'tier_auto' => isset($hash),
         'tls' => isset($_SERVER['HTTPS']),
