@@ -25,15 +25,21 @@ shopt -s nullglob extglob
 
 function exit_help ()
 {
-    echo -e "Usage:\n  $(basename $0) [-f] REPO_ID" 1>&2
+    echo -e "Usage:\n  $(basename $0) [-f] [-n] REPO_ID" 1>&2
+    echo "  -f force" 1>&2
+    echo "  -n never delete files during rsync" 1>&2
     exit 1
 }
 
+deletearg="--delete-after"
 
-while getopts ":f" opt; do
+while getopts "fn" opt; do
   case $opt in
     f)
       force=1
+      ;;
+    n)
+      deletearg=""
       ;;
     \?)
       echo "Invalid option: -$OPTARG" >&2
@@ -46,6 +52,7 @@ shift "$((OPTIND-1))"
 
 . /etc/porthos/repos.conf
 repo_id=$1
+shift
 if [[ -z ${repo_id} || -z "${repos[$repo_id]}" ]]; then
     echo "REPO_ID must be one of: " ${!repos[@]} >&2
     exit_help
@@ -60,4 +67,4 @@ fi
 
 mkdir -p ${head_dir}
 set -f
-exec /usr/local/bin/xrsync ${repos[$repo_id]}/ ${head_dir} --delete-after ${options[${repo_id}]}
+exec /usr/local/bin/xrsync ${repos[$repo_id]}/ ${head_dir} ${deletearg} ${options[${repo_id}]} $*
