@@ -82,11 +82,8 @@ if($access['tier_id'] < 0) {
 if(basename($uri['rest']) == 'repomd.xml') {
     header('Cache-Control: private');
     application_log(json_encode(array(
-        'application' => 'porthos-' . $_SERVER['PORTHOS_SITE'],
         'connection' => $_SERVER['CONNECTION'] ?: '',
-        'msg_type' => 'repomdxml-auth',
-        'msg_severity' => 'notice',
-        'server_id' => $_SERVER['PHP_AUTH_USER'],
+        'system_id' => $_SERVER['PHP_AUTH_USER'],
         'repo' => $uri['repo'],
         'version' => $uri['version'],
         'arch' => $uri['arch'],
