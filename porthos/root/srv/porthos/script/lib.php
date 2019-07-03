@@ -22,7 +22,7 @@
 
 function application_log($message, $priority = LOG_INFO) {
     error_log($message);
-    openlog('porthos-' . $_SERVER['PORTHOS_SITE'], LOG_CONS | LOG_NDELAY, LOG_LOCAL3);
+    openlog('php', LOG_CONS | LOG_NDELAY, LOG_LOCAL3);
     syslog($priority, $message);
     closelog();
 }
