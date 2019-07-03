@@ -85,10 +85,11 @@ if(basename($uri['rest']) == 'repomd.xml') {
         'porthos_site' => $_SERVER['PORTHOS_SITE'],
         'connection' => $_SERVER['CONNECTION'] ?: '',
         'system_id' => $_SERVER['PHP_AUTH_USER'],
+        'remote_addr' => $_SERVER['REMOTE_ADDR'],
         'repo' => $uri['repo'],
         'version' => $uri['version'],
         'arch' => $uri['arch'],
-        'tier_id' => $uri['prefix'] == 'autoupdate' ? NULL : $tier_id,
+        'tier_id' => $uri['prefix'] == 'autoupdate' ? $tier_id : NULL,
         'tier_auto' => isset($hash),
         'tls' => isset($_SERVER['HTTPS']),
     )));
