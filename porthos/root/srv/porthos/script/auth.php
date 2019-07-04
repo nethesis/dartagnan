@@ -55,9 +55,6 @@ if($config['legacy_auth']) {
     $valid_credentials = $valid_credentials || $_SERVER['PHP_AUTH_USER'] ===  $_SERVER['PHP_AUTH_PW'];
 }
 $has_access_disabled = ! is_numeric($access['tier_id']);
-if ($has_access_disabled || ! $valid_credentials) {
-    exit_http(403);
-}
 
 if($access['tier_id'] < 0) {
     $hash = 0;
@@ -92,7 +89,12 @@ if(basename($uri['rest']) == 'repomd.xml') {
         'tier_id' => $uri['prefix'] == 'autoupdate' ? $tier_id : NULL,
         'tier_auto' => isset($hash),
         'tls' => isset($_SERVER['HTTPS']),
+        'auth_response' => ! $valid_credentials ? 'bad_credentials' : $has_access_disabled ? 'bad_access' : 'pass',
     )));
+}
+
+if ($has_access_disabled || ! $valid_credentials) {
+    exit_http(403);
 }
 
 if($uri['prefix'] == 'autoupdate') {
