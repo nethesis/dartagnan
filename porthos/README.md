@@ -180,6 +180,8 @@ fixed before being pulled in locally. In that case run `repo-head-init` as follo
 
     repo-head-init -n -f 7.6.1810/nethserver-updates/x86_64
 
+The `-n` flag preserves local files from deletion, whilst `-f` forces the
+command to run even if the repository was already initialized.
 
 ## Automated schedule
 
