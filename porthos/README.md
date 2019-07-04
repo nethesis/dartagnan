@@ -145,7 +145,7 @@ If `secret` field is not set, both `auth.php` and `subscription.php` reply with
 ## Repository management commands
 
 The `repo-*` are a set of Bash commands that include (source) the configuration
-from `/etc/porthos.conf`. Upstream YUM rsync URLs are defined there.
+from `/etc/porthos/repos.conf`. Upstream YUM rsync URLs are defined there.
 
 - `repo-bulk-hinit` runs initial synchronization from upstream repositories (-f disables the check for already existing directories)
 - `repo-bulk-pull` creates a snapshot date-dir (e.g. `d20180301`) under
@@ -155,12 +155,31 @@ from `/etc/porthos.conf`. Upstream YUM rsync URLs are defined there.
   the optional `N` parameter creates missing links up to N - 1.
 - `repo-bulk-cleanup` erases stale tier snapshots
 
-The following commands should not be invoked directly. They are intended to be
-called by the commands above.
+The following commands should not be invoked directly normally:
 
-- `repo-head-init`  initial synchronization from a specific upstream repo
-- `repo-tier-pull`  upstream snapshot for a specific repo
-- `xrsync` run rsync and try to repeat the operation if fails
+- `repo-head-init`  initial/override synchronization of head from a specific upstream repo
+- `repo-head-rollback` rollback head to a previous snapshot for a specific repo
+- `repo-tier-pull`  create a new upstream snapshot for a specific repo
+- `xrsync` run rsync safely, trying to repeat the operation if it fails
+
+A **rollback action** for a given repository consists into seeking the
+most recent snapshot and moving it back to the head position. YUM metadata and
+removed RPMs are merged, reverting the head to the past snapshot state. For
+instance:
+
+    repo-head-rollback 7.6.1810/nethserver-updates/x86_64
+
+The command above rolls back the `head/` directory to the most recent, non-empty
+snapshot of `nethserver-updates`. The command can be invoked multiple times, but
+it fails as soon as no snapshot is found, or if an invalid repository identifier
+is issued.
+
+Some times it is desirable to re-sync the head repository, without generating a
+new snapshot, like `repo-tier-pull` does. That happens if an upstream repo was
+fixed before being pulled in locally. In that case run `repo-head-init` as follow:
+
+    repo-head-init -n -f 7.6.1810/nethserver-updates/x86_64
+
 
 ## Automated schedule
 
@@ -173,4 +192,4 @@ When upstream releases a new minor version,
 
 - fix the `repos.conf` configuration file with new release number / mirror location
 - run the initial synchronization `repo-bulk-hinit`
-- add the new release to `mirrorlist.php`
+- add the new release to `config-porthos.php`
