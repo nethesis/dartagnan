@@ -1,0 +1,64 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2019 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+function exit_help ()
+{
+    echo -e "Usage:\n  $(basename "$0") DIR/REPO_ID [DIR/REPO_ID]..." 1>&2
+    exit 1
+}
+
+. /etc/porthos/repos.conf
+
+cd ${dest_dir} || exit 1
+
+if (( $# < 1 )); then
+    echo "[ERROR] missing DIR/REPO_ID argument(s)" 1>&2
+    exit_help;
+fi
+
+errors=0
+
+for path in "${@}"; do
+    snapshot=${path/\/*}
+    repo_id=${path:$[${#snapshot} + 1]}
+    if [[ ${snapshot} = "head" ]]; then
+        echo "[WARNING] ${repo_id} cannot be deleted from head"
+        continue
+    elif [[ ! -d ${snapshot} ]]; then
+        echo "[ERROR] invalid DIR part in ${path}" 1>&2
+        ((++errors))
+        continue
+    elif [[ -z ${repo_id} || -z ${repos[$repo_id]} ]]; then
+        echo "[ERROR] invalid REPO_ID part in ${path}" 1>&2
+        ((++errors))
+        continue
+    fi
+
+    if [[ -f ${path}/repodata/repomd.xml ]]; then
+        rm -f ${path}/repodata/repomd.xml ${path}/repodata/repomd.xml.asc
+        echo "[NOTICE] deleted repo metadata ${repo_id} from snapshot ${snapshot}"
+    fi
+done
+
+if ((errors > 0)); then
+    exit 1
+fi
