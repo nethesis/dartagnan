@@ -1,0 +1,56 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2019 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+function exit_help ()
+{
+    echo -e "Usage:\n  $(basename "$0") REPO_ID [additional rsync opts]" 1>&2
+    exit 1
+}
+
+. /etc/porthos/repos.conf
+
+cd ${dest_dir} || exit 1
+
+repo_id=$1; shift
+
+if [[ -z ${repo_id} || -z ${repos[$repo_id]} ]]; then
+    echo "[ERROR] invalid REPO_ID argument" 1>&2
+    exit_help;
+fi
+
+tiers=( t[0-9] )
+
+for tier in "${tiers[@]}"; do
+    if [[ -f ${tier}/${repo_id}/repodata/repomd.xml ]]; then
+        rsync --remove-source-files -ai "${@}" ${tier}/${repo_id}/ head/${repo_id}
+        if [[ $? == 0 ]]; then
+            echo "[NOTICE] ${repo_id} repository was rolled back to snapshot $(readlink ${tier}) (${tier})"
+            exit 0
+        else
+            echo "[ERROR] rsync error" 1>&2
+            exit 1
+        fi
+    fi
+done
+
+echo "[ERROR] Cannot find any past snapshot of ${repo_id}. Aborted." 1>&2
+exit 1
