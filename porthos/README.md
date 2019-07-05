@@ -147,19 +147,23 @@ If `secret` field is not set, both `auth.php` and `subscription.php` reply with
 The `repo-*` are a set of Bash commands that include (source) the configuration
 from `/etc/porthos/repos.conf`. Upstream YUM rsync URLs are defined there.
 
-- `repo-bulk-hinit` runs initial synchronization from upstream repositories (-f disables the check for already existing directories)
+The following commands are executed automatically, as defined in `porthos.cron`:
+
 - `repo-bulk-pull` creates a snapshot date-dir (e.g. `d20180301`) under
   `dest_dir` with differences from upstream repositories. It sets `t0` to point at
   it.
 - `repo-bulk-shift [N]` updates `t1` ... `tN` links by shifting tiers of one position
   the optional `N` parameter creates missing links up to N - 1.
-- `repo-bulk-cleanup` erases stale tier snapshots
+- `repo-bulk-cleanup` erases stale snapshots directories
 
-The following commands should not be invoked directly normally:
+The following commands are designed for Porthos initialization, to recover from errors, or implement low-level actions:
 
+- `repo-bulk-hinit` runs initial synchronization from upstream repositories (-f disables the check for already existing directories)
 - `repo-head-init`  initial/override synchronization of head from a specific upstream repo
-- `repo-head-rollback` rollback head to a previous snapshot for a specific repo
+- `repo-head-rollback` roll back head to a previous snapshot for a specific repo
 - `repo-tier-pull`  create a new upstream snapshot for a specific repo
+- `repo-tier-delete`  delete repomd.xml from a given tier or snapshot
+- `repo-rpm-lookup`  seek the given RPM in every snapshot for a given repository
 - `xrsync` run rsync safely, trying to repeat the operation if it fails
 
 A **rollback action** for a given repository consists into seeking the
@@ -176,12 +180,29 @@ is issued.
 
 Some times it is desirable to re-sync the head repository, without generating a
 new snapshot, like `repo-tier-pull` does. That happens if an upstream repo was
-fixed before being pulled in locally. In that case run `repo-head-init` as follow:
+fixed before being shifted. In that case run `repo-head-init` as follow:
 
     repo-head-init -n -f 7.6.1810/nethserver-updates/x86_64
 
 The `-n` flag preserves local files from deletion, whilst `-f` forces the
 command to run even if the repository was already initialized.
+
+If one or more snapshots contain a bogus RPM it is possible to delete the whole
+repository metadata (repomd.xml) file with the following command:
+
+    repo-tier-delete d20190702/7.6.1810/nethserver-updates/x86_64 d20190630/7.6.1810/nethserver-updates/x86_64
+
+The correct snapshot (or tier) name can be found starting from the RPM name with:
+
+    repo-rpm-lookup bogus-rpm-1.2.3-1.ns7.noarch.rpm
+    d20190702/7.6.1810/nethserver-updates/x86_64
+    d20190630/7.6.1810/nethserver-updates/x86_64
+
+The two commands can be combined together with `xargs`:
+
+    repo-rpm-lookup bogus-rpm-1.2.3-1.ns7.noarch.rpm | xargs -- repo-tier-delete
+
+If the RPM is found under `head/`, `repo-tier-delete` safely ignores it.
 
 ## Automated schedule
 

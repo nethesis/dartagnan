@@ -1,0 +1,52 @@
+#!/bin/bash
+
+#
+# Copyright (C) 2019 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+function exit_help ()
+{
+    echo -e "Usage:\n  $(basename "$0") REPO_ID [additional rsync opts]" 1>&2
+    exit 1
+}
+
+if [[ ! -x /usr/bin/xpath ]]; then
+    echo "[ERROR] no xpath binary found" 1>&2
+    exit 1
+fi
+
+. /etc/porthos/repos.conf
+
+cd ${dest_dir} || exit 1
+
+for repomd in $(find . -name 'repomd.xml'); do
+    repopath=${repomd/%\/repodata\/repomd.xml}
+    primarydb="${repopath}/$(/usr/bin/xpath ${repomd} "string(//data[@type='primary']/location/@href)" 2>/dev/null)"
+    if [[ ! -f ${primarydb} ]]; then
+        # Search in other places too! Upstream uses to retain old DBs for a while to minimize HTTP caching issues.
+        primarydb="$(find . -name $(basename ${primarydb}))"
+        if [[ ! -f ${primarydb} ]]; then
+            echo "[WARNING] could not find primarydb in ${repopath}: ${primarydb}" 1>&2
+            continue
+        fi
+    fi
+    if zgrep -q -F "$1" ${primarydb}; then
+        echo ${repopath:2}
+    fi
+done
