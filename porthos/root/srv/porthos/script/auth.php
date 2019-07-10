@@ -61,14 +61,12 @@ if($access['tier_id'] < 0) {
         $hash += ord($c);
     }
     $hash = $hash % 256;
-    if($hash < 13) { // 5%
+    if($hash < 26) { // 10%
         $tier_id = 0;
-    } elseif($hash < 51) { // +15% = 20%
+    } elseif($hash < 77) { // +20% = 30%
         $tier_id = 1;
-    } elseif($hash < 128) { // +30% = 50%
+    } else { // +70% = 100%
         $tier_id = 2;
-    } else { // +50% = 100%
-        $tier_id = 3;
     }
     $tier_id += $config['tier_id_base'];
 } else {
