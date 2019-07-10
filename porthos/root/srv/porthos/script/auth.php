@@ -54,7 +54,6 @@ $valid_credentials = $_SERVER['PHP_AUTH_PW'] === $access['secret'];
 if($config['legacy_auth']) {
     $valid_credentials = $valid_credentials || $_SERVER['PHP_AUTH_USER'] ===  $_SERVER['PHP_AUTH_PW'];
 }
-$has_access_disabled = ! is_numeric($access['tier_id']);
 
 if($access['tier_id'] < 0) {
     $hash = 0;
@@ -73,8 +72,10 @@ if($access['tier_id'] < 0) {
     }
     $tier_id += $config['tier_id_base'];
 } else {
-    $tier_id = intval($access['tier_id']);
+    $tier_id = $access['tier_id'];
 }
+
+$is_tier_request = is_numeric($tier_id) && $uri['prefix'] == 'autoupdate';
 
 if(basename($uri['rest']) == 'repomd.xml') {
     header('Cache-Control: private');
@@ -86,18 +87,18 @@ if(basename($uri['rest']) == 'repomd.xml') {
         'repo' => $uri['repo'],
         'version' => $uri['version'],
         'arch' => $uri['arch'],
-        'tier_id' => $uri['prefix'] == 'autoupdate' ? $tier_id : NULL,
+        'tier_id' => $is_tier_request ? $tier_id : FALSE,
         'tier_auto' => isset($hash),
         'tls' => isset($_SERVER['HTTPS']),
-        'auth_response' => ! $valid_credentials ? 'bad_credentials' : $has_access_disabled ? 'bad_access' : 'pass',
+        'auth_response' => ! $valid_credentials ? 'bad_credentials' : 'pass',
     )));
 }
 
-if ($has_access_disabled || ! $valid_credentials) {
+if (! $valid_credentials) {
     exit_http(403);
 }
 
-if($uri['prefix'] == 'autoupdate') {
+if($is_tier_request) {
     return_file('/T' . $tier_id . $uri['full_path']);
 } else {
     return_file('/head' . $uri['full_path']);
