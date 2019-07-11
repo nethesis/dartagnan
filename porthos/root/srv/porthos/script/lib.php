@@ -70,3 +70,27 @@ function parse_uri($uri) {
     $parts = array_merge($parts, $matches);
     return $parts;
 }
+
+function get_snapshot_timestamp($snapshot_name) {
+    $parts = array();
+    if(!$snapshot_name || !preg_match('/^d(?<year>\d\d\d\d)(?<month>\d\d)(?<day>\d\d)$/', $snapshot_name, $parts)) {
+        return time();
+    }
+    return mktime(0, 0, 0, $parts['month'], $parts['day'], $parts['year']);
+}
+
+function lookup_snapshot($path, $tier_id = 0, $week_size = 5) {
+    $root_path = "/srv/porthos/webroot/";
+    $snapshots = array_reverse(array_map('basename', glob($root_path . "d20*")));
+    $last_snapshot_day_id = date('w', get_snapshot_timestamp($snapshots[0]));
+    // $monday_offset formula:
+    //     ($last_snapshot_day_id-1): rebase on Mondays
+    //     ($last_snapshot_day_id > $tier_id ? 0 : $week_size): select current week Monday or previous one
+    $monday_offset = ($last_snapshot_day_id-1) + ($last_snapshot_day_id > $tier_id ? 0 : $week_size);
+    for($i = min($monday_offset, count($snapshots) - 1); $i >= 0; $i--) {
+        if(is_file($root_path . $snapshots[$i] . '/' . $path)) {
+            break;
+        }
+    }
+    return $i < 0 ? 'head' : $snapshots[$i];
+}

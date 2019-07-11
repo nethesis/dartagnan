@@ -5,9 +5,8 @@
 RANDOM=20
 CRON_TZ=UTC
 
-0 21 * * 1        root /usr/local/bin/repo-bulk-pull
-0 21 * * 2-4      root /usr/local/bin/repo-bulk-shift
-0 22 * * 1-4      root /usr/local/bin/repo-bulk-cleanup
+0 21 * * 0-4      root /usr/local/bin/repo-bulk-pull
+0 22 * * 0-4      root /usr/local/bin/repo-bulk-cleanup >/dev/null
 
 # end
 

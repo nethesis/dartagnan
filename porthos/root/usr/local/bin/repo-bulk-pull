@@ -31,6 +31,3 @@ for repo in ${!repos[@]}; do
 done
 
 wait
-
-cd ${dest_dir}
-ln -sfT ${date_dir} t0

@@ -52,3 +52,12 @@ $config['legacy_auth'] = FALSE;
 //     - be sure that (tier_id_base + 3) < "number of tiers"
 //     - run repo-bulk-shift N (with N = "number of tiers") to add more tier links
 $config['tier_id_base'] = 0;
+
+// week_size (int)
+//     number of days/snapshots per week. Ensure this value is consistent with
+//     your crontab settings
+$config['week_size'] = 5;
+
+// timezone (string)
+//     the PHP timezone for this application
+$config['timezone'] = 'UTC';

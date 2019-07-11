@@ -22,6 +22,7 @@
 
 require_once("lib.php");
 require_once("config-" . $_SERVER['PORTHOS_SITE'] . ".php");
+ini_set('date.timezone', $config['timezone']);
 
 $uri = parse_uri($_SERVER['DOCUMENT_URI']);
 
@@ -74,9 +75,17 @@ if($access['tier_id'] < 0) {
 }
 
 $is_tier_request = is_numeric($tier_id) && $uri['prefix'] == 'autoupdate';
+if($is_tier_request && $valid_credentials) {
+    // Seeking a snapshot is a time-consuming op. Ensure we have valid
+    // credentials before running it!
+    $snapshot = lookup_snapshot($uri['full_path'], $tier_id, $config['week_size']);
+} else {
+    $snapshot = 'head';
+}
 
 if(basename($uri['rest']) == 'repomd.xml') {
-    header('Cache-Control: private');
+    // repomd.xml is the entry point of repository (meta)data: let's keep track
+    // of every client access to repositories:
     application_log(json_encode(array(
         'porthos_site' => $_SERVER['PORTHOS_SITE'],
         'connection' => $_SERVER['CONNECTION'] ?: '',
@@ -89,15 +98,14 @@ if(basename($uri['rest']) == 'repomd.xml') {
         'tier_auto' => isset($hash),
         'tls' => isset($_SERVER['HTTPS']),
         'auth_response' => ! $valid_credentials ? 'bad_credentials' : 'pass',
+        'snapshot' => $snapshot,
     )));
 }
 
 if (! $valid_credentials) {
+    // Exit here, after sending the application_log record for repomd.xml requests.
     exit_http(403);
 }
 
-if($is_tier_request) {
-    return_file('/T' . $tier_id . $uri['full_path']);
-} else {
-    return_file('/head' . $uri['full_path']);
-}
+header('Cache-Control: private');
+return_file('/' . $snapshot . $uri['full_path']);
