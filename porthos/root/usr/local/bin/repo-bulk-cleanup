@@ -26,7 +26,7 @@ shopt -s nullglob extglob
 . /etc/porthos/repos.conf
 cd ${dest_dir}
 
-# 2 weeks before last repo-tier-pull:
+# 2 weeks before last repo-bulk-pull:
 stale_ts=$[ $(stat -c %Y head) - (86400*14) ]
 
 declare -A targets
