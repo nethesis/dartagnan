@@ -47,12 +47,6 @@ $config['arches'] = array('x86_64');
 //     if FALSE, check the user name and the password separately
 $config['legacy_auth'] = FALSE;
 
-// tier_id_base (int)
-//     this is the base/minimum tier_id value, when automatic tier_id (-1) is set.
-//     - be sure that (tier_id_base + 3) < "number of tiers"
-//     - run repo-bulk-shift N (with N = "number of tiers") to add more tier links
-$config['tier_id_base'] = 0;
-
 // week_size (int)
 //     number of days/snapshots per week. Ensure this value is consistent with
 //     your crontab settings

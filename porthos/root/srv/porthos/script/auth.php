@@ -69,7 +69,6 @@ if($access['tier_id'] < 0) {
     } else { // +70% = 100%
         $tier_id = 2;
     }
-    $tier_id += $config['tier_id_base'];
 } else {
     $tier_id = $access['tier_id'];
 }
