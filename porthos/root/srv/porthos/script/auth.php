@@ -22,6 +22,7 @@
 
 require_once("lib.php");
 require_once("config-" . $_SERVER['PORTHOS_SITE'] . ".php");
+ini_set('date.timezone', $config['timezone']);
 
 $uri = parse_uri($_SERVER['DOCUMENT_URI']);
 
@@ -54,7 +55,6 @@ $valid_credentials = $_SERVER['PHP_AUTH_PW'] === $access['secret'];
 if($config['legacy_auth']) {
     $valid_credentials = $valid_credentials || $_SERVER['PHP_AUTH_USER'] ===  $_SERVER['PHP_AUTH_PW'];
 }
-$has_access_disabled = ! is_numeric($access['tier_id']);
 
 if($access['tier_id'] < 0) {
     $hash = 0;
@@ -62,22 +62,29 @@ if($access['tier_id'] < 0) {
         $hash += ord($c);
     }
     $hash = $hash % 256;
-    if($hash < 13) { // 5%
+    if($hash < 26) { // 10%
         $tier_id = 0;
-    } elseif($hash < 51) { // +15% = 20%
+    } elseif($hash < 77) { // +20% = 30%
         $tier_id = 1;
-    } elseif($hash < 128) { // +30% = 50%
+    } else { // +70% = 100%
         $tier_id = 2;
-    } else { // +50% = 100%
-        $tier_id = 3;
     }
-    $tier_id += $config['tier_id_base'];
 } else {
-    $tier_id = intval($access['tier_id']);
+    $tier_id = $access['tier_id'];
+}
+
+$is_tier_request = is_numeric($tier_id) && $uri['prefix'] == 'autoupdate';
+if($is_tier_request && $valid_credentials) {
+    // Seeking a snapshot is a time-consuming op. Ensure we have valid
+    // credentials before running it!
+    $snapshot = lookup_snapshot($uri['full_path'], $tier_id, $config['week_size']);
+} else {
+    $snapshot = 'head';
 }
 
 if(basename($uri['rest']) == 'repomd.xml') {
-    header('Cache-Control: private');
+    // repomd.xml is the entry point of repository (meta)data: let's keep track
+    // of every client access to repositories:
     application_log(json_encode(array(
         'porthos_site' => $_SERVER['PORTHOS_SITE'],
         'connection' => $_SERVER['CONNECTION'] ?: '',
@@ -86,19 +93,18 @@ if(basename($uri['rest']) == 'repomd.xml') {
         'repo' => $uri['repo'],
         'version' => $uri['version'],
         'arch' => $uri['arch'],
-        'tier_id' => $uri['prefix'] == 'autoupdate' ? $tier_id : NULL,
+        'tier_id' => $is_tier_request ? $tier_id : FALSE,
         'tier_auto' => isset($hash),
         'tls' => isset($_SERVER['HTTPS']),
-        'auth_response' => ! $valid_credentials ? 'bad_credentials' : $has_access_disabled ? 'bad_access' : 'pass',
+        'auth_response' => ! $valid_credentials ? 'bad_credentials' : 'pass',
+        'snapshot' => $snapshot,
     )));
 }
 
-if ($has_access_disabled || ! $valid_credentials) {
+if (! $valid_credentials) {
+    // Exit here, after sending the application_log record for repomd.xml requests.
     exit_http(403);
 }
 
-if($uri['prefix'] == 'autoupdate') {
-    return_file('/T' . $tier_id . $uri['full_path']);
-} else {
-    return_file('/head' . $uri['full_path']);
-}
+header('Cache-Control: private');
+return_file('/' . $snapshot . $uri['full_path']);

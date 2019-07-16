@@ -62,10 +62,10 @@ fi
 
 if [[ -d ${backup_dir} ]]; then
     if [[ -n ${force} ]]; then
-        echo "[WARNING] the already existing repository backup directory ${date_dir}/${repo_id} has been removed"
+        echo "[WARNING] the already existing repository snapshot directory ${date_dir}/${repo_id} has been removed"
         rm -rf ${backup_dir}
     else
-        echo "[WARNING] the repository backup directory already exists. Quit now ${backup_dir}"
+        echo "[WARNING] the repository snapshot directory already exists. Quit now ${backup_dir}"
         exit 0
     fi
 fi

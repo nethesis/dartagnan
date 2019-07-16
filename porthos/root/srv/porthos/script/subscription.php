@@ -47,8 +47,7 @@ $valid_credentials = $_SERVER['PHP_AUTH_PW'] === $access['secret'];
 if($config['legacy_auth']) {
     $valid_credentials = $valid_credentials || $_SERVER['PHP_AUTH_USER'] ===  $_SERVER['PHP_AUTH_PW'];
 }
-$has_access_disabled = ! is_numeric($access['tier_id']) || $access['icat'] === FALSE;
-if ($has_access_disabled || ! $valid_credentials) {
+if (! $valid_credentials) {
     exit_http(403);
 }
 
