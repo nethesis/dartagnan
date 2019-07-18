@@ -93,7 +93,7 @@ if(basename($uri['rest']) == 'repomd.xml') {
         'repo' => $uri['repo'],
         'version' => $uri['version'],
         'arch' => $uri['arch'],
-        'tier_id' => $is_tier_request ? $tier_id : FALSE,
+        'tier_id' => $is_tier_request ? $tier_id : -1,
         'tier_auto' => isset($hash),
         'tls' => isset($_SERVER['HTTPS']),
         'auth_response' => ! $valid_credentials ? 'bad_credentials' : 'pass',
