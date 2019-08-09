@@ -74,10 +74,11 @@ if($access['tier_id'] < 0) {
 }
 
 $is_tier_request = is_numeric($tier_id) && $uri['prefix'] == 'autoupdate';
+$real_full_path = resolve_version_symlinks($uri['full_path']);
 if($is_tier_request && $valid_credentials) {
     // Seeking a snapshot is a time-consuming op. Ensure we have valid
     // credentials before running it!
-    $snapshot = lookup_snapshot($uri['full_path'], $tier_id, $config['week_size']);
+    $snapshot = lookup_snapshot($real_full_path, $tier_id, $config['week_size']);
 } else {
     $snapshot = 'head';
 }
@@ -107,4 +108,4 @@ if (! $valid_credentials) {
 }
 
 header('Cache-Control: private');
-return_file('/' . $snapshot . $uri['full_path']);
+return_file('/' . $snapshot . $real_full_path);

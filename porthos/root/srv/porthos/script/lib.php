@@ -80,7 +80,7 @@ function get_snapshot_timestamp($snapshot_name) {
 }
 
 function lookup_snapshot($path, $tier_id = 0, $week_size = 5) {
-    $root_path = "/srv/porthos/webroot/";
+    $root_path = $config['root_path'] ?: '/srv/porthos/webroot/';
     $snapshots = array_reverse(array_map('basename', glob($root_path . "d20*")));
     $last_snapshot_day_id = date('w', get_snapshot_timestamp($snapshots[0]));
     // $monday_offset formula:
@@ -93,4 +93,17 @@ function lookup_snapshot($path, $tier_id = 0, $week_size = 5) {
         }
     }
     return $i < 0 ? 'head' : $snapshots[$i];
+}
+
+function resolve_version_symlinks($full_path) {
+    $version = substr($full_path, 0, strpos($full_path, '/'));
+    if( ! $version) {
+        return $full_path;
+    }
+    $head_path = ($config['root_path'] ?: '/srv/porthos/webroot/') . 'head/';
+    $version_path = realpath($head_path . $version);
+    if( ! $version_path) {
+        return $full_path;
+    }
+    return basename($version_path) . substr($full_path, strpos($full_path, '/'));
 }

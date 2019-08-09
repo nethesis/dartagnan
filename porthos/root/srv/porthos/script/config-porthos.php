@@ -55,3 +55,7 @@ $config['week_size'] = 5;
 // timezone (string)
 //     the PHP timezone for this application
 $config['timezone'] = 'UTC';
+
+// root_path (string)
+//     absolute path to porthos web root directory, with trailing slash
+$config['root_path'] = '/srv/porthos/webroot/';

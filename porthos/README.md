@@ -52,6 +52,26 @@ Restart nginx:
 
     systemctl restart nginx
 
+## Filesystem structure
+
+Repository files are stored under
+`/srv/porthos/webroot/head/<nsversion>/<repo>/<arch>`. The `<nsversion>`
+component can be a symlink to another version directory. For instance
+
+    /srv/porthos/webroot/head/6.10/nethserver-updates/x86_64
+
+The old `6.9` version number can be a symlink:
+
+    /srv/porthos/webroot/head/6.9 -> 6.10
+
+Repository snapshots are prefixed as `/srv/porthos/webroot/head/d<YYYYMMDD>`.
+For instance
+
+    /srv/porthos/webroot/d20190809/6.10/nethserver-updates/x86_64
+
+If a version symlink is set under `head/` it is considered valid also for
+snapshots. See the `resolve_version_symlinks()` PHP function in `lib.php`.
+
 ## YUM client
 
 Mirrorlist query format
@@ -149,7 +169,9 @@ from `/etc/porthos/repos.conf`. Upstream YUM rsync URLs are defined there.
 The following commands are executed automatically, as defined in `porthos.cron`:
 
 - `repo-bulk-pull` creates a snapshot date-dir (e.g. `d20180301`) under
-  `dest_dir` with differences from upstream repositories.
+  `dest_dir` with differences from upstream repositories.  Ensure `dest_dir`
+  parameter for Bash scripts has the same value of PHP `$config['root_dir']`
+  (default is `/srv/porthos/webroot/`, with trailing slash for PHP).
 - `repo-bulk-cleanup` erases stale snapshots directories
 
 The following commands are designed for Porthos initialization, to recover from errors, or implement low-level actions:
