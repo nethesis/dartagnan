@@ -55,6 +55,7 @@ $valid_credentials = $_SERVER['PHP_AUTH_PW'] === $access['secret'];
 if($config['legacy_auth']) {
     $valid_credentials = $valid_credentials || $_SERVER['PHP_AUTH_USER'] ===  $_SERVER['PHP_AUTH_PW'];
 }
+$valid_credentials = $valid_credentials && ($access['tier_id'] !== FALSE);
 
 if($access['tier_id'] < 0) {
     $hash = 0;
