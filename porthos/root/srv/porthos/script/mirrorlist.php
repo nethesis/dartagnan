@@ -52,5 +52,9 @@ if($system_id) {
 }
 
 foreach($config['base_urls'] as $baseurl) {
-    echo $baseurl . $path . "${version}/${repo}/${arch}\n";
+    if($use_tier && in_array($version, $config['stop_autoupdate'])) {
+        echo $baseurl . "empty\n";
+    } else {
+        echo $baseurl . $path . "${version}/${repo}/${arch}\n";
+    }
 }
