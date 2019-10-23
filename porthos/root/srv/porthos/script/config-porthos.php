@@ -56,7 +56,7 @@ $config['week_size'] = 5;
 //     the PHP timezone for this application
 $config['timezone'] = 'UTC';
 
-// stop_autoupdate (boolean)
-//     forcibly stop autoupdate contents distribution. The /empty repository
-//     is served instead.
-$config['stop_autoupdate'] = FALSE;
+// stop_autoupdate (array)
+//     forcibly stop autoupdate contents distribution for the listed versions.
+//     The /empty repository is served instead.
+$config['stop_autoupdate'] = array();
