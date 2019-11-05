@@ -60,3 +60,8 @@ $config['timezone'] = 'UTC';
 //     forcibly stop autoupdate contents distribution for the listed versions.
 //     The /empty repository is served instead.
 $config['stop_autoupdate'] = array();
+
+// tier_seed (int)
+//     The system_id value is reduced to the integer range 0-9 plus the seed.
+//     The resulting value is mapped to a tier_id
+$config['tier_seed'] = 0;

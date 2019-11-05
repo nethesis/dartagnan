@@ -29,10 +29,10 @@ while($system_id = trim(fgets(STDIN))) {
     foreach(str_split($system_id) as $c) {
         $hash += ord($c);
     }
-    $hash = $hash % 256;
-    if($hash < 26) { // 10%
+    $hash = $hash % 10;
+    if($hash < 1) { // 10%
         $tier_id = 0;
-    } elseif($hash < 77) { // +20% = 30%
+    } elseif($hash < 3) { // +20% = 30%
         $tier_id = 1;
     } else { // +70% = 100%
         $tier_id = 2;
