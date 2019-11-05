@@ -78,7 +78,7 @@ $is_tier_request = is_numeric($tier_id) && $uri['prefix'] == 'autoupdate';
 if($is_tier_request && $valid_credentials) {
     // Seeking a snapshot is a time-consuming op. Ensure we have valid
     // credentials before running it!
-    $snapshot = lookup_snapshot($uri['full_path'], $tier_id, $config['week_size']);
+    $snapshot = lookup_snapshot($uri['full_path'], $uri['version'], $tier_id);
 } else {
     $snapshot = 'head';
 }
@@ -108,4 +108,8 @@ if (! $valid_credentials) {
 }
 
 header('Cache-Control: private');
-return_file('/' . $snapshot . $uri['full_path']);
+if($snapshot == 'empty') {
+    return_file('/empty/repodata/' . basename($uri['full_path']));
+} else {
+    return_file('/' . $snapshot . $uri['full_path']);
+}

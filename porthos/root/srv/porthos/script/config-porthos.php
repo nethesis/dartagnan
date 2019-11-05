@@ -56,6 +56,18 @@ $config['week_size'] = 5;
 //     the PHP timezone for this application
 $config['timezone'] = 'UTC';
 
+// autoupdate_policy (array)
+//     Decide the content returned for a given version/tier_id combination.
+//     Valid keys are, for instance "7.6.1810/2" "6.10/0" "7.7.1908/*" ...
+//     Valid values are "head" "empty" "d20191104" (a snapshot name). If the
+//     snapshot dir does not exist, "empty" is assumed.
+$config['autoupdate_policy'] = array();
+
+// snapshots_dir (string)
+//     Filesystem directory path where snapshot directories are stored with
+//     trailing slash.
+$config['snapshots_dir'] = '/srv/porthos/webroot/';
+
 // tier_seed (int)
 //     The system_id value is reduced to the integer range 0-9 plus the seed.
 //     The resulting value is mapped to a tier_id
