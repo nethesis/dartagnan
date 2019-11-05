@@ -20,18 +20,31 @@
  * along with Dartagnan.  If not, see COPYING.
  */
 
-$hash = 0;
+$tier_hits = [0,0,0];
 
-foreach(str_split($argv[1]) as $c) {
-    $hash += ord($c);
-}
-$hash = $hash % 256;
-if($hash < 26) { // 10%
-    $tier_id = 0;
-} elseif($hash < 77) { // +20% = 30%
-    $tier_id = 1;
-} else { // +70% = 100%
-    $tier_id = 2;
+while($system_id = trim(fgets(STDIN))) {
+
+    $hash = 0;
+
+    foreach(str_split($system_id) as $c) {
+        $hash += ord($c);
+    }
+    $hash = $hash % 256;
+    if($hash < 26) { // 10%
+        $tier_id = 0;
+    } elseif($hash < 77) { // +20% = 30%
+        $tier_id = 1;
+    } else { // +70% = 100%
+        $tier_id = 2;
+    }
+
+    $tier_hits[$tier_id]++;
+
 }
 
-echo $tier_id . "\n";
+$total_hits = array_sum($tier_hits);
+
+printf("Total: %d\n", $total_hits);
+foreach($tier_hits as $tier_id => $hits) {
+    printf("Tier %d, hits %4d - %.2f\n", $tier_id, $hits, 100*$hits/$total_hits);
+}
