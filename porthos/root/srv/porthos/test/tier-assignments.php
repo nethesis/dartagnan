@@ -20,7 +20,12 @@
  * along with Dartagnan.  If not, see COPYING.
  */
 
-$tier_hits = [0,0,0];
+//
+// Test the automatic tier assignment procedure.
+//
+// 1. Read a list of system_id keys from standard input
+// 2. Print the system_id with resulting tier_id
+//
 
 while($system_id = trim(fgets(STDIN))) {
 
@@ -29,22 +34,14 @@ while($system_id = trim(fgets(STDIN))) {
     foreach(str_split($system_id) as $c) {
         $hash += ord($c);
     }
-    $hash = $hash % 256;
-    if($hash < 26) { // 10%
+    $hash = $hash % 10;
+    if($hash < 1) { // 10%
         $tier_id = 0;
-    } elseif($hash < 77) { // +20% = 30%
+    } elseif($hash < 3) { // +20% = 30%
         $tier_id = 1;
     } else { // +70% = 100%
         $tier_id = 2;
     }
 
-    $tier_hits[$tier_id]++;
-
-}
-
-$total_hits = array_sum($tier_hits);
-
-printf("Total: %d\n", $total_hits);
-foreach($tier_hits as $tier_id => $hits) {
-    printf("Tier %d, hits %4d - %.2f\n", $tier_id, $hits, 100*$hits/$total_hits);
+    echo $system_id . ' ' . $tier_id . "\n";
 }

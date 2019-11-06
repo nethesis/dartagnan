@@ -79,8 +79,49 @@ function get_snapshot_timestamp($snapshot_name) {
     return mktime(0, 0, 0, $parts['month'], $parts['day'], $parts['year']);
 }
 
-function lookup_snapshot($path, $tier_id = 0, $week_size = 5) {
-    $root_path = "/srv/porthos/webroot/";
+function lookup_policy($version, $tier_id) {
+    global $config;
+
+    $policy_map = $config['autoupdate_policy'] ?: array();
+    $policy_key = $version . '/' . $tier_id;
+    $poldef_key = $version . '/*';
+
+    if(isset($policy_map[$policy_key])) {
+        $value = $policy_map[$policy_key];
+    } elseif(isset($policy_map[$poldef_key])) {
+        $value = $policy_map[$poldef_key];
+    } else {
+        $value = 'default';
+    }
+
+    return $value;
+}
+
+function lookup_fixed($path, $snapshot_start) {
+    global $config;
+
+    $root_path = $config['snapshots_dir'] ?: "/srv/porthos/webroot/";
+    $snapshots = array_map('basename', glob($root_path . "d20*"));
+
+    $start_key = array_search($snapshot_start, $snapshots);
+    if( ! $start_key) {
+        // the fixed snapshot does not exist: fall back to the empty repository.
+        return 'empty';
+    }
+    $snapshots = array_slice($snapshots, $start_key);
+    foreach($snapshots as $snapshot) {
+        if(is_file($root_path . $snapshot . '/' . $path)) {
+            return $snapshot;
+        }
+    }
+    return 'head';
+}
+
+function lookup_monday($path, $tier_id) {
+    global $config;
+
+    $week_size = $config['week_size'] ?: 5;
+    $root_path = $config['snapshots_dir'] ?: "/srv/porthos/webroot/";
     $snapshots = array_reverse(array_map('basename', glob($root_path . "d20*")));
     $last_snapshot_day_id = date('w', get_snapshot_timestamp($snapshots[0]));
     // $monday_offset formula:
@@ -93,4 +134,19 @@ function lookup_snapshot($path, $tier_id = 0, $week_size = 5) {
         }
     }
     return $i < 0 ? 'head' : $snapshots[$i];
+}
+
+function lookup_snapshot($path, $version, $tier_id) {
+    global $config;
+
+    $policy_name = lookup_policy($version, $tier_id);
+    if($policy_name == 'default') {
+        return lookup_monday($path, $tier_id);
+    } elseif(substr($policy_name, 0, 6) == 'fixed/') {
+        return lookup_fixed($path, substr($policy_name, 6));
+    } elseif($policy_name == 'empty') {
+        return 'empty';
+    } else {
+        return 'head';
+    }
 }

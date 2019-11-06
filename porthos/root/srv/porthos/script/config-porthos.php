@@ -56,7 +56,20 @@ $config['week_size'] = 5;
 //     the PHP timezone for this application
 $config['timezone'] = 'UTC';
 
-// stop_autoupdate (array)
-//     forcibly stop autoupdate contents distribution for the listed versions.
-//     The /empty repository is served instead.
-$config['stop_autoupdate'] = array();
+// autoupdate_policy (array)
+//     Decide the content returned for a given version/tier_id combination.
+//     Valid keys are, for instance "7.6.1810/2" "6.10/0" "7.7.1908/*" ...
+//     Valid values are "head", "empty", "fixed/d20191104" (fixed snapshot name -
+//     if the snapshot dir does not exist, "empty" is assumed) and "default"
+//     (automatically selects the previous monday snapshot).
+$config['autoupdate_policy'] = array();
+
+// snapshots_dir (string)
+//     Filesystem directory path where snapshot directories are stored with
+//     trailing slash.
+$config['snapshots_dir'] = '/srv/porthos/webroot/';
+
+// tier_seed (int)
+//     The system_id value is reduced to the integer range 0-9 plus the seed.
+//     The resulting value is mapped to a tier_id
+$config['tier_seed'] = 0;

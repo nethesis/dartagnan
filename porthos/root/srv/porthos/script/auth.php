@@ -58,14 +58,14 @@ if($config['legacy_auth']) {
 $valid_credentials = $valid_credentials && ($access['tier_id'] !== FALSE);
 
 if($access['tier_id'] < 0) {
-    $hash = 0;
+    $hash = $config['tier_seed'] ?: 0;
     foreach(str_split($_SERVER['PHP_AUTH_USER']) as $c) {
         $hash += ord($c);
     }
-    $hash = $hash % 256;
-    if($hash < 26) { // 10%
+    $hash = $hash % 10;
+    if($hash < 1) { // 10%
         $tier_id = 0;
-    } elseif($hash < 77) { // +20% = 30%
+    } elseif($hash < 3) { // +20% = 30%
         $tier_id = 1;
     } else { // +70% = 100%
         $tier_id = 2;
@@ -78,7 +78,7 @@ $is_tier_request = is_numeric($tier_id) && $uri['prefix'] == 'autoupdate';
 if($is_tier_request && $valid_credentials) {
     // Seeking a snapshot is a time-consuming op. Ensure we have valid
     // credentials before running it!
-    $snapshot = lookup_snapshot($uri['full_path'], $tier_id, $config['week_size']);
+    $snapshot = lookup_snapshot($uri['full_path'], $uri['version'], $tier_id);
 } else {
     $snapshot = 'head';
 }
@@ -108,4 +108,8 @@ if (! $valid_credentials) {
 }
 
 header('Cache-Control: private');
-return_file('/' . $snapshot . $uri['full_path']);
+if($snapshot == 'empty') {
+    return_file('/empty/repodata/' . basename($uri['full_path']));
+} else {
+    return_file('/' . $snapshot . $uri['full_path']);
+}
