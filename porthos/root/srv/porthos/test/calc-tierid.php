@@ -20,6 +20,13 @@
  * along with Dartagnan.  If not, see COPYING.
  */
 
+//
+// Test the automatic tier assignment procedure.
+//
+// 1. Read a list of system_id keys from standard input
+// 2. Print the tiers hit percentages
+//
+
 $tier_hits = [0,0,0];
 
 while($system_id = trim(fgets(STDIN))) {
@@ -44,7 +51,7 @@ while($system_id = trim(fgets(STDIN))) {
 
 $total_hits = array_sum($tier_hits);
 
-printf("Total: %d\n", $total_hits);
+printf("Total hits: %d\n", $total_hits);
 foreach($tier_hits as $tier_id => $hits) {
-    printf("Tier %d, hits %4d - %.2f\n", $tier_id, $hits, 100*$hits/$total_hits);
+    printf("- tier %d: %2.2f%% (%d)\n", $tier_id, 100*$hits/$total_hits, $hits);
 }
