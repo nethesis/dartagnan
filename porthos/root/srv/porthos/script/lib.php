@@ -91,7 +91,7 @@ function lookup_policy($version, $tier_id) {
     } elseif(isset($policy_map[$poldef_key])) {
         $value = $policy_map[$poldef_key];
     } else {
-        $value = 'lookup_monday';
+        $value = 'default';
     }
 
     return $value;
@@ -140,9 +140,9 @@ function lookup_snapshot($path, $version, $tier_id) {
     global $config;
 
     $policy_name = lookup_policy($version, $tier_id);
-    if($policy_name == 'lookup_monday') {
+    if($policy_name == 'default') {
         return lookup_monday($path, $tier_id);
-    } elseif(substr($policy_name, 0, 6) == 'fixed-') {
+    } elseif(substr($policy_name, 0, 6) == 'fixed/') {
         return lookup_fixed($path, substr($policy_name, 6));
     } elseif($policy_name == 'empty') {
         return 'empty';

@@ -59,8 +59,9 @@ $config['timezone'] = 'UTC';
 // autoupdate_policy (array)
 //     Decide the content returned for a given version/tier_id combination.
 //     Valid keys are, for instance "7.6.1810/2" "6.10/0" "7.7.1908/*" ...
-//     Valid values are "head" "empty" "d20191104" (a snapshot name). If the
-//     snapshot dir does not exist, "empty" is assumed.
+//     Valid values are "head", "empty", "fixed/d20191104" (fixed snapshot name -
+//     if the snapshot dir does not exist, "empty" is assumed) and "default"
+//     (automatically selects the previous monday snapshot).
 $config['autoupdate_policy'] = array();
 
 // snapshots_dir (string)
