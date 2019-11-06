@@ -140,6 +140,41 @@ If `icat` field is not set, the `subscription.php` replies with 403 - forbidden.
 If `secret` field is not set, both `auth.php` and `subscription.php` reply with
 403 - forbidden, unless `$config['legacy_auth']` is enabled.
 
+## Porthos repository autoupdate policy
+
+When a client accesses the `autoupdate/` contents it is possible to
+differentiate  what it can see, on a client `tier_id` and `version` basis.
+
+The **default** policy is to return the repository state of the last monday, or
+the previous one, depending on the tier number. Custom policies can be
+configured by adding items to the `$config['autoupdate_policy']` array.
+
+Example 1:
+
+```php
+$config['autoupdate_policy'] = array(
+    '7.6.1810/0' => 'head',
+    '7.6.1810/*' => 'empty',
+);
+```
+
+This setting says that clients of tier 0 requesting version 7.6.1810 can see the
+`head` repository state. Clients of other tiers (identified by `*`) always see
+an `empty` repository.
+
+Example 2:
+
+```php
+$config['autoupdate_policy'] = array(
+    '7.6.1810/*' => 'default',
+    '7.6.1810/2' => 'fixed/d20191030',
+);
+```
+
+In this case clients of tier 2 see the repository state as it was on 2019-10-30.
+Other clients see the repository state according to the default policy (note
+that the corresponding line can be omitted because it already corresponds to the
+default policy).
 
 ## Repository management commands
 
