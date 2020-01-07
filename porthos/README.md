@@ -191,23 +191,23 @@ The following commands are designed for Porthos initialization, to recover from 
 
 - `repo-bulk-hinit` runs initial synchronization from upstream repositories (-f disables the check for already existing directories)
 - `repo-head-init`  synchronization of head from a specific upstream repo
-- `repo-head-rollback` roll back a repository head state to a previous snapshot state
+- `repo-head-rollback` rolls back a repository to its latest snapshot
 - `repo-snapshot-create` create a new repository snapshot
 - `repo-snapshot-delete` delete repomd.xml from a given repository snapshot
 - `repo-rpm-lookup`  seek the given RPM in every snapshot for a given repository
 - `xrsync` run rsync safely, trying to repeat the operation if it fails
 
-A **rollback action** for a given repository consists into seeking the
-most recent snapshot and moving it back to the head position. YUM metadata and
-removed RPMs are merged, reverting the head to the past snapshot state. For
-instance:
+A **rollback action** for a given repository consists into reverting its most
+recent snapshot state, by moving the snapshot YUM metadata and removed/changed
+RPMs to the head position. For instance:
 
-    repo-head-rollback 7.6.1810/nethserver-updates/x86_64
+    repo-head-rollback 7.7.1908/nethserver-updates/x86_64 -n
 
-The command above rolls back the `head/` directory to the most recent, non-empty
-snapshot of `nethserver-updates`. The command can be invoked multiple times, but
-it fails as soon as no snapshot is found, or if an invalid repository identifier
-is issued.
+The command above attempts to roll back the `head/` directory to the most
+recent, non-empty snapshot of `nethserver-updates`. The command can be invoked
+multiple times, but it fails as soon as no snapshot is found, or if an invalid
+repository identifier is issued. Remove the `-n` flag (rsync dry run) to
+actually change the files.
 
 Some times it is desirable to re-sync the head repository, without generating a
 new snapshot, like `repo-snapshot-create` does. That happens if an upstream repo
