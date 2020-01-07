@@ -20,6 +20,8 @@
 # along with NethServer.  If not, see COPYING.
 #
 
+shopt -s nullglob extglob
+
 function exit_help ()
 {
     echo -e "Usage:\n  $(basename "$0") REPO_ID [additional rsync opts]" 1>&2
@@ -37,20 +39,23 @@ if [[ -z ${repo_id} || -z ${repos[$repo_id]} ]]; then
     exit_help;
 fi
 
-tiers=( t[0-9] )
+snapshots=( d+([0-9])"/${repo_id}/repodata/repomd.xml" )
 
-for tier in "${tiers[@]}"; do
-    if [[ -f ${tier}/${repo_id}/repodata/repomd.xml ]]; then
-        rsync --remove-source-files -ai "${@}" ${tier}/${repo_id}/ head/${repo_id}
-        if [[ $? == 0 ]]; then
-            echo "[NOTICE] ${repo_id} repository was rolled back to snapshot $(readlink ${tier}) (${tier})"
-            exit 0
-        else
-            echo "[ERROR] rsync error" 1>&2
-            exit 1
-        fi
+((${#snapshots[@]} > 0)) && snapshot="${snapshots[-1]%%/*}"
+
+if [[ -z ${snapshot} ]]; then
+    echo "[ERROR] Cannot find any past snapshot of ${repo_id}. Aborted." 1>&2
+    exit 1
+fi
+
+if [[ -f ${snapshot}/${repo_id}/repodata/repomd.xml ]]; then
+    rsync --remove-source-files -ai "${@}" "${snapshot}/${repo_id}/" "head/${repo_id}"
+    if [[ $? != 0 ]]; then
+        echo "[ERROR] rsync error" 1>&2
+        exit 1
     fi
-done
+fi
 
-echo "[ERROR] Cannot find any past snapshot of ${repo_id}. Aborted." 1>&2
-exit 1
+timestamp=$(stat -c %y "head/${repo_id}/repodata/repomd.xml")
+echo "[NOTICE] ${repo_id} repository was rolled back to snapshot ${snapshot} (repomd.xml ${timestamp})"
+exit 0
