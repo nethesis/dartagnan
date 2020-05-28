@@ -145,7 +145,7 @@
   },
   {
     "id": "1d_others_plain",
-    "translation": "Hi {{.Name}},\nyour {{.Subscription}} subscription will expire tomorrow!\n\nAfter subscription expiration, the server will not be able to download updates.\n\nIf you want to leave the subscription program, remember to unregister your machine following the documentation at: https://docs.nethserver.org/en/v7/subscription.html#removing-a-subscription.\n\nOtherwise, if you are still interested in accessing the stable repositories, renew your subscription now by clicking the button below:"
+    "translation": "Hi {{.Name}},\nyour {{.Subscription}} subscription will expire tomorrow!\n\nAfter subscription expiration, the server will not be able to download updates.\n\nIf you want to leave the subscription program, remember to unregister your machine following the documentation at: https://docs.nethserver.org/en/v7/subscription.html#removing-a-subscription.\n\nOtherwise, if you are still interested in accessing the stable repositories, renew your subscription now by clicking the link below:"
   },
   {
     "id": "server_link",
