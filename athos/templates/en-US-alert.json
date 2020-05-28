@@ -121,7 +121,7 @@
   },
   {
     "id": "1w_others",
-    "translation": "<br>your <b>{{.Subscription}}</b> subscription will expire in <b>1 week</b>.<br><br>If you are enjoining it and you want to still have access to stable repositories, renew your subscription clicking the button below:"
+    "translation": "<br>your <b>{{.Subscription}}</b> subscription will expire in <b>1 week</b>.<br><br>If you are enjoying it and you want to still have access to stable repositories, renew your subscription clicking the button below:"
   },
   {
     "id": "1d_others",
