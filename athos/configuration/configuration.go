@@ -31,11 +31,12 @@ import (
 )
 
 type Notifications struct {
-	PortalUrl   string `json:"portal_url"`
-	HelpUrl     string `json:"help_url"`
-	DocsUrl     string `json:"docs_url"`
-	PortalTitle string `json:"portal_title"`
-	Email       struct {
+	PortalUrl    string `json:"portal_url"`
+	HelpUrl      string `json:"help_url"`
+	DocsUrl      string `json:"docs_url"`
+	CommunityUrl string `json:"community_url"`
+	PortalTitle  string `json:"portal_title"`
+	Email        struct {
 		From         string `json:"from"`
 		SMTPHost     string `json:"smtp_host"`
 		SMTPPort     int    `json:"smtp_port"`
@@ -53,17 +54,17 @@ type Configuration struct {
 		Password string `json:"password"`
 	} `json:"database"`
 	Redis struct {
-		Host  string `json:"host"`
-		Port  string `json:"port"`
+		Host string `json:"host"`
+		Port string `json:"port"`
 	} `json:"redis"`
-	Cors       struct {
+	Cors struct {
 		Headers []string `json:"headers"`
 		Origins []string `json:"origins"`
 		Methods []string `json:"methods"`
 	} `json:"cors"`
 	Auth0 struct {
-		Domain        string `json:"domain"`
-		Audience      string `json:"audience"`
+		Domain   string `json:"domain"`
+		Audience string `json:"audience"`
 	} `json:"auth0"`
 	PayPal struct {
 		ClientID     string `json:"client_id"`
@@ -71,7 +72,7 @@ type Configuration struct {
 		Sandbox      bool   `json:"sandbox"`
 	} `json:"paypal"`
 	Log struct {
-		Level        string `json:"level"`
+		Level string `json:"level"`
 	} `json:"log"`
 	Billing struct {
 		Country string `json:"country"`

@@ -31,7 +31,7 @@ import (
 	"time"
 
 	"github.com/nicksnyder/go-i18n/i18n"
-	"github.com/satori/go.uuid"
+	uuid "github.com/satori/go.uuid"
 
 	"github.com/nethesis/dartagnan/athos/database"
 	"github.com/nethesis/dartagnan/athos/models"
@@ -101,6 +101,15 @@ func Round(val float64, roundOn float64, places int) float64 {
 
 func Contains(intSlice []int, searchInt int) bool {
 	for _, value := range intSlice {
+		if value == searchInt {
+			return true
+		}
+	}
+	return false
+}
+
+func ContainsS(stringSlice []string, searchInt string) bool {
+	for _, value := range stringSlice {
 		if value == searchInt {
 			return true
 		}
