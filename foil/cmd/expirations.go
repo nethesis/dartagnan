@@ -51,7 +51,7 @@ var expirationsCmd = &cobra.Command{
 	 Supported periods:
 	 - 1d (1 day)
 	 - 1w (1 week)
-	 - 2w (2 week) (only for trials)
+	 - 2w (2 weeks) (only for trials)
 
 	 `,
 	Run: getExpireSystems,
