@@ -160,7 +160,7 @@ func expireTextBody(system models.System, period string) string {
 	text += "\n" + message
 	text += fmt.Sprintf("\n%s\n", fmt.Sprintf(fmt.Sprintf("%s/servers/%d", configuration.Config.Notifications.PortalUrl, system.ID)))
 
-	text += fmt.Sprintf("\n%s: %s\n", "Blog", configuration.Config.Notifications.CommunityUrl)
+	text += fmt.Sprintf("\n%s: %s\n", "Community", configuration.Config.Notifications.CommunityUrl)
 	text += fmt.Sprintf("%s: %s\n", "Support", strings.Split(configuration.Config.Notifications.HelpUrl, ":")[1])
 	text += fmt.Sprintf("%s: %s\n", "Docs", configuration.Config.Notifications.DocsUrl)
 	return text
