@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Nethesis S.r.l.
+ * Copyright (C) 2020 Nethesis S.r.l.
  * http://www.nethesis.it - info@nethesis.it
  *
  * This file is part of Dartagnan project.
@@ -18,25 +18,21 @@
  * along with Dartagnan.  If not, see COPYING.
  *
  */
-
-package notifications
+package utils
 
 import (
+	"fmt"
+
+	"github.com/nethesis/dartagnan/athos/database"
 	"github.com/nethesis/dartagnan/athos/models"
-	"github.com/nethesis/dartagnan/athos/utils"
 )
 
-func AlertNotification(alert models.Alert, isNew bool) {
-	if alert.System.Subscription.SubscriptionPlan.Code == "" {
-		alert.System = utils.GetSystemById(alert.SystemID)
-	}
-	if utils.CanAccessAlerts(alert.System.Subscription.SubscriptionPlan) {
-		switch x := alert.System.Notification["emails"].(type) {
-		case []interface{}:
-			for _, e := range x {
-				MailNotificationAlert(e.(string), alert, isNew)
-			}
-		default:
-		}
-	}
+// List expiration systems in a specific period
+func ListExpirationSystems(period string) []models.System {
+	var systems []models.System
+
+	db := database.Instance()
+	db.Preload("Subscription.SubscriptionPlan").Joins("JOIN subscriptions ON systems.subscription_id = subscriptions.id JOIN subscription_plans ON subscription_plans.id = subscriptions.subscription_plan_id").Where(fmt.Sprintf("date(subscriptions.valid_until)::date = date(date('now') + interval '%s')::date", period)).Find(&systems)
+
+	return systems
 }

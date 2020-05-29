@@ -1,4 +1,5 @@
-[{
+[
+  {
     "id": "Alert report",
     "translation": "Alert report"
   },
@@ -93,5 +94,73 @@
   {
     "id": "alert_nut",
     "translation": "UPS on battery"
+  },
+  {
+    "id": "hello",
+    "translation": "Hello"
+  },
+  {
+    "id": "expiration",
+    "translation": "EXPIRATION"
+  },
+  {
+    "id": "subscription",
+    "translation": "Subscription"
+  },
+  {
+    "id": "2w_trial",
+    "translation": "<br>thank you for joining our Subscription trial program.<br><br>Your trial subscription will expire in <b>2 weeks</b>, we hope that everything is still up and running!<br><br>If you need help, remember to join our vibrant <a target=\"blank\" href=\"https://community.nethserver.org\">Community</a><br><br>· Would you like to secure your installation thanks to stable repositories?<br>· Do you want to sponsor the NethServer project?<br><br>Click on the button below and buy a subscription:"
+  },
+  {
+    "id": "1w_trial",
+    "translation": "<br>your trial subscription will expire in <b>1 week</b>.<br><br>If you are enjoining it and you want to still have access to stable repositories, buy a subscription by clicking the button below:"
+  },
+  {
+    "id": "1d_trial",
+    "translation": "<br>your trial subscription will expire <b>tomorrow</b>!<br><br>After subscription expiration, the server <b>will not be able</b> to download updates.<br><br>If you want to leave the subscription program, remember to unregister your machine following the <a href=\"https://docs.nethserver.org/en/v7/subscription.html#removing-a-subscription\">documentation</a>.<br><br>Otherwise, if you are still interested in accessing the stable repositories, buy a subscription now by clicking the button below:"
+  },
+  {
+    "id": "1w_others",
+    "translation": "<br>your <b>{{.Subscription}}</b> subscription will expire in <b>1 week</b>.<br><br>If you are enjoying it and you want to still have access to stable repositories, renew your subscription clicking the button below:"
+  },
+  {
+    "id": "1d_others",
+    "translation": "<br>your <b>{{.Subscription}}</b> subscription will expire <b>tomorrow</b>!<br><br>After subscription expiration, the server <b>will not be able</b> to download updates.<br><br>If you want to leave the subscription program, remember to unregister your machine following the <a href=\"https://docs.nethserver.org/en/v7/subscription.html#removing-a-subscription\">documentation</a>.<br><br>Otherwise, if you are still interested in accessing the stable repositories, renew your subscription now by clicking the button below:"
+  },
+  {
+    "id": "2w_trial_plain",
+    "translation": "Hi,\nthank you for joining our Subscription trial program.\n\nYour trial subscription will expire in 2 weeks, we hope that everything is still up and running!\n\nIf you need help, remember to join our vibrant community at: https://community.nethserver.org\n\n· Would you like to secure your installation thanks to stable repositories?\n· Do you want to sponsor the NethServer project?\n\nClick on the link below and buy a subscription:"
+  },
+  {
+    "id": "1w_trial_plain",
+    "translation": "Hi,\nyour trial subscription will expire in 1 week.\n\nIf you are enjoining it and you want to still have access to stable repositories, buy a subscription by clicking the link below:"
+  },
+  {
+    "id": "1d_trial_plain",
+    "translation": "Hi,\nyour trial subscription will expire tomorrow!\n\nAfter subscription expiration, the server will not be able to download updates.\n\nIf you want to leave the subscription program, remember to unregister your machine following the documentation at: https://docs.nethserver.org/en/v7/subscription.html#removing-a-subscription.\n\nOtherwise, if you are still interested in accessing the stable repositories, buy a subscription now by clicking the link below:"
+  },
+  {
+    "id": "1w_others_plain",
+    "translation": "Hi {{.Name}},\nyour {{.Subscription}} subscription will expire in 1 week.\n\nIf you are enjoining it and you want to still have access to stable repositories, renew your subscription by clicking the link below:"
+  },
+  {
+    "id": "1d_others_plain",
+    "translation": "Hi {{.Name}},\nyour {{.Subscription}} subscription will expire tomorrow!\n\nAfter subscription expiration, the server will not be able to download updates.\n\nIf you want to leave the subscription program, remember to unregister your machine following the documentation at: https://docs.nethserver.org/en/v7/subscription.html#removing-a-subscription.\n\nOtherwise, if you are still interested in accessing the stable repositories, renew your subscription now by clicking the link below:"
+  },
+  {
+    "id": "server_link",
+    "translation": "Upgrade your plan"
+  },
+  {
+    "id": "server_link_renew",
+    "translation": "Renew your plan"
+  },
+  {
+    "id": "server_uuid",
+    "translation": "System"
+  },
+  {
+    "id": "footer_message",
+    "translation": "Still convinced to not buy a subscription? <a href=\"mailto:support@nethserver.com\">Tell us</a> why and how can we improve our offer!<br><br>Thank you,<br>NethServer Subscription team"
   }
 ]

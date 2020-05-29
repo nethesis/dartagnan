@@ -1,0 +1,14 @@
+#
+# -P period (supported are: 1d, 1w, 2w)
+# -M send mail
+# -Q quiet mode, no output
+#
+
+# expiration in 1 day
+5 2 * * * root /opt/dartagnan/foil expirations -P 1d -M -Q
+
+# expiration in 1 week
+15 2 * * * root /opt/dartagnan/foil expirations -P 1w -M -Q
+
+# expiration in 2 weeks
+20 2 * * * root /opt/dartagnan/foil expirations -P 2w -M -Q
