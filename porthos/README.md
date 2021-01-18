@@ -142,12 +142,22 @@ If `secret` field is not set, both `auth.php` and `subscription.php` reply with
 
 ## Porthos repository autoupdate policy
 
-When a client accesses the `autoupdate/` contents it is possible to
-differentiate  what it can see, on a client `tier_id` and `version` basis.
+Changes to upstream repostories are recorded as repository snapshots, according to the
+configured cron table.
 
-The **default** policy is to return the repository state of the last monday, or
-the previous one, depending on the tier number. Custom policies can be
-configured by adding items to the `$config['autoupdate_policy']` array.
+A snapshot directory contain the differences with the upstream repository at snapshot
+creation time. It is created by the `rsync --backup` command. Differences may consist of
+`repomd.xml` file and related YUM repository metadata files. If the upstream
+repository changes include also some RPM deletions, the snapshot directory contains
+also RPM files.
+
+When a client accesses the `autoupdate/` contents it is possible to
+decide what point in time it can see, on a client `tier_id` and `version` basis.
+
+The **default** policy is to return the repository snapshot contents of the last Monday, or
+the previous one, depending on the tier number.
+
+Custom policies can be configured by adding items to the `$config['autoupdate_policy']` array.
 
 Example 1:
 
@@ -171,7 +181,8 @@ $config['autoupdate_policy'] = array(
 );
 ```
 
-In this case clients of tier 2 see the repository state as it was on 2019-10-30.
+In this case clients of tier 2 always see the "fixed" repositories state as
+they were recorded by snapshots up to 2019-10-30.
 Other clients see the repository state according to the default policy (note
 that the corresponding line can be omitted because it already corresponds to the
 default policy).
