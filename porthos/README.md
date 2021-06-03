@@ -206,7 +206,10 @@ The following commands are designed for Porthos initialization, to recover from 
 - `repo-snapshot-create` create a new repository snapshot
 - `repo-snapshot-delete` delete repomd.xml from a given repository snapshot
 - `repo-rpm-lookup`  seek the given RPM in every snapshot for a given repository
-- `xrsync` run rsync safely, trying to repeat the operation if it fails
+- `xrsync` run rsync safely, trying to repeat the operation if it fails.
+  The `/etc/porthos/xrsync.conf` file contains the definition of rsync pools that
+  helps with network errors and mirror failures. Add multiple mirror URLs to each
+  pool (CENTOS, EPEL) to recover from such errors automatically.
 
 A **rollback action** for a given repository consists into reverting its most
 recent snapshot state, by moving the snapshot YUM metadata and removed/changed

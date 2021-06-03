@@ -20,26 +20,57 @@
 # along with NethServer.  If not, see COPYING.
 #
 
-
-attempts=3
-src=$1 ; shift
+attempts=5
+srcp=$1 ; shift
 dest=$1 ; shift
 
-for ((I=1; I < attempts; I++)); do
-    rsync -aqSH --no-super --no-g --no-o "${@}" "${src}" "${dest}"
+source /etc/porthos/xrsync.conf
+
+function exithandler() {
+    # If exit code is non-zero, copy error file contents to stderr
+    if [[ $? != 0 ]]; then
+        cat "${tmperr}" >&2
+    fi
+    rm -f "${tmperr}"
+}
+
+tmperr=$(mktemp)
+trap exithandler EXIT
+
+src_seed=$RANDOM
+
+if [[ "${srcp}" == rsync-pool://* ]]; then
+    poolk=${srcp#rsync-pool://}
+    poolk=${poolk%%/*}
+    poolp=${srcp#rsync-pool://$poolk}
+    read -r -a src_list <<<"${rsync_pool[$poolk]}"
+else
+    src_list=("${srcp}")
+    poolp=""
+fi
+
+if [[ "${#src_list[@]}" == "0" ]]; then
+    echo "[ERROR] The list of sources is empty" 1>&2
+    exit 1
+fi
+
+for ((I=1; I <= attempts; I++)); do
+    src_id=$(( (src_seed + I) % ${#src_list[@]} ))
+    src="${src_list[$src_id]}${poolp}"
+    rsync -aqSH --no-super --no-g --no-o "${@}" "${src}" "${dest}" 2>>"${tmperr}"
     ret_rsync=$?
     if [[ $ret_rsync == 0 ]]; then
         exit 0
     elif [[ $ret_rsync == 1 ]]; then
-        echo "[ERROR] rsync bad syntax"
+        echo "[ERROR] rsync bad syntax" >>"${tmperr}"
         exit 1
     elif [[ $ret_rsync == 20 ]]; then
-        echo "[ERROR] rsync signal caught"
+        echo "[ERROR] rsync signal caught" >>"${tmperr}"
         exit 2
     fi
-    echo "[WARNING] rsync from $src failed with code $ret_rsync; attempt $I of ${attempts}..." 1>&2
-    ((I < attempts)) && sleep $(($RANDOM % 30))
+    echo "[WARNING] $(date -R) rsync from $src failed with code $ret_rsync; attempt $I of ${attempts}..." >>"${tmperr}"
+    ((I < attempts)) && sleep 1
 done
 
-echo "[ERROR] rsync from $src failed ${attempts} times. Aborted." 1>&2
+echo "[ERROR] rsync from $src failed ${attempts} times. Aborted." >>"${tmperr}"
 exit 1
