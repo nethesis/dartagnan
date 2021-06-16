@@ -27,9 +27,12 @@ dest=$1 ; shift
 source /etc/porthos/xrsync.conf
 
 function exithandler() {
-    # If exit code is non-zero, copy error file contents to stderr
     if [[ $? != 0 ]]; then
-        cat "${tmperr}" >&2
+        # If exit code is non-zero, copy error file contents to syslog and stderr
+        logger -t xrsync -s -f "${tmperr}"
+    else
+        # Log to syslog only
+        logger -t xrsync -f "${tmperr}"
     fi
     rm -f "${tmperr}"
 }
@@ -60,6 +63,7 @@ for ((I=1; I <= attempts; I++)); do
     rsync -aqSH --no-super --no-perms --chmod=ugo=rwX --no-g --no-o "${@}" "${src}" "${dest}" 2>>"${tmperr}"
     ret_rsync=$?
     if [[ $ret_rsync == 0 ]]; then
+        echo "sync-success from ${src} to ${dest}" >>"${tmperr}"
         exit 0
     elif [[ $ret_rsync == 1 ]]; then
         echo "[ERROR] rsync bad syntax" >>"${tmperr}"
