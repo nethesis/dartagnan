@@ -161,6 +161,6 @@ CREATE TABLE volume_discounts (
   max_volume numeric
 );
 
-INSERT INTO volume_discounts VALUES (1, 15, 6, 10);
-INSERT INTO volume_discounts VALUES (2, 20, 11, 20);
-INSERT INTO volume_discounts VALUES (3, 25, 21, 50);
+INSERT INTO volume_discounts VALUES (1, 15, 5, 9);
+INSERT INTO volume_discounts VALUES (2, 20, 10, 19);
+INSERT INTO volume_discounts VALUES (3, 25, 20, 50);
