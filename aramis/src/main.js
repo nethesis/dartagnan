@@ -16,7 +16,7 @@ Vue.use(VueClipboard);
 Vue.use(VueGoodTable);
 
 window.$ = window.jQuery = require("patternfly/node_modules/jquery/dist/jquery.min.js");
-require("patternfly/node_modules/bootstrap/dist/js/bootstrap.min.js");
+require("bootstrap3/dist/js/bootstrap.min.js");
 require("patternfly/dist/js/patternfly.min");
 require("patternfly/dist/css/patternfly.min.css");
 require("patternfly/dist/css/patternfly-additions.min.css");
@@ -27,7 +27,7 @@ const i18n = new VueI18n({
   locale: langConf.locale,
   messages: langConf.messages
 });
-var moment = require("patternfly/node_modules/moment/moment.js");
+var moment = require("moment/moment.js");
 moment.locale(langConf.locale);
 
 // import filters

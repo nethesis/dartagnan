@@ -48,13 +48,13 @@ var Filters = {
     return time;
   },
   formatDate: function(value, hours = true) {
-    var moment = require("patternfly/node_modules/moment/moment.js");
+    var moment = require("moment/moment.js");
     if (+new Date(value) > 0)
       return moment(value).format("DD MMMM YYYY" + (hours ? ", HH:mm" : ""));
     else return "-";
   },
   dateFromNow: function(value) {
-    var moment = require("patternfly/node_modules/moment/moment.js");
+    var moment = require("moment/moment.js");
     var date = new Date(value);
     if (+date > 0) return moment(date).fromNow();
     else return "-";

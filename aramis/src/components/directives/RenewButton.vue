@@ -495,7 +495,7 @@ export default {
         );
     },
     calculateSubscription(date, subscription) {
-      var moment = require("patternfly/node_modules/moment/moment.js");
+      var moment = require("moment/moment.js");
       return moment(date, "YYYY-MM-DDTHH:mm:ss").add(
         subscription.period,
         "days"
