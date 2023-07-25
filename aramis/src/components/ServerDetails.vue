@@ -501,7 +501,7 @@ import LoginService from "./../services/login";
 import StorageService from "./../services/storage";
 import UtilService from "./../services/util";
 import _ from "lodash";
-import c3 from "patternfly/node_modules/c3";
+import c3 from "c3";
 
 import RenewButton from "./directives/RenewButton.vue";
 import DeleteServer from "./directives/DeleteServer.vue";
