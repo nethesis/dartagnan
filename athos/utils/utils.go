@@ -38,7 +38,7 @@ import (
 )
 
 func GenerateUUID() string {
-	u := uuid.Must(uuid.NewV4())
+	u := uuid.Must(uuid.NewV4(), nil)
 	return u.String()
 }
 

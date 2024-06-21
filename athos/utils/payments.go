@@ -26,7 +26,7 @@ import (
 
 	"github.com/nethesis/dartagnan/athos/database"
 
-	"github.com/logpacker/PayPal-Go-SDK"
+	"github.com/nethesis/PayPal-Go-SDK"
 	"github.com/nethesis/dartagnan/athos/configuration"
 	"github.com/nethesis/dartagnan/athos/models"
 )

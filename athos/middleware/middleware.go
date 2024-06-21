@@ -28,15 +28,15 @@ import (
 	"strings"
 	"time"
 
-	auth0 "github.com/auth0-community/go-auth0"
 	"github.com/gin-gonic/gin"
-	"github.com/logpacker/PayPal-Go-SDK"
+	"github.com/nethesis/PayPal-Go-SDK"
+	auth0 "github.com/nethesis/go-auth0"
 	jose "gopkg.in/square/go-jose.v2"
 
 	"github.com/nethesis/dartagnan/athos/configuration"
-	"github.com/nethesis/dartagnan/athos/utils"
-	"github.com/nethesis/dartagnan/athos/models"
 	"github.com/nethesis/dartagnan/athos/database"
+	"github.com/nethesis/dartagnan/athos/models"
+	"github.com/nethesis/dartagnan/athos/utils"
 )
 
 func respondWithError(code int, message string, c *gin.Context) {
@@ -129,7 +129,6 @@ func PaymentCheck(paymentID string, planCode string, uuid string) bool {
 	}
 	return false
 }
-
 
 func SavePaymentDetails(paymentID string, systemUUID string) {
 	var system models.System
