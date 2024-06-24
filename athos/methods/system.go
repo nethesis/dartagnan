@@ -31,6 +31,7 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 
 	"github.com/nethesis/dartagnan/athos/cache"
+	"github.com/nethesis/dartagnan/athos/configuration"
 	"github.com/nethesis/dartagnan/athos/database"
 	"github.com/nethesis/dartagnan/athos/middleware"
 	"github.com/nethesis/dartagnan/athos/models"
@@ -40,23 +41,37 @@ import (
 func CreateSystem(c *gin.Context) {
 	creatorID := c.MustGet("authUser").(string)
 
+	// count trial subscriptions
+	ns8Count := utils.CountTrialNS8Subscription(creatorID)
+	nsecCount := utils.CountTrialNSecSubscription(creatorID)
+
 	var json models.SystemJSON
 	if err := c.BindJSON(&json); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "request fields malformed", "error": err.Error()})
 		return
 	}
 
+	// check if trial already exists
+	if json.Type == "ns8" && ns8Count > configuration.Config.TrialLimit {
+		c.JSON(http.StatusConflict, gin.H{"status": "one or more NethServer 8 subscription trials found. no others can be created"})
+		return
+	}
+	if json.Type == "nsec" && nsecCount > configuration.Config.TrialLimit {
+		c.JSON(http.StatusConflict, gin.H{"status": "one or more NethSecurity 8 subscription trials found. no others can be created"})
+		return
+	}
+
 	// get subscription plan
-	subscriptionPlan := utils.GetSubscriptionPlanByCode("trial")
+	subscriptionPlan := utils.GetSubscriptionPlanByCode("trial-" + json.Type)
 
 	// create system
 	uuid := utils.GenerateUUID()
 	secret := utils.GenerateSecret(uuid)
 	system := models.System{
 		CreatorID:    creatorID,
-		UUID:         uuid,
+		UUID:         json.Type + "-" + uuid,
 		Secret:       secret,
-		Tags:         "trial",
+		Tags:         "trial-" + json.Type,
 		PublicIP:     "",
 		Status:       "active",
 		Notification: json.Notification,
@@ -215,6 +230,7 @@ func GetSystem(c *gin.Context) {
 
 func DeleteSystem(c *gin.Context) {
 	var system models.System
+	var subscription models.Subscription
 	creatorID := c.MustGet("authUser").(string)
 
 	systemID := c.Param("system_id")
@@ -227,13 +243,20 @@ func DeleteSystem(c *gin.Context) {
 		return
 	}
 
+	// get subscription
+	db.Where("id = ?", system.SubscriptionID).First(&subscription)
+
 	if err := db.Delete(&system).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"message": "system not deleted", "error": err.Error()})
 		return
 	}
 	if res := cache.DeleteValidSystem(system); !res {
-		// Soft fail, chache can be restored later
+		// Soft fail, cache can be restored later
 		fmt.Println("[ERROR]: can't delete %s from cache", system.UUID)
+	}
+	if err := db.Delete(&subscription).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"message": "subscription not deleted", "error": err.Error()})
+		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
@@ -265,6 +288,9 @@ func RenewalPlan(c *gin.Context) {
 		system.Subscription.ValidFrom = time.Now().UTC()
 		system.Subscription.ValidUntil = system.Subscription.ValidUntil.AddDate(0, 0, system.Subscription.SubscriptionPlan.Period)
 		system.Subscription.Status = "valid"
+
+		// update uuid by adding prefix (ns8 or nsec)
+		system.UUID = utils.GetSystemTypeBySubscriptionPlan(system.Subscription.SubscriptionPlan.ID) + "-" + system.UUID
 
 		// update system info
 		if err := db.Save(&system).Error; err != nil {
@@ -335,6 +361,9 @@ func UpgradePlan(c *gin.Context) {
 			system.Subscription.ValidUntil = time.Now().UTC().AddDate(0, 0, newSubscriptionPlan.Period)
 			system.Subscription.Status = "valid"
 
+			// update uuid by adding prefix (ns8 or nsec)
+			system.UUID = utils.GetSystemTypeBySubscriptionPlan(system.Subscription.SubscriptionPlan.ID) + "-" + system.UUID
+
 			// update system info
 			if err := db.Save(&system).Error; err != nil {
 				c.JSON(http.StatusBadRequest, gin.H{"message": "system subscription plan not updated", "error": err.Error()})
@@ -354,4 +383,16 @@ func UpgradePlan(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"status": "success"})
+}
+
+func Counters(c *gin.Context) {
+	// get creator id
+	creatorID := c.MustGet("authUser").(string)
+
+	// get counters
+	ns8Count := utils.CountTrialNS8Subscription(creatorID)
+	nsecCount := utils.CountTrialNSecSubscription(creatorID)
+
+	// return counters
+	c.JSON(http.StatusOK, gin.H{"status": "success", "ns8": ns8Count, "nsec": nsecCount, "limit": configuration.Config.TrialLimit})
 }

@@ -58,7 +58,12 @@ func main() {
 	corsConf.AllowMethods = configuration.Config.Cors.Methods
 	router.Use(cors.New(corsConf))
 
+	// create api group
 	api := router.Group("/api")
+
+	// create basic auth apis
+	api.GET("/auth", methods.BasicAuth)
+	api.GET("/auth/service/:service", methods.BasicAuthService)
 
 	// protect API using SystemID middleware
 	machine := api.Group("/machine")
@@ -117,6 +122,7 @@ func main() {
 			systems.GET("/:system_id/upgrade_price", methods.UpgradePlanPrice)
 			systems.POST("/:system_id/upgrade", methods.UpgradePlan)
 
+			systems.GET("/counters", methods.Counters)
 		}
 
 		plans := ui.Group("/plans")

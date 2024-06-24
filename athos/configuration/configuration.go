@@ -78,6 +78,7 @@ type Configuration struct {
 		Country string `json:"country"`
 	}
 	Notifications Notifications `json:"notifications"`
+	TrialLimit    int           `json:"trial_limit"`
 }
 
 var Config = Configuration{}
