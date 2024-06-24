@@ -38,10 +38,10 @@
         "email": {
                 "from": "noreply@YOUR_DOMAIN",
                 "smtp_host": "YOUR_SMTP_HOST",
-                "smtp_port": YOUR_SMTP_PORT,
+                "smtp_port": "YOUR_SMTP_PORT",
                 "smtp_user": "YOUR_SMTP_USER",
                 "smtp_password": "YOUR_SMTP_PASSWORD"
         }
-    }
-
+    },
+    "trial_limit": 1
 }
