@@ -9,8 +9,12 @@ nsec_SERVICES=(threat_shield report hotspot)
 # declare licenses and services price maps
 declare -A LICENSES_PRICES
 declare -A SERVICE_PRICES
+declare -A MAP_NAMES
+declare -A MAP_DESCRIPTIONS
 LICENSES_PRICES=( ["personal-ns8"]=60 ["personal-nsec"]=60 ["business-ns8"]=250 ["business-nsec"]=250 )
 SERVICE_PRICES=( ["threat_shield"]=5 ["report"]=6 ["hotspot"]=7 ["nethvoice"]=10)
+MAP_NAMES=( ["personal-ns8"]="Personal (NS8)" ["business-ns8"]="Business (NS8)" ["personal-nsec"]="Personal (NSec)" ["business-nsec"]="Business (NSec)" )
+MAP_DESCRIPTIONS=( ["personal-ns8"]="Personal NethServer 8" ["business-ns8"]="Business NethServer 8" ["personal-nsec"]="Personal NethSecurity 8" ["business-nsec"]="Business NethSecurity 8" )
 
 # sort services by name
 IFS=$'\n' ns8_services_list=($(sort -n <<<"${ns8_SERVICES[*]}"))
@@ -61,8 +65,12 @@ for p in "${PRODUCTS[@]}"; do
             # sum basic license price with services price
             total=$(( $license_price + $service_total ))
 
+            # define license name and description
+            name=$(echo "${MAP_NAMES[$l-$p]}")
+            description=$(echo "${MAP_DESCRIPTIONS[$l-$p]}")
+
             # print insert query
-            (IFS=,; printf "INSERT INTO subscription_plans VALUES ($c, '$l-$p+%s', '', '', $total.00, 365);\n"  "${list[*]}")
+            (IFS=,; printf "INSERT INTO subscription_plans VALUES ($c, '!$l-$p+%s', '$l-$p', '$name', '$description', $total.00, $license_price.00, 365);\n"  "${list[*]}")
 
             # increment insert id
             (( c++ ))

@@ -7,40 +7,44 @@ GRANT ALL PRIVILEGES ON DATABASE dartagnan to dtuser;
 CREATE TABLE subscription_plans (
     id serial not null primary key,
     code character varying(1024) not null,
+    base_code character varying(1024) not null,
     name character varying(1024) not null,
     description character varying(1024) not null,
     price numeric,
-    period numeric default null
+    base_price numeric,
+    period numeric default null,
+    UNIQUE (id, code)
 );
 
-INSERT INTO subscription_plans VALUES (1, 'trial', 'Trial Pizza', '30 Day Trial', 0, 30);
-INSERT INTO subscription_plans VALUES (2, 'crostino', 'Crostino', '- Stable Updates repository
+INSERT INTO subscription_plans VALUES (1, 'trial', 'trial', 'Trial Pizza', '30 Day Trial', 0, 0, 30);
+INSERT INTO subscription_plans VALUES (2, 'crostino', 'crostino', 'Crostino', '- Stable Updates repository
 - Community Support
-- Support tickets not included / 100 € each', 48.00, 365);
-INSERT INTO subscription_plans VALUES (3, 'lasagna', 'Lasagna', '- Stable Updates repository
+- Support tickets not included / 100 € each', 48.00, 48.00, 365);
+INSERT INTO subscription_plans VALUES (3, 'lasagna', 'lasagna', 'Lasagna', '- Stable Updates repository
 - Professional support via Email + SSH
-- 3 support tickets/year included', 250.0, 365);
-INSERT INTO subscription_plans VALUES (4, 'fiorentina', 'Fiorentina', '- Stable Updates repository
+- 3 support tickets/year included', 250.0, 250.00, 365);
+INSERT INTO subscription_plans VALUES (4, 'fiorentina', 'fiorentina', 'Fiorentina', '- Stable Updates repository
 - Professional support via Email + SSH
 - 6 support tickets/year included
-- Monitoring Portal', 450.0, 365);
-INSERT INTO subscription_plans VALUES (5, 'pizza', 'Pizza', '- Stable Updates repository
+- Monitoring Portal', 450.00, 450.00, 365);
+INSERT INTO subscription_plans VALUES (5, 'pizza', 'pizza', 'Pizza', '- Stable Updates repository
 - Professional support via Email + SSH + Phone
 - 12 support tickets/year included
-- Monitoring Portal', 800.0, 365);
+- Monitoring Portal', 800.00, 800.00, 365);
 
 /* insert new subscription versions*/
-INSERT INTO subscription_plans VALUES (6, 'trial-ns8', 'Trial Business (NS8)', '30 Day Trial', 0, 30);
-INSERT INTO subscription_plans VALUES (7, 'trial-nsec', 'Trial Business (NSec)', '30 Day Trial', 0, 30);
+INSERT INTO subscription_plans VALUES (6, 'trial-ns8', 'trial-ns8', 'Trial Business (NS8)', '30 Day Trial', 0, 0, 30);
+INSERT INTO subscription_plans VALUES (7, 'trial-nsec', 'trial-nsec', 'Trial Business (NSec)', '30 Day Trial', 0, 0, 30);
 
-INSERT INTO subscription_plans VALUES (8, 'personal-ns8', 'Personal (NS8)', 'Personal NethServer 8', 60.00, 365);
-INSERT INTO subscription_plans VALUES (9, 'personal-nsec', 'Personal (NSec)', 'Personal NethSecurity 8', 60.00, 365);
+INSERT INTO subscription_plans VALUES (8, 'personal-ns8', 'personal-ns8', 'Personal (NS8)', 'Personal NethServer 8', 60.00, 60.00, 365);
+INSERT INTO subscription_plans VALUES (9, 'personal-nsec', 'personal-nsec', 'Personal (NSec)', 'Personal NethSecurity 8', 60.00, 60.00, 365);
 
-INSERT INTO subscription_plans VALUES (10, 'business-ns8', 'Business (NS8)', 'Business NethServer 8', 250.00, 365);
-INSERT INTO subscription_plans VALUES (11, 'business-nsec', 'Business (NSec)', 'Business NethSecurity 8', 250.00, 365);
+INSERT INTO subscription_plans VALUES (10, 'business-ns8', 'business-ns8', 'Business (NS8)', 'Business NethServer 8', 250.00, 250.00, 365);
+INSERT INTO subscription_plans VALUES (11, 'business-nsec', 'business-nsec', 'Business (NSec)', 'Business NethSecurity 8', 250.00, 250.00, 365);
 
 /* set price to 0 for older subscription versions*/
 UPDATE subscription_plans SET price = 0 WHERE ID < 6;
+UPDATE subscription_plans SET base_price = 0 WHERE ID < 6;
 
 CREATE TABLE subscriptions (
     id serial not null primary key,
