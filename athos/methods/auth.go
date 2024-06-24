@@ -23,11 +23,13 @@ package methods
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"github.com/nethesis/dartagnan/athos/database"
 	"github.com/nethesis/dartagnan/athos/models"
+	"github.com/nethesis/dartagnan/athos/utils"
 )
 
 func BasicAuth(c *gin.Context) {
@@ -61,6 +63,58 @@ func BasicAuth(c *gin.Context) {
 }
 
 func BasicAuthService(c *gin.Context) {
+	// define model
+	var system models.System
+
+	// get http basic credentials
+	uuid, secret, _ := c.Request.BasicAuth()
+
+	// get service name
+	service := c.Param("service")
+
+	// init db instance
+	db := database.Instance()
+	db.Preload("Subscription.SubscriptionPlan").Where("uuid = ? AND secret = ?", uuid, secret).First(&system)
+
+	// check if system exists
+	if system.ID == 0 {
+		// response 401
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"code":    401,
+			"message": "basic auth failed. system not found",
+			"data":    nil,
+		})
+		return
+	}
+
+	// extract service from subscription plan
+	servicesParts := strings.Split(system.Subscription.SubscriptionPlan.Code, "+")
+
+	// check if there are services
+	if len(servicesParts) <= 1 {
+		// response 401
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"code":    401,
+			"message": "basic auth failed. service not found in system subscription",
+			"data":    nil,
+		})
+		return
+	}
+
+	// get single services
+	services := strings.Split(servicesParts[1], ",")
+
+	// check if service is in subscription plan
+	if !utils.ContainsS(services, service) {
+		// response 401
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"code":    401,
+			"message": "basic auth failed. service not found in system subscription",
+			"data":    nil,
+		})
+		return
+	}
+
 	// response 200
 	c.JSON(http.StatusOK, gin.H{
 		"code":    200,

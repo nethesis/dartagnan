@@ -129,7 +129,6 @@ func main() {
 		{
 			plans.GET("", methods.GetSubscriptionPlans)
 			plans.GET("/volume_discount", methods.VolumeDiscountPrice)
-
 		}
 
 		billings := ui.Group("/billings")

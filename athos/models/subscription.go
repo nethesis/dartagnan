@@ -28,10 +28,12 @@ import (
 
 type SubscriptionPlan struct {
 	ID          int     `db:"id" json:"id"`
+	BaseCode    string  `db:"base_code" json:"base_code"`
 	Code        string  `db:"code" json:"code"`
 	Name        string  `db:"name" json:"name"`
 	Description string  `db:"description" json:"description"`
 	Price       float64 `db:"price" json:"price"`
+	BasePrice   float64 `db:"base_price" json:"base_price"`
 	Period      int     `db:"period" json:"period"`
 }
 
