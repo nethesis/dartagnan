@@ -183,7 +183,7 @@
       "nethspot_get_credentials": "Get credentials",
       "nethspot_text": "Access to my.nethspot.com and manage hotspots.",
       "warning": "Warning",
-      "credentials_alert": "You will only see these credentials once. save them in a safe place!"
+      "credentials_alert": "You will only see these credentials once. Save them in a safe place!"
     },
     "action": "Action",
     "next": "Next",
