@@ -289,9 +289,6 @@ func RenewalPlan(c *gin.Context) {
 		system.Subscription.ValidUntil = system.Subscription.ValidUntil.AddDate(0, 0, system.Subscription.SubscriptionPlan.Period)
 		system.Subscription.Status = "valid"
 
-		// update uuid by adding prefix (ns8 or nsec)
-		system.UUID = utils.GetSystemTypeBySubscriptionPlan(system.Subscription.SubscriptionPlan.ID) + "-" + system.UUID
-
 		// update system info
 		if err := db.Save(&system).Error; err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"message": "system subscription plan not renewed", "error": err.Error()})
@@ -360,9 +357,6 @@ func UpgradePlan(c *gin.Context) {
 			system.Subscription.ValidFrom = time.Now().UTC()
 			system.Subscription.ValidUntil = time.Now().UTC().AddDate(0, 0, newSubscriptionPlan.Period)
 			system.Subscription.Status = "valid"
-
-			// update uuid by adding prefix (ns8 or nsec)
-			system.UUID = utils.GetSystemTypeBySubscriptionPlan(system.Subscription.SubscriptionPlan.ID) + "-" + system.UUID
 
 			// update system info
 			if err := db.Save(&system).Error; err != nil {

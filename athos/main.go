@@ -37,7 +37,7 @@ import (
 
 func main() {
 	// read and init configuration
-	ConfigFilePtr := flag.String("c", "/opt/dartagnan/athos/conf.json", "Path to configuration file")
+	ConfigFilePtr := flag.String("c", "/opt/dartagnan/config.json", "Path to configuration file")
 	flag.Parse()
 	configuration.Init(ConfigFilePtr)
 
@@ -146,6 +146,11 @@ func main() {
 		utils := ui.Group("/utils")
 		{
 			utils.GET("/reverse_lookup/:ip", methods.ReverseLookup)
+		}
+
+		integrations := ui.Group("/integrations")
+		{
+			integrations.POST("/:integration", methods.CreateIntegration)
 		}
 	}
 	// handle missing endpoint

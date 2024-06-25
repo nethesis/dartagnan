@@ -24,6 +24,7 @@ package methods
 import (
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -41,7 +42,7 @@ func BasicAuth(c *gin.Context) {
 
 	// init db instance
 	db := database.Instance()
-	db.Where("uuid = ? AND secret = ?", uuid, secret).First(&system)
+	db.Preload("Subscription.SubscriptionPlan").Where("uuid = ? AND secret = ?", uuid, secret).First(&system)
 
 	// check if system exists
 	if system.ID == 0 {
@@ -49,6 +50,17 @@ func BasicAuth(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"code":    401,
 			"message": "basic auth failed. system not found",
+			"data":    nil,
+		})
+		return
+	}
+
+	// check if system subscription is expired
+	if time.Now().After(system.Subscription.ValidUntil) {
+		// response 401
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"code":    401,
+			"message": "basic auth failed. system subscription is expired",
 			"data":    nil,
 		})
 		return
@@ -82,6 +94,17 @@ func BasicAuthService(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{
 			"code":    401,
 			"message": "basic auth failed. system not found",
+			"data":    nil,
+		})
+		return
+	}
+
+	// check if system subscription is expired
+	if time.Now().After(system.Subscription.ValidUntil) {
+		// response 401
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"code":    401,
+			"message": "basic auth failed. system subscription is expired",
 			"data":    nil,
 		})
 		return
