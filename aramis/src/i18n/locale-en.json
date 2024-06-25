@@ -6,6 +6,7 @@
       "dashboard": "Dashboard",
       "alerts": "Alerts",
       "servers": "Servers",
+      "services": "Services",
       "profile": "Profile",
       "get_support": "Get support",
       "login": "Login",
@@ -17,8 +18,7 @@
       "last_login": "Last login",
       "email_is": "Email is",
       "billing_not_configured": "Billing information missing",
-      "billing_not_configured_desc":
-        "Insert your billing information in the fileds below",
+      "billing_not_configured_desc": "Insert your billing information in the fileds below",
       "info": "Information",
       "billing": "Billing",
       "name": "Name",
@@ -42,9 +42,10 @@
     },
     "servers": {
       "no_servers_title": "No servers found",
-      "no_servers_subtitle":
-        "You don't have any servers. Click on the button below to create one",
+      "no_servers_subtitle": "You don't have any servers. Click on the button below to create one",
       "create_server": "Create server",
+      "create_server_ns8": "Create server (NS8)",
+      "create_server_nsec": "Create server (NSec)",
       "new_server": "New server",
       "server_created": "Server created successfully",
       "done": "Done",
@@ -82,8 +83,7 @@
       "no_alerts_found": "No alerts found",
       "inventory_available": "Inventory available",
       "inventory_not_available": "Inventory not available",
-      "inventory_not_available_desc":
-        "This system has not yet sent its inventory",
+      "inventory_not_available_desc": "This system has not yet sent its inventory",
       "public_ip": "Public IP",
       "ns_lookup": "Reverse DNS Lookup",
       "version": "Version",
@@ -123,7 +123,10 @@
       "more_info": "More info",
       "secret": "Secret",
       "show_secret": "Show secret",
-      "license_valid_not_delete": "This server can't be deleted. There's an active license."
+      "license_valid_not_delete": "This server can't be deleted. There's an active license.",
+      "trial_exceed": "Trials exceeded for this subscription type",
+      "trials_limit": "Trials limit",
+      "trials_limit_text": "You can create {ns8} NethServer 8 and {nsec} NethSecurity 8 systems with trial subscription"
     },
     "payment": {
       "renew": "Renew plan",
@@ -147,7 +150,10 @@
       "active_licenses": "Active licenses",
       "taxes": "Taxes",
       "volume_discount": "Volume discount",
-      "previous_license_discount": "Previous license discount"
+      "previous_license_discount": "Previous license discount",
+      "services": "Additional services",
+      "invalid_subscription": "Invalid subscription plan!",
+      "invalid_subscription_text": "The selected subscription is no more available. Please select a different subscription plan."
     },
     "alerts": {
       "all": "All",
@@ -172,6 +178,12 @@
       "search": "Search",
       "server": "Server",
       "action": "Action"
+    },
+    "integrations": {
+      "nethspot_get_credentials": "Get credentials",
+      "nethspot_text": "Access to my.nethspot.com and manage hotspots.",
+      "warning": "Warning",
+      "credentials_alert": "You will only see these credentials once. save them in a safe place!"
     },
     "action": "Action",
     "next": "Next",

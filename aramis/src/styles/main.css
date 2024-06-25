@@ -376,6 +376,10 @@ textarea {
   right: 0;
 }
 
+.extra-padding {
+  padding-bottom: 18px;
+}
+
 .absolute-center-top {
   margin: auto !important;
   position: absolute !important;

@@ -1,6 +1,6 @@
 <template>
   <div class="login-pf">
-    <div v-if="sessionExpired" class="alert alert-warning alert-dismissable absolute-center-message">
+    <div v-if="sessionExpired" class="alert alert-warning alert-dismissable absolute-center-message extra-padding">
       <span class="pficon pficon-warning-triangle-o"></span>
       <strong>{{$t('login.session_expired')}}</strong>. {{$t('login.session_expired_desc')}}.
     </div>
