@@ -63,7 +63,7 @@ func CreateIntegration(c *gin.Context) {
 	}
 
 	// exec integration script
-	out, err := exec.Command("/opt/dartagnan/"+integration+".sh", "/opt/dartagnan/config.json", email).Output()
+	out, err := exec.Command("/opt/dartagnan/integrations/"+integration+".sh", "/opt/dartagnan/config.json", email).Output()
 
 	// parse json output
 	var result map[string]interface{}

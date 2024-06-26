@@ -64,12 +64,14 @@ Instruction for a clean CentOS 7.
    cp ./roles/athos/files/athos.service /etc/system/athos.service
    ```
 
-7. Create a configuration file:
+7. Create configuration file, templates, integrations and licenses:
 
    ```
    cp ./roles/athos/files/config.json /opt/dartagnan/
    cp -r ./athos/templates /opt/dartagnan/
-   
+   cp -r ./athos/integrations /opt/dartagnan/
+   cp -r ./deploy/roles/athos/files/license_generator.sh /opt/dartagnan/
+
    ```
 
    Edit at least the following options inside `/opt/dartagnan/config.json`:
@@ -105,7 +107,7 @@ Instruction for a clean CentOS 7.
    systemctl enable --now certbot-renew.timer
    certbot certonly --dns-digitalocean --dns-digitalocean-credentials /etc/letsencrypt/digitalocean.ini --dns-digitalocean-propagation-seconds 60 --register-unsafely-without-email --non-interactive --agree-tos --cert-name athos -d YOUR_DOMAIN
    ```
- 
+
    Replace `XXXXXXX` with your valid token and `YOUR_DOMAIN` with your server public FQDN.
 
 10. Configure nginx
