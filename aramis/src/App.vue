@@ -181,6 +181,7 @@ export default {
     if (Object.keys(this.$route.query).length > 0) {
       for (var p in this.$route.query) {
         this.set(this.$route.query[p], true);
+        this.set(p, this.$route.query[p])
       }
     }
 

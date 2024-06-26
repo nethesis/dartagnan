@@ -41,10 +41,13 @@ export default {
       this.doLogin();
       this.delete("autoLogin");
     }
+
+    var currentProduct = this.get("product") || "nethserver";
+
     return {
       sessionExpired: sessionExpired,
       appName: CONFIG.APP_NAME,
-      iframeURL: CONFIG.FRAME_URL,
+      iframeURL: CONFIG.FRAME_URL[currentProduct],
     };
   },
   methods: {
