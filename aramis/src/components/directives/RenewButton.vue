@@ -672,7 +672,11 @@ export default {
         );
     },
     changePlan(plan, withServices) {
-      console.log(plan, this.selectedPlan)
+      if (this.currentServices.length > 0 && !withServices) {
+        this.selectedServices = this.currentServices;
+        withServices = true;
+      }
+
       var newCode = plan.base_code;
       if (withServices && this.selectedServices.length > 0) {
         newCode = "!" + newCode + "+" + this.selectedServices.sort().join(",");
@@ -680,7 +684,10 @@ export default {
         this.selectedServices = [];
       }
 
-      if (newCode !== this.obj.subscription.subscription_plan.code) {
+      if (
+        newCode !== this.obj.subscription.subscription_plan.code ||
+        withServices
+      ) {
         // handle upgrade
         var context = this;
         this.calculateUpgradePrice(newCode, function (data) {

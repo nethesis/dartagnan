@@ -1,10 +1,21 @@
 <template>
   <div class="login-pf">
-    <div v-if="sessionExpired" class="alert alert-warning alert-dismissable absolute-center-message extra-padding">
+    <div
+      v-if="sessionExpired"
+      class="alert alert-warning alert-dismissable absolute-center-message extra-padding"
+    >
       <span class="pficon pficon-warning-triangle-o"></span>
-      <strong>{{$t('login.session_expired')}}</strong>. {{$t('login.session_expired_desc')}}.
+      <strong>{{ $t("login.session_expired") }}</strong
+      >. {{ $t("login.session_expired_desc") }}.
     </div>
-    <button @click="doLogin()" class="btn btn-primary btn-lg login-big absolute-center-top" type="button">{{ $t("login.login") }}</button>
+    <button
+      @click="doLogin()"
+      class="btn btn-primary btn-lg login-big absolute-center-top adjust-login-button"
+      type="button"
+    >
+      <span class="i fa fa-user icon-adjust"></span>
+      {{ $t("login.login") }}
+    </button>
     <iframe class="iframe-container" :src="iframeURL"></iframe>
   </div>
 </template>
@@ -33,7 +44,7 @@ export default {
     return {
       sessionExpired: sessionExpired,
       appName: CONFIG.APP_NAME,
-      iframeURL: CONFIG.FRAME_URL
+      iframeURL: CONFIG.FRAME_URL,
     };
   },
   methods: {
@@ -53,8 +64,8 @@ export default {
       if (plan == "lasagna") {
         return require("./../assets/lasagna-white.svg");
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -145,6 +156,10 @@ export default {
 .login-big {
   width: 180px !important;
   height: 40px !important;
-  font-size: 20px !important;
+  font-size: 16px !important;
+}
+
+.icon-adjust {
+  margin-right: 8px;
 }
 </style>

@@ -320,6 +320,9 @@ func UpgradePlanPrice(c *gin.Context) {
 
 	// calculate discount upgrade
 	daysDiff := system.Subscription.ValidUntil.Sub(time.Now().UTC())
+	if daysDiff < 0 {
+		daysDiff = 0
+	}
 	discount := (daysDiff.Hours() / 24) * system.Subscription.SubscriptionPlan.Price / float64(system.Subscription.SubscriptionPlan.Period)
 	finalPrice := newSubuscriptionPlan.Price - discount
 
