@@ -37,7 +37,7 @@ func GetSubscriptionPlans(c *gin.Context) {
 	var subscriptionPlans []models.SubscriptionPlan
 
 	db := database.Instance()
-	db.Find(&subscriptionPlans)
+	db.Where("code NOT LIKE '!%'").Find(&subscriptionPlans)
 
 	if len(subscriptionPlans) <= 0 {
 		c.JSON(http.StatusNotFound, gin.H{"message": "no subscription plans found!"})

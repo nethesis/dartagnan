@@ -9,6 +9,7 @@ import NotFound from "@/components/NotFound";
 import Dashboard from "@/components/Dashboard";
 import Alerts from "@/components/Alerts";
 import Servers from "@/components/Servers";
+import Services from "@/components/Services";
 import ServerDetail from "@/components/ServerDetails";
 import Profile from "@/components/Profile";
 
@@ -41,6 +42,11 @@ const router = new Router({
       path: "/servers",
       name: "Servers",
       component: Servers
+    },
+    {
+      path: "/services",
+      name: "Services",
+      component: Services
     },
     {
       path: "/servers/:id",

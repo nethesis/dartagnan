@@ -37,6 +37,10 @@ import (
 	"github.com/nethesis/dartagnan/athos/models"
 )
 
+type Result struct {
+	Count int
+}
+
 func GenerateUUID() string {
 	u := uuid.Must(uuid.NewV4(), nil)
 	return u.String()
@@ -313,4 +317,38 @@ func GetSystemFirstMailAddress(systemUuid string) string {
 	}
 
 	return address
+}
+
+func GetSystemTypeBySubscriptionPlan(id int) string {
+	// define system type
+	var systemType string
+
+	// get subscription plan
+	subscriptionPlan := GetSubscriptionPlanById(id)
+
+	// check subscription code to check type
+	if strings.Contains(subscriptionPlan.Code, "ns8") {
+		systemType = "ns8"
+	}
+	if strings.Contains(subscriptionPlan.Code, "nsec") {
+		systemType = "nsec"
+	}
+
+	return systemType
+}
+
+func CountTrialNS8Subscription(creatorID string) int {
+	var subscriptions []models.Subscription
+	db := database.Instance()
+	db.Where("user_id = ? AND subscription_plan_id IN (SELECT id FROM subscription_plans WHERE code LIKE 'trial-ns8')", creatorID).Find(&subscriptions)
+
+	return len(subscriptions)
+}
+
+func CountTrialNSecSubscription(creatorID string) int {
+	var subscriptions []models.Subscription
+	db := database.Instance()
+	db.Where("user_id = ? AND subscription_plan_id IN (SELECT id FROM subscription_plans WHERE code LIKE 'trial-nsec')", creatorID).Find(&subscriptions)
+
+	return len(subscriptions)
 }

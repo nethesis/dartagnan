@@ -76,6 +76,14 @@
             </router-link>
           </li>
 
+          <li v-bind:class="[getCurrentPath('services') ? 'active' : '', 'list-group-item']">
+            <router-link to="/services">
+              <span class="fa fa-cubes"></span>
+              <span class="list-group-item-value">{{ $t("menu.services") }}</span>
+
+            </router-link>
+          </li>
+
           <li class="list-group-item secondary-nav-item-pf mobile-nav-item-pf visible-xs-block" data-target="#user-secondary">
             <a href="#">
               <span class="pficon pficon-user" data-toggle="tooltip" title="" data-original-title="User"></span>
@@ -173,6 +181,7 @@ export default {
     if (Object.keys(this.$route.query).length > 0) {
       for (var p in this.$route.query) {
         this.set(this.$route.query[p], true);
+        this.set(p, this.$route.query[p])
       }
     }
 
