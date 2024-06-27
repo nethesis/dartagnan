@@ -13,8 +13,8 @@ declare -A MAP_NAMES
 declare -A MAP_DESCRIPTIONS
 LICENSES_PRICES=( ["personal-ns8"]=60 ["personal-nsec"]=60 ["business-ns8"]=250 ["business-nsec"]=250 )
 SERVICE_PRICES=( ["threat_shield"]=5 ["report"]=6 ["hotspot"]=7 ["nethvoice"]=10)
-MAP_NAMES=( ["personal-ns8"]="Personal (NS8)" ["business-ns8"]="Business (NS8)" ["personal-nsec"]="Personal (NSec)" ["business-nsec"]="Business (NSec)" )
-MAP_DESCRIPTIONS=( ["personal-ns8"]="Personal NethServer 8" ["business-ns8"]="Business NethServer 8" ["personal-nsec"]="Personal NethSecurity 8" ["business-nsec"]="Business NethSecurity 8" )
+MAP_NAMES=( ["personal-ns8"]="Personal NethServer" ["business-ns8"]="Business NethServer" ["personal-nsec"]="Personal NethSecurity" ["business-nsec"]="Business NethSecurity" )
+MAP_DESCRIPTIONS=( ["personal-ns8"]="Personal NethServer" ["business-ns8"]="Business NethServer" ["personal-nsec"]="Personal NethSecurity" ["business-nsec"]="Business NethSecurity" )
 
 # sort services by name
 IFS=$'\n' ns8_services_list=($(sort -n <<<"${ns8_SERVICES[*]}"))

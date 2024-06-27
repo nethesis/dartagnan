@@ -115,7 +115,12 @@
                             role="menuitem"
                             tabindex="-1"
                             href="#"
-                            >{{ p.name }}</a
+                          >
+                            <img
+                              :src="getImage(p.base_code)"
+                              class="plan-icon-mini"
+                            />
+                            {{ p.name }}</a
                           >
                         </li>
                       </ul>
@@ -529,6 +534,20 @@ export default {
     };
   },
   methods: {
+    getImage(s) {
+      if (s == "personal-ns8") {
+        return require("./../../assets/fiorentina.svg");
+      }
+      if (s == "personal-nsec") {
+        return require("./../../assets/pizza.svg");
+      }
+      if (s == "business-ns8") {
+        return require("./../../assets/crostino.svg");
+      }
+      if (s == "business-nsec") {
+        return require("./../../assets/lasagna.svg");
+      }
+    },
     extractProduct(license) {
       var product = license.split("-")[1];
       return product ? product.split("+")[0] : "";
@@ -871,5 +890,10 @@ export default {
   padding-left: 5px;
   text-align: left;
   margin-bottom: 0px;
+}
+
+.plan-icon-mini {
+  width: 30px;
+  margin-right: 0px;
 }
 </style>
