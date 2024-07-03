@@ -159,7 +159,7 @@
                           @change="changePlan(currentPlan, true)"
                           :disabled="currentServices.indexOf(s.code) != -1"
                         />
-                        <label :for="s.code">{{ s.name }} (+{{s.price}}€)</label
+                        <label :for="s.code">{{ s.name }} (+{{s.price}}€ / year)</label
                         ><br />
                       </li>
                     </ul>
@@ -197,7 +197,7 @@
                           currentPlan.full_price > 0
                             ? currentPlan.full_price
                             : 0
-                        }}€</strong
+                        }}€ / year</strong
                       >
                     </span>
                     <div
@@ -301,7 +301,9 @@
                   </div>
                   <div class="card-pf-item details-pay-item">
                     <span v-if="!onUpgradePriceCalc" class="card-pf-item-text">
-                      <strong>{{ currentPlan.price }}€</strong>
+
+                      <strong v-if="discounts.annualDiscount > 0">{{currentPlan.price}}€ (then {{ currentPlan.full_price }}€ / year)</strong>
+                      <strong v-if="discounts.annualDiscount == 0">{{ currentPlan.price }}€ / year</strong>
                       <span>+ {{ $t("payment.taxes") }}</span>
                     </span>
                     <div
