@@ -4,26 +4,24 @@
     <div v-if="isLoading" class="spinner spinner-lg"></div>
     <button
       v-if="!isLoading && servers.length > 0"
-      @click="(counters.ns8 >= counters.limit) ? undefined : addServer('ns8')"
+      @click="counters.ns8 >= counters.limit ? undefined : addServer('ns8')"
       :class="[
         'btn btn-primary btn-lg create-server-ns8',
-        (counters.ns8 >= counters.limit) ? 'disabled' : '',
+        counters.ns8 >= counters.limit ? 'disabled' : '',
       ]"
     >
       {{ $t("servers.create_server_ns8") }}
     </button>
     <button
       v-if="!isLoading && servers.length > 0"
-      @click="(counters.nsec >= counters.limit) ? undefined : addServer('nsec')"
+      @click="counters.nsec >= counters.limit ? undefined : addServer('nsec')"
       :class="[
         'btn btn-primary btn-lg create-server-nsec',
-        (counters.nsec >= counters.limit) ? 'disabled' : '',
+        counters.nsec >= counters.limit ? 'disabled' : '',
       ]"
     >
       {{ $t("servers.create_server_nsec") }}
     </button>
-
-
 
     <!-- filters -->
     <div v-if="!isLoading" class="row toolbar-pf filters-container">
@@ -156,9 +154,18 @@
     </div>
     <!-- end filters -->
 
-    <div v-if="servers.length > 0" class="alert alert-warning alert-dismissable info-trial">
+    <div
+      v-if="servers.length > 0"
+      class="alert alert-warning alert-dismissable info-trial"
+    >
       <span class="pficon pficon-warning-triangle-o"></span>
-      <strong>{{ $t("servers.trials_limit") }}:</strong> {{ $t("servers.trials_limit_text", {ns8: counters.limit - counters.ns8, nsec: counters.limit - counters.nsec}) }}.
+      <strong>{{ $t("servers.trials_limit") }}:</strong>
+      {{
+        $t("servers.trials_limit_text", {
+          ns8: counters.limit - counters.ns8,
+          nsec: counters.limit - counters.nsec,
+        })
+      }}.
     </div>
 
     <div v-if="!isLoading && servers.length == 0" class="blank-slate-pf">
@@ -211,9 +218,17 @@
               <img
                 data-toggle="tooltip"
                 data-placement="top"
-                :title="s.subscription.subscription_plan.name"
+                :title="
+                  isUnsupported(s.subscription.subscription_plan.base_code)
+                    ? s.subscription.subscription_plan.name + ' (EOL)'
+                    : s.subscription.subscription_plan.name
+                "
                 :src="getImage(s)"
-                class="plan-icon"
+                :class="
+                  isExpired(s.subscription.valid_until)
+                    ? 'plan-icon-expired'
+                    : 'plan-icon'
+                "
               />
               <span
                 :class="[
@@ -564,6 +579,14 @@ export default {
     },
     isExpired(date) {
       return new Date().toISOString() > date;
+    },
+    isUnsupported(plan) {
+      return (
+        plan == "crostino" ||
+        plan == "pizza" ||
+        plan == "fiorentina" ||
+        plan == "lasagna"
+      );
     },
     addServer(type) {
       this.$http
