@@ -3,16 +3,16 @@
 # define main variables
 PRODUCTS=(ns8 nsec)
 LICENSES=(personal business)
-ns8_SERVICES=(nethvoice)
-nsec_SERVICES=(threat_shield report hotspot)
+ns8_SERVICES=()
+nsec_SERVICES=(threat_shield flashstart_lite hotspot)
 
 # declare licenses and services price maps
 declare -A LICENSES_PRICES
 declare -A SERVICE_PRICES
 declare -A MAP_NAMES
 declare -A MAP_DESCRIPTIONS
-LICENSES_PRICES=( ["personal-ns8"]=60 ["personal-nsec"]=60 ["business-ns8"]=250 ["business-nsec"]=250 )
-SERVICE_PRICES=( ["threat_shield"]=5 ["report"]=6 ["hotspot"]=7 ["nethvoice"]=10)
+LICENSES_PRICES=( ["personal-ns8"]=120 ["personal-nsec"]=96 ["business-ns8"]=324 ["business-nsec"]=300 )
+SERVICE_PRICES=( ["threat_shield"]=96 ["flashstart_lite"]=18 ["hotspot"]=60 ["nethvoice"]=288 ["ldap_mattermost"]=24)
 MAP_NAMES=( ["personal-ns8"]="Personal NethServer" ["business-ns8"]="Business NethServer" ["personal-nsec"]="Personal NethSecurity" ["business-nsec"]="Business NethSecurity" )
 MAP_DESCRIPTIONS=( ["personal-ns8"]="Personal NethServer" ["business-ns8"]="Business NethServer" ["personal-nsec"]="Personal NethSecurity" ["business-nsec"]="Business NethSecurity" )
 

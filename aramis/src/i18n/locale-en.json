@@ -126,7 +126,7 @@
       "license_valid_not_delete": "This server can't be deleted. There's an active license.",
       "trial_exceed": "Trials exceeded for this subscription type",
       "trials_limit": "Trials limit",
-      "trials_limit_text": "You can create {ns8} NethServer 8 and {nsec} NethSecurity 8 systems with trial subscription"
+      "trials_limit_text": "You can create {ns8} NethServer and {nsec} NethSecurity systems with trial subscription"
     },
     "payment": {
       "renew": "Renew plan",
@@ -182,6 +182,8 @@
     "integrations": {
       "nethspot_get_credentials": "Get credentials",
       "nethspot_text": "Access to my.nethspot.com and manage hotspots.",
+      "nethspot_info": "Info:",
+      "nethspot_info_text": "To add an hotspot unit you must have an active subscription with the 'Hotspot' service.",
       "warning": "Warning",
       "credentials_alert": "You will only see these credentials once. Save them in a safe place!"
     },

@@ -69,6 +69,10 @@
               {{ $t("integrations.nethspot_text") }}
             </div>
           </div>
+          <div class="alert alert-info alert-dismissable adjust-size">
+            <span class="pficon pficon-info"></span>
+            <strong>{{ $t('integrations.nethspot_info') }}</strong> {{ $t('integrations.nethspot_info_text') }}
+          </div>
         </div>
       </div>
     </div>

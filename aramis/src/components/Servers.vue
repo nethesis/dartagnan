@@ -530,22 +530,34 @@ export default {
   },
   methods: {
     getImage(s) {
-      if (s.subscription.subscription_plan.base_code == "personal-ns8") {
-        return require("./../assets/fiorentina.svg");
-      }
-      if (s.subscription.subscription_plan.base_code == "personal-nsec") {
-        return require("./../assets/pizza.svg");
-      }
-      if (s.subscription.subscription_plan.base_code == "business-ns8") {
+       if (s.subscription.subscription_plan.base_code == "crostino") {
         return require("./../assets/crostino.svg");
       }
-      if (s.subscription.subscription_plan.base_code == "business-nsec") {
+      if (s.subscription.subscription_plan.base_code == "lasagna") {
         return require("./../assets/lasagna.svg");
+      }
+      if (s.subscription.subscription_plan.base_code == "fiorentina") {
+        return require("./../assets/fiorentina.svg");
+      }
+      if (s.subscription.subscription_plan.base_code == "pizza") {
+        return require("./../assets/pizza.svg");
+      }
+      if (s.subscription.subscription_plan.base_code == "personal-ns8") {
+        return require("./../assets/personal-ns8.svg");
+      }
+      if (s.subscription.subscription_plan.base_code == "personal-nsec") {
+        return require("./../assets/personal-nsec.svg");
+      }
+      if (s.subscription.subscription_plan.base_code == "business-ns8") {
+        return require("./../assets/business-ns8.svg");
+      }
+      if (s.subscription.subscription_plan.base_code == "business-nsec") {
+        return require("./../assets/business-nsec.svg");
       }
       if (s.subscription.subscription_plan.base_code.includes("trial")) {
         return require("./../assets/trial.svg");
       }
-      return require("./../assets/crostino.svg");
+      return require("./../assets/trial.svg");
     },
     handleCopy(status) {
       this.copySucceeded = status;

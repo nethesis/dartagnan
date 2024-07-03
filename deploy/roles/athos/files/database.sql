@@ -36,11 +36,11 @@ INSERT INTO subscription_plans VALUES (5, 'pizza', 'pizza', 'Pizza', '- Stable U
 INSERT INTO subscription_plans VALUES (6, 'trial-ns8', 'trial-ns8', 'Trial Business NethServer', '30 Day Trial', 0, 0, 30);
 INSERT INTO subscription_plans VALUES (7, 'trial-nsec', 'trial-nsec', 'Trial Business NethSecurity', '30 Day Trial', 0, 0, 30);
 
-INSERT INTO subscription_plans VALUES (8, 'personal-ns8', 'personal-ns8', 'Personal NethServer', 'Personal NethServer', 60.00, 60.00, 365);
-INSERT INTO subscription_plans VALUES (9, 'personal-nsec', 'personal-nsec', 'Personal NethSecurity', 'Personal NethSecurity', 60.00, 60.00, 365);
+INSERT INTO subscription_plans VALUES (8, 'personal-ns8', 'personal-ns8', 'Personal NethServer', 'Personal NethServer', 120.00, 120.00, 365);
+INSERT INTO subscription_plans VALUES (9, 'personal-nsec', 'personal-nsec', 'Personal NethSecurity', 'Personal NethSecurity', 96.00, 96.00, 365);
 
-INSERT INTO subscription_plans VALUES (10, 'business-ns8', 'business-ns8', 'Business NethServer', 'Business NethServer', 250.00, 250.00, 365);
-INSERT INTO subscription_plans VALUES (11, 'business-nsec', 'business-nsec', 'Business NethSecurity', 'Business NethSecurity', 250.00, 250.00, 365);
+INSERT INTO subscription_plans VALUES (10, 'business-ns8', 'business-ns8', 'Business NethServer', 'Business NethServer', 324.00, 324.00, 365);
+INSERT INTO subscription_plans VALUES (11, 'business-nsec', 'business-nsec', 'Business NethSecurity', 'Business NethSecurity', 300.00, 300.00, 365);
 
 /* set price to 0 for older subscription versions*/
 UPDATE subscription_plans SET price = 0 WHERE ID < 6;

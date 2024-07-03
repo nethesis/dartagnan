@@ -137,7 +137,10 @@
                   "
                   class="card-pf-items text-center"
                 >
-                  <div class="card-pf-item details-pay-item">
+                  <div
+                    v-if="services[extractProduct(currentPlan.code)] && services[extractProduct(currentPlan.code)].length > 0"
+                    class="card-pf-item details-pay-item"
+                  >
                     <span class="card-pf-item-text">
                       <strong>{{ $t("payment.services") }}</strong>
                     </span>
@@ -156,7 +159,7 @@
                           @change="changePlan(currentPlan, true)"
                           :disabled="currentServices.indexOf(s.code) != -1"
                         />
-                        <label :for="s.code">{{ s.name }}</label
+                        <label :for="s.code">{{ s.name }} (+{{s.price}}€)</label
                         ><br />
                       </li>
                     </ul>
@@ -499,16 +502,12 @@ export default {
       },
       plans: [],
       services: {
-        ns8: _.orderBy(
-          [{ name: "NethVoice", code: "nethvoice" }],
-          "name",
-          "asc"
-        ),
+        ns8: _.orderBy([], "name", "asc"),
         nsec: _.orderBy(
           [
-            { name: "Hotspot", code: "hotspot" },
-            { name: "Threat shield", code: "threat_shield" },
-            { name: "Report", code: "report" },
+            { name: "Hotspot", code: "hotspot", price: 60.0 },
+            { name: "Threat shield", code: "threat_shield", price: 96.0 },
+            { name: "Flashstart Lite", code: "flashstart_lite", price: 18.0 },
           ],
           "name",
           "asc"
