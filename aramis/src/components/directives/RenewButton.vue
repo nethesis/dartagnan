@@ -138,7 +138,10 @@
                   class="card-pf-items text-center"
                 >
                   <div
-                    v-if="services[extractProduct(currentPlan.code)] && services[extractProduct(currentPlan.code)].length > 0"
+                    v-if="
+                      services[extractProduct(currentPlan.code)] &&
+                      services[extractProduct(currentPlan.code)].length > 0
+                    "
                     class="card-pf-item details-pay-item"
                   >
                     <span class="card-pf-item-text">
@@ -159,7 +162,8 @@
                           @change="changePlan(currentPlan, true)"
                           :disabled="currentServices.indexOf(s.code) != -1"
                         />
-                        <label :for="s.code">{{ s.name }} (+{{s.price}}€ / year)</label
+                        <label :for="s.code"
+                          >{{ s.name }} (+{{ s.price }}€ / year)</label
                         ><br />
                       </li>
                     </ul>
@@ -187,7 +191,7 @@
                 <div class="card-pf-items text-center">
                   <div class="card-pf-item details-pay-item">
                     <span class="card-pf-item-text">
-                      <strong>{{ $t("payment.price") }}</strong>
+                      <strong>{{ $t("payment.price") }} </strong>
                     </span>
                   </div>
                   <div class="card-pf-item details-pay-item">
@@ -301,9 +305,13 @@
                   </div>
                   <div class="card-pf-item details-pay-item">
                     <span v-if="!onUpgradePriceCalc" class="card-pf-item-text">
-
-                      <strong v-if="discounts.annualDiscount > 0">{{currentPlan.price}}€ (then {{ currentPlan.full_price }}€ / year)</strong>
-                      <strong v-if="discounts.annualDiscount == 0">{{ currentPlan.price }}€ / year</strong>
+                      <strong v-if="discounts.annualDiscount > 0"
+                        >{{ currentPlan.price }}€ (then
+                        {{ currentPlan.full_price }}€ / year)</strong
+                      >
+                      <strong v-if="discounts.annualDiscount == 0"
+                        >{{ currentPlan.price }}€ / year</strong
+                      >
                       <span>+ {{ $t("payment.taxes") }}</span>
                     </span>
                     <div
@@ -713,6 +721,7 @@ export default {
         this.calculateUpgradePrice(newCode, function (data) {
           context.onUpgrade = true;
           context.currentPlan = plan;
+          context.currentPlan.id = data.id;
           context.currentPlan.price = data.price;
           context.currentPlan.full_price = data.full_price;
           context.discounts.annualDiscount =
@@ -742,6 +751,7 @@ export default {
                     100;
                 context.discounts.volumeDiscount = success.body.discount;
                 context.discounts.count = success.body.count;
+                context.currentPlan.code = newCode;
               },
               function (error) {
                 console.error(error);
@@ -774,6 +784,7 @@ export default {
                 (this.currentPlan.full_price * success.body.discount) / 100;
               this.discounts.volumeDiscount = success.body.discount;
               this.discounts.count = success.body.count;
+              this.currentPlan.code = newCode;
             },
             function (error) {
               console.error(error);
