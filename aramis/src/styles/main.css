@@ -471,6 +471,12 @@ textarea {
   height: 75px !important;
   font-size: 30px !important;
   line-height: 72px !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
+.expired-svg {
+  filter: opacity(0.5);
 }
 
 .renew-button {

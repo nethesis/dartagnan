@@ -543,19 +543,38 @@ export default {
     };
   },
   methods: {
-    getImage(s) {
-      if (s == "personal-ns8") {
-        return require("./../../assets/fiorentina.svg");
-      }
-      if (s == "personal-nsec") {
-        return require("./../../assets/pizza.svg");
-      }
-      if (s == "business-ns8") {
+     getImage(s) {
+      if (s == "crostino") {
         return require("./../../assets/crostino.svg");
       }
-      if (s == "business-nsec") {
+      if (s == "lasagna") {
         return require("./../../assets/lasagna.svg");
       }
+      if (s == "fiorentina") {
+        return require("./../../assets/fiorentina.svg");
+      }
+      if (s == "pizza") {
+        return require("./../../assets/pizza.svg");
+      }
+      if (s == "personal-ns8") {
+        return require("./../../assets/personal-ns8.svg");
+      }
+      if (s == "personal-nsec") {
+        return require("./../../assets/personal-nsec.svg");
+      }
+      if (s == "business-ns8") {
+        return require("./../../assets/business-ns8.svg");
+      }
+      if (s == "business-nsec") {
+        return require("./../../assets/business-nsec.svg");
+      }
+      if (s == "trial-ns8") {
+        return require("./../../assets/trial-ns8.svg");
+      }
+      if (s == "trial-nsec") {
+        return require("./../../assets/trial-nsec.svg");
+      }
+      return require("./../../assets/trial.svg");
     },
     extractProduct(license) {
       var product = license.split("-")[1];

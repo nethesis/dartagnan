@@ -33,8 +33,8 @@ INSERT INTO subscription_plans VALUES (5, 'pizza', 'pizza', 'Pizza', '- Stable U
 - Monitoring Portal', 800.00, 800.00, 365);
 
 /* insert new subscription versions*/
-INSERT INTO subscription_plans VALUES (6, 'trial-ns8', 'trial-ns8', 'Trial Business NethServer', '30 Day Trial', 0, 0, 30);
-INSERT INTO subscription_plans VALUES (7, 'trial-nsec', 'trial-nsec', 'Trial Business NethSecurity', '30 Day Trial', 0, 0, 30);
+INSERT INTO subscription_plans VALUES (6, 'trial-ns8', 'trial-ns8', 'Trial NethServer', '30 Day Trial', 0, 0, 30);
+INSERT INTO subscription_plans VALUES (7, 'trial-nsec', 'trial-nsec', 'Trial NethSecurity', '30 Day Trial', 0, 0, 30);
 
 INSERT INTO subscription_plans VALUES (8, 'personal-ns8', 'personal-ns8', 'Personal NethServer', 'Personal NethServer', 120.00, 120.00, 365);
 INSERT INTO subscription_plans VALUES (9, 'personal-nsec', 'personal-nsec', 'Personal NethSecurity', 'Personal NethSecurity', 96.00, 96.00, 365);

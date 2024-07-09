@@ -224,20 +224,11 @@
                     : s.subscription.subscription_plan.name
                 "
                 :src="getImage(s)"
-                :class="
-                  isExpired(s.subscription.valid_until)
-                    ? 'plan-icon-expired'
-                    : 'plan-icon'
-                "
-              />
-              <span
                 :class="[
-                  isExpired(s.subscription.valid_until)
-                    ? 'disabled-circle'
-                    : '',
+                  isExpired(s.subscription.valid_until) ? 'expired-svg' : '',
                   'pficon pficon-server card-pf-icon-circle adjust-icon-size',
                 ]"
-              ></span>
+              />
             </div>
             <h2
               @click="$parent.routeTo('servers/' + s.id)"
@@ -545,7 +536,7 @@ export default {
   },
   methods: {
     getImage(s) {
-       if (s.subscription.subscription_plan.base_code == "crostino") {
+      if (s.subscription.subscription_plan.base_code == "crostino") {
         return require("./../assets/crostino.svg");
       }
       if (s.subscription.subscription_plan.base_code == "lasagna") {
@@ -569,8 +560,11 @@ export default {
       if (s.subscription.subscription_plan.base_code == "business-nsec") {
         return require("./../assets/business-nsec.svg");
       }
-      if (s.subscription.subscription_plan.base_code.includes("trial")) {
-        return require("./../assets/trial.svg");
+      if (s.subscription.subscription_plan.base_code == "trial-ns8") {
+        return require("./../assets/trial-ns8.svg");
+      }
+      if (s.subscription.subscription_plan.base_code == "trial-nsec") {
+        return require("./../assets/trial-nsec.svg");
       }
       return require("./../assets/trial.svg");
     },
@@ -785,6 +779,6 @@ export default {
 }
 
 .adjust-height {
-  min-height: 327px;
+  min-height: 353px;
 }
 </style>
