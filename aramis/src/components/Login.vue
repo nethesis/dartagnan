@@ -2,9 +2,11 @@
   <div class="login-pf">
     <div
       v-if="sessionExpired"
-      class="alert alert-warning alert-dismissable absolute-center-message extra-padding"
+      class="alert alert-warning alert-dismissable absolute-center-message extra-padding adjust-session-line"
     >
-      <span class="pficon pficon-warning-triangle-o"></span>
+      <span
+        class="pficon pficon-warning-triangle-o adjust-session-triangle"
+      ></span>
       <strong>{{ $t("login.session_expired") }}</strong
       >. {{ $t("login.session_expired_desc") }}.
     </div>
@@ -164,5 +166,13 @@ export default {
 
 .icon-adjust {
   margin-right: 8px;
+}
+
+.adjust-session-triangle {
+  top: 20px;
+}
+
+.adjust-session-line {
+  line-height: 35px;
 }
 </style>
