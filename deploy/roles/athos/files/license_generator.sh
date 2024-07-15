@@ -4,15 +4,15 @@
 PRODUCTS=(ns8 nsec)
 LICENSES=(personal business)
 ns8_SERVICES=()
-nsec_SERVICES=(threat_shield flashstart_lite hotspot)
+nsec_SERVICES=(threat_shield hotspot)
 
 # declare licenses and services price maps
 declare -A LICENSES_PRICES
 declare -A SERVICE_PRICES
 declare -A MAP_NAMES
 declare -A MAP_DESCRIPTIONS
-LICENSES_PRICES=( ["personal-ns8"]=120 ["personal-nsec"]=96 ["business-ns8"]=324 ["business-nsec"]=300 )
-SERVICE_PRICES=( ["threat_shield"]=96 ["flashstart_lite"]=18 ["hotspot"]=60 ["nethvoice"]=288 ["ldap_mattermost"]=24)
+LICENSES_PRICES=( ["personal-ns8"]=120 ["personal-nsec"]=97 ["business-ns8"]=320 ["business-nsec"]=297 )
+SERVICE_PRICES=( ["threat_shield"]=48 ["flashstart_lite"]=18 ["hotspot"]=120 ["nethvoice"]=280 ["ldap_mattermost"]=24)
 MAP_NAMES=( ["personal-ns8"]="Personal NethServer" ["business-ns8"]="Business NethServer" ["personal-nsec"]="Personal NethSecurity" ["business-nsec"]="Business NethSecurity" )
 MAP_DESCRIPTIONS=( ["personal-ns8"]="Personal NethServer" ["business-ns8"]="Business NethServer" ["personal-nsec"]="Personal NethSecurity" ["business-nsec"]="Business NethSecurity" )
 

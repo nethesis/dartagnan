@@ -512,12 +512,19 @@ export default {
       },
       plans: [],
       services: {
-        ns8: _.orderBy([], "name", "asc"),
+        ns8: _.orderBy(
+          [
+            // { name: "LDAP Mattermost", code: "ldap_mattermost", price: 120.0 },
+            // { name: "NethVoice", code: "nethvoice", price: 120.0 },
+          ],
+          "name",
+          "asc"
+        ),
         nsec: _.orderBy(
           [
-            { name: "Hotspot", code: "hotspot", price: 60.0 },
-            { name: "Threat shield", code: "threat_shield", price: 96.0 },
-            { name: "Flashstart Lite", code: "flashstart_lite", price: 18.0 },
+            { name: "Hotspot", code: "hotspot", price: 120.0 },
+            { name: "Threat shield", code: "threat_shield", price: 48.0 },
+            // { name: "Flashstart Lite", code: "flashstart_lite", price: 18.0 },
           ],
           "name",
           "asc"
@@ -543,7 +550,7 @@ export default {
     };
   },
   methods: {
-     getImage(s) {
+    getImage(s) {
       if (s == "crostino") {
         return require("./../../assets/crostino.svg");
       }
@@ -557,16 +564,16 @@ export default {
         return require("./../../assets/pizza.svg");
       }
       if (s == "personal-ns8") {
-        return require("./../../assets/personal-ns8.svg");
+        return require("./../../assets/circle-ns8.svg");
       }
       if (s == "personal-nsec") {
-        return require("./../../assets/personal-nsec.svg");
+        return require("./../../assets/circle-nsec.svg");
       }
       if (s == "business-ns8") {
-        return require("./../../assets/business-ns8.svg");
+        return require("./../../assets/circle-ns8.svg");
       }
       if (s == "business-nsec") {
-        return require("./../../assets/business-nsec.svg");
+        return require("./../../assets/circle-nsec.svg");
       }
       if (s == "trial-ns8") {
         return require("./../../assets/trial-ns8.svg");
