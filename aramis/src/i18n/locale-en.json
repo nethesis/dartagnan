@@ -126,7 +126,12 @@
       "license_valid_not_delete": "This server can't be deleted. There's an active license.",
       "trial_exceed": "Trials exceeded for this subscription type",
       "trials_limit": "Trials limit",
-      "trials_limit_text": "You can create {ns8} NethServer and {nsec} NethSecurity systems with trial subscription"
+      "trials_limit_text": "You can create {ns8} NethServer and {nsec} NethSecurity systems with trial subscription",
+      "ldap_mattermost": "LDAP Mattermost",
+      "nethvoice": "NethVoice",
+      "hotspot": "Hotspot",
+      "threat_shield": "Threat shield",
+      "flashstart_lite": "Flashstart Lite"
     },
     "payment": {
       "renew": "Renew plan",

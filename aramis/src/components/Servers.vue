@@ -321,6 +321,18 @@
                 ></span>
               </div>
             </div>
+            <p
+              v-if="
+                extractServices(s.subscription.subscription_plan.code).length >
+                0
+              "
+              class="card-pf-info text-center"
+            >
+              <strong>{{ $t("payment.services") }}</strong>
+              <code>{{
+                extractServices(s.subscription.subscription_plan.code)
+              }}</code>
+            </p>
             <p class="card-pf-info text-center">
               <strong>{{ $t("servers.until") }}</strong>
               <span v-if="!isExpired(s.subscription.valid_until)">{{
@@ -535,6 +547,18 @@ export default {
     };
   },
   methods: {
+    extractServices(plan) {
+      var context = this;
+      var code = plan.split("+")[1];
+      return code
+        ? code
+            .split(",")
+            .sort()
+            .map(function (el) {
+              return context.$i18n.t("servers." + el);
+            }).join(", ")
+        : [];
+    },
     getImage(s) {
       if (s.subscription.subscription_plan.base_code == "crostino") {
         return require("./../assets/crostino.svg");
@@ -579,7 +603,8 @@ export default {
         plan == "crostino" ||
         plan == "pizza" ||
         plan == "fiorentina" ||
-        plan == "lasagna"
+        plan == "lasagna" ||
+        plan == "trial"
       );
     },
     addServer(type) {
@@ -780,5 +805,6 @@ export default {
 
 .adjust-height {
   min-height: 353px;
+  max-height: 353px;
 }
 </style>

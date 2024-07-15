@@ -514,17 +514,25 @@ export default {
       services: {
         ns8: _.orderBy(
           [
-            // { name: "LDAP Mattermost", code: "ldap_mattermost", price: 120.0 },
-            // { name: "NethVoice", code: "nethvoice", price: 120.0 },
+            // { name: this.$i18n.t("servers.ldap_mattermost"), code: "ldap_mattermost", price: 120.0 },
+            // { name: this.$i18n.t("servers.nethvoice"), code: "nethvoice", price: 120.0 },
           ],
           "name",
           "asc"
         ),
         nsec: _.orderBy(
           [
-            { name: "Hotspot", code: "hotspot", price: 120.0 },
-            { name: "Threat shield", code: "threat_shield", price: 48.0 },
-            // { name: "Flashstart Lite", code: "flashstart_lite", price: 18.0 },
+            {
+              name: this.$i18n.t("servers.hotspot"),
+              code: "hotspot",
+              price: 120.0,
+            },
+            {
+              name: this.$i18n.t("servers.threat_shield"),
+              code: "threat_shield",
+              price: 48.0,
+            },
+            // { name: this.$i18n.t("servers.flashstart_lite"), code: "flashstart_lite", price: 18.0 },
           ],
           "name",
           "asc"
@@ -564,16 +572,16 @@ export default {
         return require("./../../assets/pizza.svg");
       }
       if (s == "personal-ns8") {
-        return require("./../../assets/circle-ns8.svg");
+        return require("./../../assets/circle-personal-ns8.svg");
       }
       if (s == "personal-nsec") {
-        return require("./../../assets/circle-nsec.svg");
+        return require("./../../assets/circle-personal-nsec.svg");
       }
       if (s == "business-ns8") {
-        return require("./../../assets/circle-ns8.svg");
+        return require("./../../assets/circle-business-ns8.svg");
       }
       if (s == "business-nsec") {
-        return require("./../../assets/circle-nsec.svg");
+        return require("./../../assets/circle-business-nsec.svg");
       }
       if (s == "trial-ns8") {
         return require("./../../assets/trial-ns8.svg");
