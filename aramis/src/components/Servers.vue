@@ -804,7 +804,7 @@ export default {
 }
 
 .adjust-height {
-  min-height: 353px;
-  max-height: 353px;
+  min-height: 365px;
+  max-height: 365px;
 }
 </style>
