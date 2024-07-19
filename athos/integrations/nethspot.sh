@@ -31,7 +31,7 @@ END
 )
 
 # create account
-status=$(curl -s -X POST $host/api/accounts -H 'Content-Type: application/json' -H "Token: $token" --data "$body" | jq -r .status)
+status=$(curl -s $host/api/accounts -H 'Content-Type: application/json' -H "Token: $token" --data "$body" | jq -r .status)
 
 # check status
 if [ "$status" = "success" ]; then
