@@ -10,7 +10,7 @@ login_username=$(cat $config_path | jq -r .integrations.nethspot.username)
 login_password=$(cat $config_path | jq -r .integrations.nethspot.password)
 
 # get token login
-token=$(curl -s -X POST $host/api/login -H 'Content-Type: application/json' --data '{"username": "'$login_username'", "password": "'$login_password'"}' | jq -r .token)
+token=$(curl -s $host/api/login -H 'Content-Type: application/json' --data '{"username": "'$login_username'", "password": "'$login_password'"}' | jq -r .token)
 
 # generate account password
 account_pass=($(cat /dev/urandom | head -c 10 | sha1sum))
