@@ -298,11 +298,6 @@
                     "-"
                   }}</span
                 >
-                <!-- <span
-                  v-if="isExpired(s.subscription.valid_until)"
-                  class="card-pf-item-text"
-                  >{{ $t("servers.expired") }}</span
-                > -->
               </div>
               <div class="card-pf-item">
                 <span
