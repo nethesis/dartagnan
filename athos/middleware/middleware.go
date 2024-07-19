@@ -29,7 +29,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/nethesis/PayPal-Go-SDK"
+	paypalsdk "github.com/nethesis/PayPal-Go-SDK"
 	auth0 "github.com/nethesis/go-auth0"
 	jose "gopkg.in/square/go-jose.v2"
 

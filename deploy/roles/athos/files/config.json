@@ -2,28 +2,38 @@
     "billing": {
         "country": "XXXX"
     },
-    "log" : {
+    "log": {
         "level": "info"
     },
     "database": {
-        "host":"localhost",
-        "port":"5432",
-        "name":"dartagnan",
+        "host": "localhost",
+        "port": "5432",
+        "name": "dartagnan",
         "user": "dtuser",
         "password": "SECRET"
     },
     "redis": {
-         "host": "localhost",
-         "port": "16379"
+        "host": "localhost",
+        "port": "16379"
     },
     "cors": {
-        "origins": ["https://YOUR_DOMAIN"],
-        "headers": ["Authorization", "Content-Type"],
-        "methods": ["GET", "PUT", "POST", "DELETE"]
+        "origins": [
+            "https://YOUR_DOMAIN"
+        ],
+        "headers": [
+            "Authorization",
+            "Content-Type"
+        ],
+        "methods": [
+            "GET",
+            "PUT",
+            "POST",
+            "DELETE"
+        ]
     },
     "auth0": {
         "domain": "dartagnan.auth0.com",
-        "identifier_api":"https://YOUR_DOMAIN"
+        "identifier_api": "https://YOUR_DOMAIN"
     },
     "paypal": {
         "sandbox": true,
@@ -36,12 +46,19 @@
         "help_url": "https://community.nethserver.org",
         "docs_url": "http://docs.nethserver.org",
         "email": {
-                "from": "noreply@YOUR_DOMAIN",
-                "smtp_host": "YOUR_SMTP_HOST",
-                "smtp_port": YOUR_SMTP_PORT,
-                "smtp_user": "YOUR_SMTP_USER",
-                "smtp_password": "YOUR_SMTP_PASSWORD"
+            "from": "noreply@YOUR_DOMAIN",
+            "smtp_host": "YOUR_SMTP_HOST",
+            "smtp_port": "YOUR_SMTP_PORT",
+            "smtp_user": "YOUR_SMTP_USER",
+            "smtp_password": "YOUR_SMTP_PASSWORD"
+        }
+    },
+    "trial_limit": 1,
+    "integrations": {
+        "nethspot": {
+            "host": "https://my.nethspot.com",
+            "username": "xxxx",
+            "password": "xxxx"
         }
     }
-
 }

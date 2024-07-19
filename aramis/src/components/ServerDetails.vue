@@ -90,10 +90,14 @@
                   </span>
                 </div>
                 <div class="details-info">
-                  <span>{{$t('servers.description')}}</span>
+                  <span>{{$t('payment.services')}}</span>
                   <span class="right">
-                    <strong class="soft">{{server.info.subscription.subscription_plan && server.info.subscription.subscription_plan.description
-                      || '-'}}</strong>
+                    <code v-if="extractServices(server.info.subscription.subscription_plan.code).length > 0">{{
+                      extractServices(server.info.subscription.subscription_plan.code)
+                    }}</code>
+                    <span v-else>
+                      -
+                    </span>
                   </span>
                 </div>
                 <div class="details-info">
@@ -587,6 +591,18 @@ export default {
     };
   },
   methods: {
+    extractServices(plan) {
+      var context = this;
+      var code = plan.split("+")[1];
+      return code
+        ? code
+            .split(",")
+            .sort()
+            .map(function (el) {
+              return context.$i18n.t("servers." + el);
+            }).join(", ")
+        : [];
+    },
     isExpired(date) {
       return new Date().toISOString() > date;
     },

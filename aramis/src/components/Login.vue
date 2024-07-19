@@ -1,10 +1,23 @@
 <template>
   <div class="login-pf">
-    <div v-if="sessionExpired" class="alert alert-warning alert-dismissable absolute-center-message">
-      <span class="pficon pficon-warning-triangle-o"></span>
-      <strong>{{$t('login.session_expired')}}</strong>. {{$t('login.session_expired_desc')}}.
+    <div
+      v-if="sessionExpired"
+      class="alert alert-warning alert-dismissable absolute-center-message extra-padding adjust-session-line"
+    >
+      <span
+        class="pficon pficon-warning-triangle-o adjust-session-triangle"
+      ></span>
+      <strong>{{ $t("login.session_expired") }}</strong
+      >. {{ $t("login.session_expired_desc") }}.
     </div>
-    <button @click="doLogin()" class="btn btn-primary btn-lg login-big absolute-center-top" type="button">{{ $t("login.login") }}</button>
+    <button
+      @click="doLogin()"
+      class="btn btn-primary btn-lg login-big absolute-center-top adjust-login-button"
+      type="button"
+    >
+      <span class="i fa fa-user icon-adjust"></span>
+      {{ $t("login.login") }}
+    </button>
     <iframe class="iframe-container" :src="iframeURL"></iframe>
   </div>
 </template>
@@ -30,10 +43,13 @@ export default {
       this.doLogin();
       this.delete("autoLogin");
     }
+
+    var currentProduct = this.get("product") || "nethserver";
+
     return {
       sessionExpired: sessionExpired,
       appName: CONFIG.APP_NAME,
-      iframeURL: CONFIG.FRAME_URL
+      iframeURL: CONFIG.FRAME_URL[currentProduct],
     };
   },
   methods: {
@@ -53,8 +69,8 @@ export default {
       if (plan == "lasagna") {
         return require("./../assets/lasagna-white.svg");
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -145,6 +161,18 @@ export default {
 .login-big {
   width: 180px !important;
   height: 40px !important;
-  font-size: 20px !important;
+  font-size: 16px !important;
+}
+
+.icon-adjust {
+  margin-right: 8px;
+}
+
+.adjust-session-triangle {
+  top: 20px;
+}
+
+.adjust-session-line {
+  line-height: 35px;
 }
 </style>

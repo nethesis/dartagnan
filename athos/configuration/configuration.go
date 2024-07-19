@@ -78,6 +78,14 @@ type Configuration struct {
 		Country string `json:"country"`
 	}
 	Notifications Notifications `json:"notifications"`
+	TrialLimit    int           `json:"trial_limit"`
+	Integrations  struct {
+		NethSpot struct {
+			Host     string `json:"host"`
+			Username string `json:"username"`
+			Password string `json:"password"`
+		} `json:"nethspot"`
+	} `json:"integrations"`
 }
 
 var Config = Configuration{}
