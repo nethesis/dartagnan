@@ -289,12 +289,20 @@ func GetSystemById(systemID int) models.System {
 }
 
 func CanAccessAlerts(plan models.SubscriptionPlan) bool {
-	switch plan.ID {
-	case 1: // Trial
+	switch plan.BaseCode {
+	case "trial": // Trial
 		return true
-	case 4: // Fiorentina
+	case "trial-ns8": // Trial NethServer
 		return true
-	case 5: // Pizza
+	case "trial-nsec": // Trial NethSecurity
+		return true
+	case "fiorentina": // Fiorentina
+		return true
+	case "pizza": // Pizza
+		return true
+	case "business-ns8": // Business NethServer
+		return true
+	case "business-nsec": // Business NethSecurity
 		return true
 	}
 	return false
