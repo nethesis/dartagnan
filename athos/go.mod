@@ -1,6 +1,6 @@
 module github.com/nethesis/dartagnan/athos
 
-go 1.21.10
+go 1.23
 
 require (
 	github.com/cbroglie/mustache v1.4.0
