@@ -76,6 +76,10 @@
     "translation": "Swap partion full"
   },
   {
+    "id": "alert_swap_notpresent",
+    "translation": "Swap space not configured"
+  },
+  {
     "id": "alert_md",
     "translation": "RAID"
   },

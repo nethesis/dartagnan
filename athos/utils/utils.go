@@ -172,6 +172,9 @@ func GetAlertHumanName(alertId string, locale string) string {
 		swap:percent:free
 	*/
 	case "swap":
+		if parts[1] == "notpresent" {
+			return T("alert_swap_notpresent")
+		}
 		return T("alert_swap")
 	/*
 		md:([a-z0-9-]+):md_disks:([a-z]+)
