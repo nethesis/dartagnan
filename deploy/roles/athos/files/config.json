@@ -33,7 +33,7 @@
     },
     "auth0": {
         "domain": "dartagnan.auth0.com",
-        "identifier_api": "https://YOUR_DOMAIN"
+        "audience": "https://YOUR_DOMAIN"
     },
     "paypal": {
         "sandbox": true,

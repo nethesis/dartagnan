@@ -4,19 +4,15 @@
       v-if="
         isExpired(obj.subscription.valid_until) ||
         (plans.length > 0 &&
-          plans[plans.length - 1].code !=
-            obj.subscription.subscription_plan.code)
+          plans[plans.length - 1].code != obj.subscription.subscription_plan.code) ||
+          obj.subscription.subscription_plan.code.includes('business-')
       "
       @click="showRenewModal(obj.id)"
       type="button"
       class="btn btn-primary"
     >
       <span class="fa fa-shopping-cart"></span>
-      {{
-        isExpired(obj.subscription.valid_until)
-          ? $t("payment.renew_button")
-          : $t("payment.upgrade_button")
-      }}
+      {{ getButtonText(obj.subscription.subscription_plan.code) }}
     </button>
     <div
       class="modal fade"
@@ -271,14 +267,26 @@
                     <span
                       v-if="!onUpgrade && !onUpgradePriceCalc"
                       class="card-pf-item-text"
-                      >{{ obj.subscription.valid_until | formatDate(false) }} -
-                      {{
-                        calculateSubscription(
-                          obj.subscription.valid_until,
-                          obj.subscription.subscription_plan
-                        ) | formatDate(false)
-                      }}</span
                     >
+                      <span v-if="isExpired(obj.subscription.valid_until)">
+                        {{ new Date().toISOString() | formatDate(false) }} -
+                        {{
+                          calculateSubscription(
+                            new Date().toISOString(),
+                            obj.subscription.subscription_plan
+                          ) | formatDate(false)
+                        }}
+                      </span>
+                      <span v-else>
+                        {{ obj.subscription.valid_until | formatDate(false) }} -
+                        {{
+                          calculateSubscription(
+                            obj.subscription.valid_until,
+                            obj.subscription.subscription_plan
+                          ) | formatDate(false)
+                        }}
+                      </span>
+                    </span>
                     <span
                       v-if="onUpgrade && !onUpgradePriceCalc"
                       class="card-pf-item-text"
@@ -306,11 +314,11 @@
                   <div class="card-pf-item details-pay-item">
                     <span v-if="!onUpgradePriceCalc" class="card-pf-item-text">
                       <strong v-if="discounts.annualDiscount > 0"
-                        >{{ currentPlan.price }}€ (then
+                        >{{ Math.round(currentPlan.price * 100) / 100 }}€ (then
                         {{ currentPlan.full_price }}€ / year)</strong
                       >
                       <strong v-if="discounts.annualDiscount == 0"
-                        >{{ currentPlan.price }}€ / year</strong
+                        >{{ Math.round(currentPlan.price * 100) / 100 }}€ / year</strong
                       >
                       <span>+ {{ $t("payment.taxes") }}</span>
                     </span>
@@ -456,7 +464,7 @@ export default {
                         name: context.currentPlan.code,
                         description: context.currentPlan.name,
                         sku: context.obj.uuid,
-                        price: context.currentPlan.price,
+                        price: Math.round(context.currentPlan.price * 100) / 100,
                         currency: "EUR",
                         quantity: "1",
                       },
@@ -555,6 +563,8 @@ export default {
       },
       onUpgradePriceCalc: false,
       onUpgrade: false,
+      upgradeStartDate: new Date().toISOString(),
+      upgradeEndDate: new Date().toISOString(),
     };
   },
   methods: {
@@ -602,6 +612,29 @@ export default {
     isExpired(date) {
       return new Date().toISOString() > date;
     },
+    getButtonText(code) {
+      const isTrial = code.includes("trial-");
+      const isPersonal = code.includes("personal-");
+      const isBusiness = code.includes("business-");
+      
+      // Trial (active or expired) → "Upgrade"
+      if (isTrial) {
+        return this.$t("payment.upgrade_button");
+      }
+      
+      // Personal active or expired → "Upgrade or Renew"
+      if (isPersonal) {
+        return this.$t("payment.upgrade_button") + " " + this.$t("or") + " " + this.$t("payment.renew_button");
+      }
+      
+      // Business active or expired → "Renew"
+      if (isBusiness) {
+        return this.$t("payment.renew_button");
+      }
+      
+      // Default
+      return this.$t("payment.upgrade_button");
+    },
     showRenewModal(id) {
       this.$http
         .get(
@@ -641,7 +674,31 @@ export default {
               sanitize: true,
             });
             this.onUpgradePriceCalc = false;
-            this.onUpgrade = !this.isExpired(this.obj.subscription.valid_until);
+            
+            // Determine if it's upgrade or renew based on license status and type
+            const currentCode = this.obj.subscription.subscription_plan.code;
+            const isBusiness = currentCode.includes("business-");
+            const isPersonal = currentCode.includes("personal-");
+            
+            // onUpgrade logic:
+            // 1. Trial (active or expired) → upgrade (onUpgrade = true)
+            // 2. Personal active → renew (onUpgrade = false) or upgrade (onUpgrade = true)
+            // 3. Personal expired → renew (onUpgrade = false) if same plan, upgrade (onUpgrade = true) if different plan
+            // 4. Business active → can only renew (onUpgrade = false)
+            // 5. Business expired → renew (onUpgrade = false)
+            
+            // If it's business (active or expired), it's always a renew
+            if (isBusiness) {
+              this.onUpgrade = false;
+            }
+            // If it's personal (active or expired), it's a renew by default (can be changed to upgrade via dropdown)
+            else if (isPersonal) {
+              this.onUpgrade = false;
+            }
+            // All other cases are upgrade (trial)
+            else {
+              this.onUpgrade = true;
+            }
 
             // check volume discounts
             this.$http
@@ -754,7 +811,7 @@ export default {
         var context = this;
         this.calculateUpgradePrice(newCode, function (data) {
           context.onUpgrade = true;
-          context.currentPlan = plan;
+          context.currentPlan = JSON.parse(JSON.stringify(plan));
           context.currentPlan.id = data.id;
           context.currentPlan.price = data.price;
           context.currentPlan.full_price = data.full_price;
@@ -794,8 +851,9 @@ export default {
         });
       } else {
         this.onUpgrade = false;
-        this.currentPlan = plan;
+        this.currentPlan = JSON.parse(JSON.stringify(plan));
         this.currentPlan.full_price = plan.price;
+        this.currentPlan.price = plan.price;
         this.markdownDescription = marked(plan.description, { sanitize: true });
 
         // check volume discounts

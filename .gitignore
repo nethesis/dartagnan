@@ -1,0 +1,4 @@
+./vscode/
+
+./Containerfile
+./podman-compose.yml

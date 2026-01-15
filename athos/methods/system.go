@@ -286,7 +286,15 @@ func RenewalPlan(c *gin.Context) {
 	if middleware.PaymentCheck(json.PaymentID, system.Subscription.SubscriptionPlan.Code, system.UUID) {
 		// update subscription
 		system.Subscription.ValidFrom = time.Now().UTC()
-		system.Subscription.ValidUntil = system.Subscription.ValidUntil.AddDate(0, 0, system.Subscription.SubscriptionPlan.Period)
+		
+		// if license is already expired, calculate valid_until from valid_from
+		// otherwise add period to existing valid_until
+		if time.Now().UTC().After(system.Subscription.ValidUntil) {
+			system.Subscription.ValidUntil = system.Subscription.ValidFrom.AddDate(0, 0, system.Subscription.SubscriptionPlan.Period)
+		} else {
+			system.Subscription.ValidUntil = system.Subscription.ValidUntil.AddDate(0, 0, system.Subscription.SubscriptionPlan.Period)
+		}
+		
 		system.Subscription.Status = "valid"
 
 		// update system info
