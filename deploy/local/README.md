@@ -190,7 +190,7 @@ N.B. To speed up the authentication mechanism, also define a user with username 
     ```
 
 
-## Startup Procedure:
+## Startup Procedure
 
 1. **Copy necessary files**: copy the files contained in this folder (*podman-compose.yml* and *Containerfile*) to the main folder of the repository
     ```
@@ -199,3 +199,43 @@ N.B. To speed up the authentication mechanism, also define a user with username 
     ``` 
 2. **Start the frontend**: go to the ```./aramis``` folder and run the two commands ```npm install``` and ```npm run dev```
 3. **Start the backend**: run from the main repository folder the command ```podman-compose up -d```, which will build and start the containers for the *Athos* backend and related services (Redis cache and Postgres database)
+
+### ⚠️ IMPORTANT - Remove Local Deployment Changes Before Committing
+
+Before committing and pushing your new developments to the repository, **make sure to remove all modifications made exclusively for local deployment**:
+
+- **Revert changes to configuration files** (Auth0 credentials, PayPal sandbox keys, database credentials, CORS origins, etc.)
+- **Restore original settings** in:
+  - `aramis/config/index.js` (proxy configuration)
+  - `aramis/static/config/config.js` (Auth0 and PayPal settings)
+  - `deploy/roles/athos/files/config.json` (database, Redis, CORS, Auth0, PayPal settings)
+  - `deploy/roles/athos/files/database.sql` (database initialization)
+
+Failure to do so may expose sensitive credentials or break the production build process.
+
+## Production Environment Deployment Test
+
+After developing a new feature or a fix locally, you can verify its compatibility with the production environment. To do this, follow these steps:
+
+1. copy the *Containerfile* file contained in this folder to the main folder of the repository
+    ```
+    cp ./Containerfile ./../..
+    ```
+
+2. go to the main folder of the project and run the command
+    ```
+    podman build --target build -t dartagnan_athos_build .
+    ```
+    This command will build the image containing only the operating system present in the production environment and the copy of the source files, without actually executing the Athos backend.
+
+3. once the image has been built, run the command
+    ```
+    podman run -v $(pwd):/build:Z dartagnan_athos_build sh -c "cd /build/athos && go get && go build"
+    ```
+    This command executes the compilation of the Athos backend on a container that matches the operating system present on the production machine.
+
+4. once the previous command has been executed (some warnings may appear, but the important thing is that the command is actually executed and terminates correctly), to verify the successful outcome you will need to check the presence of the binary executable ```athos``` inside the folder ```/athos```. Run the command:
+    ```
+    ls -l ./athos | grep "athos"
+    ```
+    and verify the presence of the ```athos``` executable.
