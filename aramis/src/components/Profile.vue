@@ -52,31 +52,31 @@
             <div class="form-group">
               <label class="col-sm-3 control-label" for="textInput-markup">{{$t('profile.name')}}</label>
               <div class="col-sm-9">
-                <input v-model="billingInfo.name" required type="text" id="textInput-markup" class="form-control">
+                <input v-model="billingInfo.name" required type="text" id="textInput-markup" class="form-control" autocomplete="off">
               </div>
             </div>
             <div class="form-group">
               <label class="col-sm-3 control-label" for="textInput-markup">{{$t('profile.address')}}</label>
               <div class="col-sm-9">
-                <input v-model="billingInfo.address" required type="text" id="textInput-markup" class="form-control">
+                <input v-model="billingInfo.address" required type="text" id="textInput-markup" class="form-control" autocomplete="off">
               </div>
             </div>
             <div class="form-group">
               <label class="col-sm-3 control-label" for="textInput-markup">{{$t('profile.city')}}</label>
               <div class="col-sm-9">
-                <input v-model="billingInfo.city" required type="text" id="textInput-markup" class="form-control">
+                <input v-model="billingInfo.city" required type="text" id="textInput-markup" class="form-control" autocomplete="off">
               </div>
             </div>
             <div class="form-group">
               <label class="col-sm-3 control-label" for="textInput-markup">{{$t('profile.postal_code')}}</label>
               <div class="col-sm-9">
-                <input v-model="billingInfo.postal_code" required type="text" id="textInput-markup" class="form-control">
+                <input v-model="billingInfo.postal_code" required type="text" id="textInput-markup" class="form-control" autocomplete="off">
               </div>
             </div>
             <div class="form-group">
               <label class="col-sm-3 control-label" for="textInput-markup">{{$t('profile.country')}}</label>
               <div class="col-sm-9">
-                <select required v-model="billingInfo.country" class="form-control">
+                <select required v-model="billingInfo.country" class="form-control" autocomplete="off">
                   <option v-for="c in countries" v-bind:key="c.id" v-bind:value="c.country">
                     {{ c.country }}
                   </option>
@@ -103,7 +103,7 @@
             <div v-if="billingType == 'business'" class="form-group">
               <label class="col-sm-3 control-label" for="textInput-markup">{{$t('profile.vat')}}</label>
               <div class="col-sm-9">
-                <input v-model="billingInfo.vat" required type="text" id="textInput-markup" class="form-control">
+                <input v-model="billingInfo.vat" required type="text" id="textInput-markup" class="form-control" autocomplete="off">
               </div>
             </div>
             <div class="modal-footer">
@@ -201,7 +201,13 @@ export default {
         )
         .then(
           function(success) {
-            this.countries = success.body;
+            // order countries alphabetically maintaining the "Other" option as first
+            const countries = success.body;
+            const other = countries.find(c => c.country === "Other");
+            const sorted = countries
+              .filter(c => c.country !== "Other")
+              .sort((a, b) => a.country.localeCompare(b.country, this.$i18n.locale));
+            this.countries = other ? [other, ...sorted] : sorted;
           },
           function(error) {
             console.error(error);

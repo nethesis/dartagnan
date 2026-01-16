@@ -339,12 +339,12 @@
             </p>
           </div>
           <div class="card-pf-footer">
-            <div class="card-pf-time-frame-filter">
-              <renew-button :obj="s" :update="listServers"></renew-button>
-            </div>
             <p>
               <delete-server :obj="s" :update="listServers"></delete-server>
             </p>
+            <div class="card-pf-time-frame-filter">
+              <renew-button :obj="s" :update="listServers"></renew-button>
+            </div>
           </div>
         </div>
       </div>
@@ -801,5 +801,32 @@ export default {
 .adjust-height {
   min-height: 365px;
   max-height: 365px;
+}
+
+.card-pf-footer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  gap: 10px;
+  align-items: center;
+}
+
+.card-pf-footer > div,
+.card-pf-footer > p {
+  flex: 0 1 auto;
+  margin: 0;
+}
+
+@media (max-width: 768px) {
+  .card-pf-footer {
+    flex-direction: column;
+  }
+
+  .card-pf-footer > div,
+  .card-pf-footer > p {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
 }
 </style>

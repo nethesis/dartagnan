@@ -1,0 +1,50 @@
+# Stage 1: Build stage
+FROM centos:centos7 AS build
+
+# Setup Go
+RUN curl -L https://go.dev/dl/go1.23.0.linux-amd64.tar.gz -o go.tar.gz && tar xzf go*gz -C /usr/local && rm -f go*gz
+ENV GOROOT=/usr/local/go
+ENV GOPATH=/usr/lib/go
+ENV PATH=$GOPATH/bin:$GOROOT/bin:$PATH
+
+# Copy source code
+WORKDIR /build
+COPY . /build
+
+# Configure CentOS repositories
+RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
+RUN sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
+    
+RUN yum install epel-release -y && \
+    yum update -y && \
+    yum install -y lz4-devel lz4 git && \
+    yum install -y rpm-build rpmdevtools
+
+# Stage 2: Local development stage (builds and runs athos, inherits from build stage)
+FROM build AS local-development
+
+# Backup and reconfigure CentOS repositories
+RUN mkdir /etc/yum.repos.d/backup && \
+    mv /etc/yum.repos.d/CentOS-*.repo /etc/yum.repos.d/backup/
+
+RUN printf '[base]\nname=CentOS-7 - Base\nbaseurl=http://vault.centos.org/7.9.2009/os/x86_64/\ngpgcheck=0\nenabled=1\n\n[updates]\nname=CentOS-7 - Updates\nbaseurl=http://vault.centos.org/7.9.2009/updates/x86_64/\ngpgcheck=0\nenabled=1\n\n[extras]\nname=CentOS-7 - Extras\nbaseurl=http://vault.centos.org/7.9.2009/extras/x86_64/\ngpgcheck=0\nenabled=1\n\n[sclo-rh]\nname=CentOS-7 - SCLo rh\nbaseurl=http://vault.centos.org/7.9.2009/sclo/x86_64/rh/\ngpgcheck=0\nenabled=1\n' > /etc/yum.repos.d/CentOS-Vault.repo
+
+RUN yum clean all && yum makecache
+
+# Copy configuration files and resources
+RUN mkdir -p /opt/dartagnan && \
+    cp ./deploy/roles/athos/files/config.json /opt/dartagnan/ && \
+    cp -r ./athos/templates /opt/dartagnan/ && \
+    cp -r ./athos/integrations /opt/dartagnan/ && \
+    cp -r ./deploy/roles/athos/files/license_generator.sh /opt/dartagnan/
+
+# Build athos
+WORKDIR /build/athos
+RUN go mod download && go build -o /opt/dartagnan/athos .
+
+# Expose port
+EXPOSE 8080
+
+# Start the application
+ENTRYPOINT ["/opt/dartagnan/athos"]
+CMD ["-c", "/opt/dartagnan/config.json"]

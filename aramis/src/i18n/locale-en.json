@@ -196,6 +196,7 @@
     "prev": "Prev",
     "of": "of",
     "search": "Search",
-    "rows_per_page": "Rows per page"
+    "rows_per_page": "Rows per page",
+    "or": "or"
   }
 }
